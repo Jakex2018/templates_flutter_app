@@ -1,60 +1,188 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/category/category_app.dart';
+import 'package:templates_flutter_app/screens/home/services/home_data_services.dart';
+import 'package:templates_flutter_app/screens/home/widget/card_label.dart';
+import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
 
-class HomeCard extends StatelessWidget {
+class HomeCard extends StatefulWidget {
   const HomeCard({super.key});
 
   @override
+  State<HomeCard> createState() => _HomeCardState();
+}
+
+class _HomeCardState extends State<HomeCard> {
+  final HomeDataService _dataService = HomeDataService();
+  List<Map<String, String>> selectCategory = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getDataCategory();
+  }
+
+  Future<void> _getDataCategory() async {
+    final List<Map<String, String>> fetchcategories =
+        await _dataService.getCategory();
+
+    setState(() {
+      selectCategory = fetchcategories;
+    });
+  }
+
+  bool isValidImageUrl(String url) {
+    final RegExp urlRegex = RegExp(
+      r'(https?://)?[^\s]+?\.(jpg|jpeg|png|gif|webp)(\?\S*)?',
+    );
+    return urlRegex.hasMatch(url);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Category(),
-            ));
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: aDefaultPadding / 2, vertical: aDefaultPadding),
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.sp),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.6),
-                  blurRadius: 10.0,
-                  spreadRadius: 1.0,
-                ),
-              ]),
-          child: Stack(children: [
-            Image.asset(
-              'asset/bg_01.jpg',
-              height: 124.h,
-            ),
-            Align(
-              alignment: Alignment.center,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: aDefaultPadding / 2,
+        vertical: aDefaultPadding,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: selectCategory.map((category) {
+          final String? imageUrl = category['imageCategory'];
+          return SizedBox(
+            height: 110.h,
+            child: GestureDetector(
+              onTap: () async {
+                final categorySnaphot = await FirebaseFirestore.instance
+                    .collection('categories')
+                    .where('category', isEqualTo: category['category'])
+                    .get();
+                if (categorySnaphot.docs.isNotEmpty) {
+                  final data = categorySnaphot.docs.first.data();
+                  final type = data['type'];
+                  // ignore: use_build_context_synchronously
+                  navigateToCategory(type, context, category);
+                }
+              },
               child: Container(
-                height: 124.h,
-                width: 148.w,
+                margin: EdgeInsets.symmetric(vertical: 10.h),
+                width: MediaQuery.of(context).size.width * .9,
+                clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
-                    color: Colors.black45,
-                    borderRadius: BorderRadius.circular(20.sp)),
-                child: Center(
-                  child: Text(
-                    'Restaurants',
-                    style: TextStyle(
-                        fontSize: 20.sp,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  borderRadius: BorderRadius.circular(20.sp),
                 ),
+                child: Stack(children: [
+                  imageUrl != null && isValidImageUrl(imageUrl)
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(20.sp),
+                          child: Image.network(
+                            imageUrl,
+                            height: 120.h,
+                            width: MediaQuery.of(context).size.width * .9,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : AlertDialog(
+                          title: const Text('No image available'),
+                          content: const Text(
+                              'The category does not have an associated image.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: 120.h,
+                      width: MediaQuery.of(context).size.width * .9,
+                      decoration: BoxDecoration(
+                        color: Colors.black45,
+                        borderRadius: BorderRadius.circular(20.sp),
+                      ),
+                      child: Center(
+                        child: Text(
+                          category['category'] as String,
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                      top: 40.h,
+                      left: 220.w,
+                      child: StreamBuilder<QuerySnapshot<Object?>>(
+                          stream: FirebaseFirestore.instance
+                              .collection('categories')
+                              .where('category',
+                                  isEqualTo: category['category'])
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+                            if (!snapshot.hasData) {
+                              return const CircularProgressIndicator();
+                            }
+                            final data = snapshot.data!.docs.first;
+                            final type = data['type'];
+                            return CardLabel(type: type);
+                          }))
+                ]),
               ),
-            )
-          ]),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+void navigateToCategory(String type, context, category) {
+  if (type == 'Premium') {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('This is a Premium Content'),
+          content: const Text('Please Buy a Subscription'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SuscriptionScreen(),
+                  ),
+                );
+              },
+              child: const Text('Go to Subscription'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  } else if (type == 'Free') {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Category(
+          category: category['category'] as String,
         ),
       ),
     );

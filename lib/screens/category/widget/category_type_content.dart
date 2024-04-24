@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/constants.dart';
+
 class CategoryTypeContent extends StatelessWidget {
   const CategoryTypeContent({
     super.key,
+    required this.title,
   });
-
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,13 +20,10 @@ class CategoryTypeContent extends StatelessWidget {
               topRight: Radius.circular(20.sp))),
       child: Center(
           child: Text(
-        'Restaurants',
+        title,
         style: TextStyle(
-            color: Colors.white,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold),
+            color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),
       )),
     );
   }
 }
-

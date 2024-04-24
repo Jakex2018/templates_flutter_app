@@ -32,7 +32,7 @@ class LoginBackground extends StatelessWidget {
         color: kblueColor.withOpacity(.73),
       ),
       Positioned(
-        top: 35.h,
+        top: 28.h,
         left: 10.w,
         child: Row(
           children: [

@@ -113,6 +113,7 @@ class LoginWith extends StatelessWidget {
           width: 70.w,
           height: 1.5.h,
           color: Colors.black38,
+          
         ),
         Text(
           'Or Signin with',

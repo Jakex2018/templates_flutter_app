@@ -3,16 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/screens/login/widget/form_data.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({
     super.key,
   });
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -21,7 +21,7 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...formFields.map((formData) => _buildFormField(formData)),
+          ...formRegisterFields.map((formData) => _buildFormField(formData)),
           Padding(
             padding: EdgeInsets.only(left: 165.w),
             child: Text(
@@ -33,10 +33,10 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           ButtonOne(
-            text: 'Login',
+            text: 'Register',
             onPressed: () {},
             width: .5,
-            height: .6,
+            height: -.3,
             margin: 20,
           ),
         ],

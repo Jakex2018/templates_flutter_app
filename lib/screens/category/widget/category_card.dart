@@ -49,7 +49,7 @@ class CategoryCard extends StatelessWidget {
                       child: Image.asset('asset/bg_01.jpg')),
                   imageUrl: image,
                   fit: BoxFit.fitHeight,
-                  height: 300.h,
+                  height: 210.h,
                 ),
               ],
             ),

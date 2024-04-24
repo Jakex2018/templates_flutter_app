@@ -7,6 +7,7 @@ import 'package:templates_flutter_app/screens/sidebar/widget/sidebar_link.dart';
 class MenuItems {
   static const home = MenuItem('Home', Icons.home);
   static const login = MenuItem('Login', Icons.login_outlined);
+  static const register = MenuItem('Register', Icons.logout_outlined);
   static const about = MenuItem(
     'About',
     Icons.add_box_outlined,
@@ -16,7 +17,7 @@ class MenuItems {
     Icons.chat_bubble,
   );
   static const all = <MenuItem>[home, about, chat];
-  static const allLogin = <MenuItem>[login];
+  static const allLogin = <MenuItem>[login,register];
 }
 
 class MenuItem {
@@ -64,7 +65,7 @@ class _SidebarScreenState extends State<SidebarScreen> {
             ],
           ),
           const SizedBox(
-            height: 200,
+            height: 150,
           ),
           Container(
             decoration: const BoxDecoration(

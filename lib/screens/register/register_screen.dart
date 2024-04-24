@@ -4,7 +4,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/login/login_screen.dart';
 import 'package:templates_flutter_app/screens/login/widget/login_Background.dart';
-import 'package:templates_flutter_app/screens/login/widget/login_form.dart';
+import 'package:templates_flutter_app/screens/register/widget/register_form.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -31,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 padding: const EdgeInsets.symmetric(
                     vertical: aDefaultPadding * 1.2,
                     horizontal: aDefaultPadding * 1.2),
-                height: 545.h,
+                height: 560.h,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                     color: Colors.white,
@@ -45,29 +45,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Text(
                       'Welcome',
                       style: TextStyle(
-                          fontSize: 28.sp,
+                          fontSize: 18.sp,
                           color: Colors.black,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Please register your information',
                       style: TextStyle(
-                          fontSize: 17.sp,
+                          fontSize: 15.sp,
                           color: Colors.black26,
                           fontWeight: FontWeight.bold),
                     ),
-                    const LoginForm(),
+                    const RegisterForm(),
                     const LoginWith(),
-                    SizedBox(height: 5.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('asset/login_01.png'),
-                        SizedBox(
-                          width: aDefaultPadding.w,
-                        ),
-                        Image.asset('asset/login_02.png'),
-                      ],
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'asset/login_01.png',
+                            height: 60.h,
+                          ),
+                          SizedBox(
+                            width: aDefaultPadding.w,
+                          ),
+                          Image.asset(
+                            'asset/login_02.png',
+                            height: 60.h,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

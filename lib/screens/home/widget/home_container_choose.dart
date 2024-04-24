@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/home/widget/home_card.dart';
+
+class HomeContainerChoose extends StatelessWidget {
+  const HomeContainerChoose({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: aDefaultPadding * .9),
+      child: const SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            HomeCard(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/*
 
 class HomeContainerChoose extends StatelessWidget {
   const HomeContainerChoose({
@@ -22,11 +44,11 @@ class HomeContainerChoose extends StatelessWidget {
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold),
           ),
-          SingleChildScrollView(
+          const SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (int i = 0; i < 2; i++) const HomeCard(),
+                HomeCard(),
               ],
             ),
           ),
@@ -35,3 +57,4 @@ class HomeContainerChoose extends StatelessWidget {
     );
   }
 }
+ */

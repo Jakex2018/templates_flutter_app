@@ -5,7 +5,6 @@ import 'package:templates_flutter_app/screens/template/widget/template_option.da
 import 'package:templates_flutter_app/screens/template/widget/template_web_app.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TemplateBody extends StatelessWidget {
   const TemplateBody(
@@ -14,12 +13,16 @@ class TemplateBody extends StatelessWidget {
       required this.title,
       required this.url,
       required this.nameImg,
-      required this.fetchDownloadImage});
+      required this.fetchDownloadImage,
+      required this.fetchSaveUrlTemplate,
+      required this.accessDemo});
   final String image;
   final String title;
   final String url;
   final String nameImg;
   final Function(String) fetchDownloadImage;
+  final Function(String) fetchSaveUrlTemplate;
+  final Future<WebApp?> accessDemo;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -81,8 +84,8 @@ class TemplateBody extends StatelessWidget {
                       color: Colors.black,
                       size: 40,
                     ),
-                    onTap: () {
-                      url;
+                    onTap: () async {
+                      await fetchSaveUrlTemplate(url);
                     }),
                 SizedBox(
                   height: 30.h,
@@ -99,7 +102,7 @@ class TemplateBody extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => FutureBuilder(
-                              future: accessDemo(),
+                              future: accessDemo,
                               builder: ((context, snapshot) {
                                 if (snapshot.hasData) {
                                   return snapshot.data!;
@@ -119,95 +122,4 @@ class TemplateBody extends StatelessWidget {
       ],
     );
   }
-
-  Future<WebApp?> accessDemo() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('templates')
-        .where('urlDemo')
-        .get();
-    if (snapshot.docs.isNotEmpty) {
-      final url =
-          snapshot.docs[0].get('urlDemo'); // Use 'accessDemo' field here
-      return WebApp(url: url);
-    } else {
-      return null;
-    }
-  }
 }
-
-/*
-Future<void> downloadCode() async {
-    final connectivityResult = await (Connectivity().checkConnectivity());
-
-    if (connectivityResult == ConnectivityResult.none) {
-      // No hay conexión a internet, muestra un mensaje de error al usuario
-
-      return; // Evita la descarga si no hay conexión
-    }
-
-    final snapshot =
-        await FirebaseFirestore.instance.collection('templates').get();
-    if (snapshot.docs.isNotEmpty) {
-      final url = snapshot.docs[0].get('urlRepository');
-      if (url != null && url is String) {
-        _launchUrl(url);
-      }
-    } else {
-      throw 'No se encontro el documento';
-    }
-  }
- */
-
-/**
-  Future<void> saveImageToGallery(File image) async {
-    final bytes = await image.readAsBytes();
-    final result = await ImageGallerySaver.saveImage(bytes);
-    if (result['isSuccess']) {
-      print('Imagen guardada exitosamente en la galería.');
-    } else {
-      print('Error al guardar la imagen en la galería.');
-    }
-  }
-
-  Future<String?> getDownloadImage(String templateImg) async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('templates')
-        .where('image', isEqualTo: templateImg)
-        .get();
-    if (snapshot.docs.isNotEmpty) {
-      final url = snapshot.docs[0].get('image');
-      return url;
-    } else {
-      return null;
-    }
-  }
-
-  Future<void> downloadImage(String imageUrl, context) async {
-    try {
-      final response = await http.get(Uri.parse(imageUrl));
-      if (response.statusCode == 200) {
-        final directory = await getApplicationDocumentsDirectory();
-        final filename = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-        final file = File('${directory.path}/$filename');
-        await file.writeAsBytes(response.bodyBytes);
-        Fluttertoast.showToast(
-            msg: "Imagen Descargada Correctamente\nen tu dispositivo",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 4,
-            backgroundColor: kblueColor,
-            textColor: Colors.white,
-            fontSize: 18.0);
-        print('Imagen descargada exitosamente a: ${file.path}');
-        await saveImageToGallery(file);
-      } else {
-        throw Exception('Error al descargar la imagen: ${response.statusCode}');
-      }
-    } on PlatformException catch (e) {
-      throw Exception('Error al descargar la imagen: $e');
-    } catch (e) {
-      print('Error downloading image: $e'); // Generic error handling
-    }
-  }
-
- */
