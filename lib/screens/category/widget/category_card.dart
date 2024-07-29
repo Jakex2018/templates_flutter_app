@@ -19,7 +19,9 @@ class CategoryCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Template(image: image),
+            builder: (context) => Template(
+              image: image,
+            ),
           ),
         );
       },

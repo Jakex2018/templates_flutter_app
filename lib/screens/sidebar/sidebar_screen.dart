@@ -1,252 +1,155 @@
-// ignore_for_file: use_super_parameters
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:templates_flutter_app/constants.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:templates_flutter_app/screens/home/home_app.dart';
+import 'package:templates_flutter_app/screens/login/login_screen.dart';
+import 'package:templates_flutter_app/screens/register/register_screen.dart';
 import 'package:templates_flutter_app/screens/sidebar/widget/sidebar_link.dart';
+import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
 
-class MenuItems {
-  static const home = MenuItem('Home', Icons.home);
-  static const login = MenuItem('Login', Icons.login_outlined);
-  static const register = MenuItem('Register', Icons.logout_outlined);
-  static const about = MenuItem(
-    'About',
-    Icons.add_box_outlined,
-  );
-  static const chat = MenuItem(
-    'Chat Bot',
-    Icons.chat_bubble,
-  );
-  static const all = <MenuItem>[home, about, chat];
-  static const allLogin = <MenuItem>[login,register];
-}
-
-class MenuItem {
-  final String title;
-  final IconData icon;
-  const MenuItem(this.title, this.icon);
-}
-
-class SidebarScreen extends StatefulWidget {
-  final MenuItem currentItem;
-  final ValueChanged<MenuItem> onSelectItem;
-  const SidebarScreen(
-      {super.key, required this.currentItem, required this.onSelectItem});
+class Sidebar extends StatefulWidget {
+  const Sidebar({super.key, required this.isLoggedIn});
+  final bool isLoggedIn;
 
   @override
-  State<SidebarScreen> createState() => _SidebarScreenState();
+  State<Sidebar> createState() => _SidebarState();
 }
 
-class _SidebarScreenState extends State<SidebarScreen> {
+class _SidebarState extends State<Sidebar> {
+  bool isLoggedIn = false;
+  String username = '';
+  @override
+  initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  void _checkLoginStatus() async {
+    //final prefs = await SharedPreferences.getInstance();
+    //isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final user = FirebaseAuth.instance.currentUser;
+
+    setState(() {
+      isLoggedIn = user != null;
+      username = user?.displayName ?? '';
+    });
+  }
+
   bool _isDarkMode = false;
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: _isDarkMode ? Colors.black : Colors.white,
-      borderRadius: BorderRadius.only(topRight: Radius.circular(30.sp)),
-      child: ListView(
-        padding: const EdgeInsets.symmetric(
-            horizontal: aDefaultPadding, vertical: aDefaultPadding * 2),
-        children: [
-          ListTile(
-            title: Text(
-              'User: not found\nPlease Login your account',
-              style: TextStyle(
+    bool isLogged = widget.isLoggedIn;
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: 230.w,
+      decoration: BoxDecoration(
+          boxShadow: const [BoxShadow(offset: Offset(0, 5), blurRadius: 4)],
+          borderRadius: BorderRadius.circular(30.sp)),
+      child: Drawer(
+        backgroundColor: _isDarkMode? Colors.black45:Colors.white,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Text(
+                isLoggedIn == false
+                    ? 'Hola, Invitado!'
+                    : username.isNotEmpty
+                        ? 'Hola,$username'
+                        : 'Hola, Invitado!',
+              ),
+            ),
+            ListTile(
+              title: Text('Dark Mode',style:TextStyle(color: _isDarkMode?Colors.black:Colors.white),),
+              onTap: () {
+                setState(() => _isDarkMode = !_isDarkMode);
+              },
+              leading: Icon(
+                _isDarkMode ? Icons.sunny : Icons.dark_mode_rounded,
                 color: _isDarkMode ? Colors.white : Colors.black,
               ),
             ),
-          ),
-          SizedBox(
-            height: 70.h,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ...MenuItems.all.map(buildMenuItem),
-            ],
-          ),
-          const SizedBox(
-            height: 150,
-          ),
-          Container(
-            decoration: const BoxDecoration(
-                border: Border(
-                    top: BorderSide(
-                        color: Color.fromARGB(255, 233, 235, 235), width: 2))),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 50.h),
-              child: Column(
+            if (isLogged)
+              Column(
                 children: [
-                  ...MenuItems.allLogin.map(buildMenuItem),
-                  SizedBox(
-                    height: 20.h,
-                  ),
                   SideBarLink(
-                    title: 'Dark Mode',
-                    onTap: () {
-                      setState(() => _isDarkMode = !_isDarkMode);
+                    title: 'Logout',
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
+                      await GoogleSignIn().signOut();
+                      setState(() {
+                        isLogged = false;
+                      });
+                      Fluttertoast.showToast(
+                        msg: 'Logout Successfully',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1, // 1 second for iOS/Web
+                        backgroundColor: Colors.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushReplacement(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          ));
                     },
                     icon: Icon(
-                      _isDarkMode ? Icons.sunny : Icons.dark_mode_rounded,
+                      Icons.logout,
+                      color: _isDarkMode ? Colors.white : Colors.black,
+                    ),
+                    isDarkMode: _isDarkMode,
+                  ),
+                  SideBarLink(
+                    title: 'Suscription',
+                    onTap: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SuscriptionScreen(),
+                          ));
+                    },
+                    icon: Icon(
+                      Icons.sell,
                       color: _isDarkMode ? Colors.white : Colors.black,
                     ),
                     isDarkMode: _isDarkMode,
                   ),
                 ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildMenuItem(MenuItem item) => ListTileTheme(
-        selectedColor: _isDarkMode ? Colors.white : Colors.black,
-        child: ListTile(
-          selectedTileColor: _isDarkMode ? Colors.white24 : Colors.black26,
-          selected: widget.currentItem == item,
-          minLeadingWidth: 20,
-          leading: Icon(
-            item.icon,
-            color: _isDarkMode ? Colors.white : Colors.black,
-          ),
-          title: Text(
-            item.title,
-            style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
-          ),
-          onTap: () => widget.onSelectItem(item),
-        ),
-      );
-}
-
-
-/*
-// ignore_for_file: use_super_parameters
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:templates_flutter_app/constants.dart';
-import 'package:templates_flutter_app/screens/sidebar/widget/sidebar_link.dart';
-
-class MenuItems {
-  static const home = MenuItem('Home', Icons.home);
-  static const about = MenuItem(
-    'About',
-    Icons.add_box_outlined,
-  );
-  static const chat = MenuItem(
-    'Chat Bot',
-    Icons.chat_bubble,
-  );
-  static const all = <MenuItem>[home, about, chat];
-}
-
-class MenuItem {
-  final String title;
-  final IconData icon;
-  const MenuItem(this.title, this.icon);
-}
-
-class SidebarScreen extends StatefulWidget {
-  final MenuItem currentItem;
-  final ValueChanged<MenuItem> onSelectItem;
-  const SidebarScreen(
-      {super.key, required this.currentItem, required this.onSelectItem});
-
-  @override
-  State<SidebarScreen> createState() => _SidebarScreenState();
-}
-
-class _SidebarScreenState extends State<SidebarScreen> {
-  bool _isDarkMode = false;
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: _isDarkMode ? Colors.black : Colors.white,
-      borderRadius: BorderRadius.only(topRight: Radius.circular(30.sp)),
-      child: ListView(
-        padding: const EdgeInsets.symmetric(
-            horizontal: aDefaultPadding, vertical: aDefaultPadding * 2),
-        children: [
-          ListTile(
-            title: Text(
-              'User: not found\nPlease Login your account',
-              style: TextStyle(
-                color: _isDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 70.h,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ...MenuItems.all.map(buildMenuItem),
-            ],
-          ),
-          const SizedBox(
-            height: 200,
-          ),
-          Container(
-            decoration: const BoxDecoration(
-                border: Border(
-                    top: BorderSide(
-                        color: Color.fromARGB(255, 233, 235, 235), width: 2))),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 50.h),
-              child: Column(
+              )
+            else if (!isLogged)
+              Column(
                 children: [
-                  SideBarLink(
-                    title: 'Login',
+                  ListTile(
+                    title: const Text('Iniciar Sesión'),
                     onTap: () {
-                      Navigator.push(context, e);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          )); // Redirige a la pantalla de login
                     },
-                    icon: Icon(
-                      Icons.login_rounded,
-                      color: _isDarkMode ? Colors.white : Colors.black,
-                    ),
-                    isDarkMode: _isDarkMode,
                   ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  SideBarLink(
-                    title: 'Dark Mode',
+                  ListTile(
+                    title: const Text('Registrarse'),
                     onTap: () {
-                      setState(() => _isDarkMode = !_isDarkMode);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterScreen(),
+                          )); // Redirige a la pantalla de login
                     },
-                    icon: Icon(
-                      _isDarkMode ? Icons.sunny : Icons.dark_mode_rounded,
-                      color: _isDarkMode ? Colors.white : Colors.black,
-                    ),
-                    isDarkMode: _isDarkMode,
                   ),
                 ],
-              ),
-            ),
-          ),
-        ],
+              )
+          ],
+        ),
       ),
     );
   }
-
-  Widget buildMenuItem(MenuItem item) => ListTileTheme(
-        selectedColor: _isDarkMode ? Colors.white : Colors.black,
-        child: ListTile(
-          selectedTileColor: _isDarkMode ? Colors.white24 : Colors.black26,
-          selected: widget.currentItem == item,
-          minLeadingWidth: 20,
-          leading: Icon(
-            item.icon,
-            color: _isDarkMode ? Colors.white : Colors.black,
-          ),
-          title: Text(
-            item.title,
-            style: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
-          ),
-          onTap: () => widget.onSelectItem(item),
-        ),
-      );
 }
-
- */

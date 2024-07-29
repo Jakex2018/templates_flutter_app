@@ -1,12 +1,10 @@
-// ignore_for_file: unused_local_variable, no_leading_underscores_for_local_identifiers
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:templates_flutter_app/common/routes/name.dart';
 import 'package:templates_flutter_app/global.dart';
-import 'package:templates_flutter_app/screens/sidebar/sidebar_screen.dart';
-
-/*CONNECT FIREBASE */
+import 'package:templates_flutter_app/screens/home/home_app.dart';
+import 'package:templates_flutter_app/screens/login/login_screen.dart';
+import 'package:templates_flutter_app/screens/register/register_screen.dart';
+import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
 
 Future<void> main() async {
   await Global.init();
@@ -24,27 +22,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  MenuItem currentItem = MenuItems.home;
-  final controller = ZoomDrawerController();
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: ZoomDrawer(
-            menuScreen: Builder(
-              builder: (context) => SidebarScreen(
-                  currentItem: currentItem,
-                  onSelectItem: (item) {
-                    setState(() => currentItem = item);
-                    ZoomDrawer.of(context)!.close();
-                  }),
-            ),
-            showShadow: true,
-            style: DrawerStyle.style1,
-            controller: controller,
-            slideHeight: MediaQuery.of(context).size.height,
-            mainScreen: getScreen(currentItem)),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/home',
+        routes: {
+          '/login': (context) => const Login(),
+          '/home': (context) => const Home(),
+          '/register': (context) => const RegisterScreen(),
+          '/suscription':(context) => const SuscriptionScreen()
+        },
       ),
     );
   }

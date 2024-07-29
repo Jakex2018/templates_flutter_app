@@ -1,7 +1,8 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/constants.dart';
-import 'package:gif_view/gif_view.dart';
+
 
 class LoginBackground extends StatelessWidget {
   const LoginBackground(
@@ -21,18 +22,14 @@ class LoginBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      GifView(
-        height: MediaQuery.of(context).size.height * .5,
-        image: const AssetImage('asset/bg_01_animate.gif'),
-        fit: BoxFit.fitHeight,
-      ),
+      
       Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         color: kblueColor.withOpacity(.73),
       ),
       Positioned(
-        top: 28.h,
+        top: 40.h,
         left: 10.w,
         child: Row(
           children: [
