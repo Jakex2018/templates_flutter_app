@@ -6,11 +6,11 @@ class SideBarLink extends StatelessWidget {
     required this.title,
     required this.onTap,
     required this.icon,
-    required this.isDarkMode,
+    //required this.isDarkMode,
   });
-  final bool isDarkMode;
+  //final bool isDarkMode;
   final String title;
-  final VoidCallback onTap;
+  final Function()? onTap;
   final Icon icon;
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class SideBarLink extends StatelessWidget {
       title: Text(
         title,
         style: TextStyle(
-          color: isDarkMode ? Colors.white : Colors.black,
+          color: Theme.of(context).colorScheme.inversePrimary,
         ),
       ),
       onTap: onTap,

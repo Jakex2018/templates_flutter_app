@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,6 +6,7 @@ import 'package:templates_flutter_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
+import 'package:templates_flutter_app/screens/login/login_screen.dart';
 
 class RegisterTercerd extends StatefulWidget {
   const RegisterTercerd({
@@ -27,6 +29,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
         children: [
           Image.asset(
             'asset/login_01.png',
+            color: Theme.of(context).colorScheme.inversePrimary,
             height: 50.h,
           ),
           SizedBox(
@@ -48,7 +51,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
   }
 
   void navigateHome() {
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const Home(),
@@ -56,12 +59,24 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
   }
 
   Future<void> _signInGoogle(googleSignIn) async {
-    await FirebaseAuth.instance.signOut();
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+        msg: 'No internet connection.',
+        toastLength: Toast.LENGTH_SHORT,
+        // ... other toast configuration
+      );
+      return; // Prevent further execution if no internet
+    }
+
     try {
+      await FirebaseAuth.instance.signOut();
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
       if (googleUser == null) {
         return;
       }
+
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -80,9 +95,9 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       Fluttertoast.showToast(
-        msg: e.message.toString(),
+        msg: 'Please connect Internet.',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,

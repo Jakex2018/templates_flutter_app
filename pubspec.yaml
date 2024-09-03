@@ -52,6 +52,9 @@ dependencies:
   carousel_slider: ^4.2.1
   shared_preferences: ^2.2.3
   google_sign_in: ^6.2.1
+  gif_view: ^0.4.4
+  connectivity_plus: ^5.0.2
+  provider: ^6.1.2
   
   
 

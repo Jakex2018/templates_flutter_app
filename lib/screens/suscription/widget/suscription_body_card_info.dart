@@ -62,7 +62,7 @@ class SuscriptionBodyCardInfo extends StatelessWidget {
                             ),
                             Text(
                               item['desc']['desc01'],
-                              style: TextStyle(fontSize: 14.sp),
+                              style: TextStyle(fontSize: 14.sp, color:Colors.black),
                             ),
                           ],
                         ),
@@ -74,7 +74,7 @@ class SuscriptionBodyCardInfo extends StatelessWidget {
                             ),
                             Text(
                               item['desc']['desc02'],
-                              style: TextStyle(fontSize: 14.sp),
+                              style: TextStyle(fontSize: 14.sp, color:Colors.black),
                             ),
                           ],
                         ),
@@ -86,7 +86,7 @@ class SuscriptionBodyCardInfo extends StatelessWidget {
                             ),
                             Text(
                               item['desc']['desc03'],
-                              style: TextStyle(fontSize: 14.sp),
+                              style: TextStyle(fontSize: 14.sp, color:Colors.black),
                             ),
                           ],
                         )

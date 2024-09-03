@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:templates_flutter_app/screens/template/widget/template_option.dart';
 import 'package:templates_flutter_app/screens/template/widget/template_web_app.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:templates_flutter_app/constants.dart';
 
 class TemplateBody extends StatelessWidget {
   const TemplateBody(
@@ -26,16 +25,14 @@ class TemplateBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          height: 41.h,
+          height: 53.h,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-              color: kblueColor,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.sp),
-                  topRight: Radius.circular(20.sp))),
+            color: Theme.of(context).colorScheme.onTertiary,
+          ),
           child: Center(
               child: Text(
             title,
@@ -48,7 +45,7 @@ class TemplateBody extends StatelessWidget {
         Container(
           height: 560.h,
           width: MediaQuery.of(context).size.width,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -68,9 +65,9 @@ class TemplateBody extends StatelessWidget {
                   onTap: () async {
                     await fetchDownloadImage(image);
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.download_for_offline_rounded,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     size: 40,
                   ),
                 ),
@@ -79,9 +76,9 @@ class TemplateBody extends StatelessWidget {
                 ),
                 TemplateOption(
                     title: 'Source Code',
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.code,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                       size: 40,
                     ),
                     onTap: () async {
@@ -92,9 +89,9 @@ class TemplateBody extends StatelessWidget {
                 ),
                 TemplateOption(
                   title: 'Demo',
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.developer_mode,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     size: 40,
                   ),
                   onTap: () async {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:templates_flutter_app/constants.dart';
 
 class HomeTypeContent extends StatelessWidget {
   const HomeTypeContent({
@@ -13,8 +12,8 @@ class HomeTypeContent extends StatelessWidget {
     return Container(
       height: 41.h,
       width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(
-        color: kblueColor,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onTertiary,
       ),
       child: Center(
           child: Text(

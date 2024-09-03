@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:templates_flutter_app/screens/home/home_app.dart';
 import 'package:templates_flutter_app/screens/register/widget/register_form.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,31 +14,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Material(
-        child: Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      color: Colors.white,
-      child: Column(
-        children: [
-          GestureDetector(
+        child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
             },
-            child: Container(
-              margin: EdgeInsets.only(top: 40.h, left: 20.w),
-              child: Row(
-                children: [
-                  const Icon(Icons.arrow_back_ios),
-                  SizedBox(width: 10.w,),
-                  Text('Register',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.sp),),
-                ],
-              ),
-            ),
-          ),
-          const RegisterForm(),
-        ],
+            child: const Icon(Icons.arrow_back_rounded)),
+        title: const Text('Register'),
       ),
+      body: const RegisterForm(),
     ));
   }
 }
-

@@ -62,7 +62,7 @@ class OrderBody extends StatelessWidget {
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 20.sp,
-                                color: Colors.black),
+                                color: Theme.of(context).colorScheme.onPrimaryContainer),
                           ))
                     ],
                   ),

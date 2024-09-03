@@ -269,17 +269,20 @@ class PaymentFormSecondary extends StatelessWidget {
           ),
         ),
         Positioned(
-            top: 0,
             left: 40,
-            bottom: 50,
             right: 38,
             child: Container(
               color: Colors.white,
               child: Padding(
                 padding: EdgeInsets.only(left: 10.w),
                 child: Text(
+                  overflow: TextOverflow.ellipsis,
                   'Expiration Date',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 8.sp),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 7.sp,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ))

@@ -38,11 +38,15 @@ class _TemplateState extends State<Template> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Stack(children: [
-        HomeBackground(
-          onPressed: () => Navigator.of(context).pop(),
-          sidebarIcon: Icons.arrow_back_ios_new_outlined,
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Template',
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimaryContainer),
         ),
+      ),
+      body: Stack(children: [
         TemplateBody(
           fetchDownloadImage: _dataService.fetchDownloadImage,
           image: widget.image,
@@ -53,6 +57,6 @@ class _TemplateState extends State<Template> {
           accessDemo: _dataService.accessDemo(widget.image),
         )
       ]),
-    );
+    ));
   }
 }

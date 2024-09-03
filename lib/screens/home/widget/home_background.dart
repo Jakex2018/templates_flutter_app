@@ -22,10 +22,9 @@ class HomeBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      Container(
-        height: MediaQuery.of(context).size.height * .24,
+      SizedBox(
+        height: MediaQuery.of(context).size.height * .12,
         width: MediaQuery.of(context).size.width,
-        color: kblueColor.withOpacity(.73),
       ),
       Positioned(
         top: 30,
@@ -38,7 +37,7 @@ class HomeBackground extends StatelessWidget {
                 Text(
                   title ?? "",
                   style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 32.sp),
                 ),
@@ -55,13 +54,13 @@ class HomeBackground extends StatelessWidget {
               ],
             ),
             Container(
-                padding: EdgeInsets.only(left: 10.w, bottom: 53.h),
+                padding: EdgeInsets.only(left: 0.w, bottom: 53.h),
                 child: IconButton(
                   onPressed: onPressed,
                   icon: Icon(
                     sidebarIcon,
-                    color: Colors.white,
-                    size: 30.sp,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    size: 26.sp,
                   ),
                 ))
           ],

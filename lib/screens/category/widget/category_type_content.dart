@@ -13,11 +13,9 @@ class CategoryTypeContent extends StatelessWidget {
     return Container(
       height: 41.h,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-          color: kblueColor,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.sp),
-              topRight: Radius.circular(20.sp))),
+      decoration: const BoxDecoration(
+        color: kblueColor,
+      ),
       child: Center(
           child: Text(
         title,
