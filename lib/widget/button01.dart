@@ -6,30 +6,24 @@ import 'package:templates_flutter_app/constants.dart';
 
 class ButtonOne extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final Function()? onPressed;
   final Color backgroundColor;
   final Color textColor;
-  final double width;
-  final double height;
-  final double margin;
 
   const ButtonOne({
     super.key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = kpurpleColor,
+    required this.backgroundColor,
     this.textColor = Colors.white,
-    required this.width,
-    required this.height,
-    required this.margin,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: margin.h),
-      width: width.w,
-      height: height.h,
+      margin: const EdgeInsets.symmetric(vertical: 0),
+      width: 180.w,
+      height: 30.h,
       child: ElevatedButton(
         onPressed: onPressed,
         child: Text(text),
@@ -37,7 +31,7 @@ class ButtonOne extends StatelessWidget {
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
           textStyle: TextStyle(
-              fontSize: 20.sp,
+              fontSize: 16.sp,
               fontWeight: FontWeight.bold), // Adjust font size as needed
           shape: RoundedRectangleBorder(
             borderRadius:

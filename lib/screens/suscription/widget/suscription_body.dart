@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
-import 'package:templates_flutter_app/screens/suscription/widget/suscription_body_card_info.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:templates_flutter_app/screens/home/home_app.dart';
+import 'package:templates_flutter_app/screens/payment/payment_screen.dart';
+import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
+import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/widget/button01.dart';
 
 class SuscriptionBody extends StatelessWidget {
   const SuscriptionBody({
@@ -11,181 +15,225 @@ class SuscriptionBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(height: MediaQuery.of(context).size.height * .9),
-      items: infoCard(context)
-          .map((item) => _buildSubscriptionCard(item, context))
-          .toList(),
-    );
-  }
+    final authProvider = Provider.of<AuthUserProvider>(context);
 
-  Widget _buildSubscriptionCard(Map<dynamic, dynamic> item, context) {
+    final userId = authProvider.userId;
+    print("USER $userId");
     return Center(
       child: Container(
-        height: MediaQuery.of(context).size.height * .7,
-        width: MediaQuery.of(context).size.width * .8,
-        margin: EdgeInsets.symmetric(horizontal: 10.w),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: kpurpleColor.withOpacity(.75), width: 10),
-            borderRadius: BorderRadius.circular(20.sp),
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 5.sp,
-                  offset: Offset(0, 5.sp),
-                  color: Colors.black,
-                  spreadRadius: 2.sp)
-            ]),
-        child: SuscriptionBodyCardInfo(item: item),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        height: MediaQuery.of(context).size.height * .75,
+        width: MediaQuery.of(context).size.width * .9,
+        child: ListView.separated(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              final subscriptionProvider =
+                  Provider.of<SuscriptionProvider>(context, listen: false);
+              final suscription = infoCard[index];
+              return Container(
+                width: MediaQuery.of(context).size.width * .8,
+                padding: const EdgeInsetsDirectional.symmetric(vertical: 20),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      height: 170.h,
+                      width: MediaQuery.of(context).size.width * .7,
+                      decoration: BoxDecoration(
+                        color: kpurpleColor,
+                        borderRadius: BorderRadius.circular(20.sp),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          suscription.icon,
+                          Text(suscription.title,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30.sp)),
+                        ],
+                      ),
+                    ),
+                    Column(children: [
+                      for (int i = 0; i < suscription.items.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 50),
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  suscription.items['items0${i + 1}']!,
+                                  height: 65,
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    suscription.desc['desc0${i + 1}']!,
+                                    style: TextStyle(
+                                        fontSize: 14.sp, color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ]),
+                    const SizedBox(
+                      height: 43,
+                    ),
+                    subscriptionProvider.isSuscribed
+                        ? ButtonOne(
+                            text: subscriptionProvider.isSuscribed
+                                ? infoCard[index].cat == SuscriptionCat.free
+                                    ? 'Default'
+                                    : "Cancel"
+                                : infoCard[index].cat == SuscriptionCat.free
+                                    ? 'Default'
+                                    : "Buy",
+                            onPressed: () {
+                              suscription.cat == SuscriptionCat.premium
+                                  ? subscriptionProvider.isSuscribed
+                                      ? showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: const Text(
+                                                'Are you sure you want cancel Suscription?'),
+                                            actions: [
+                                              MaterialButton(
+                                                  onPressed: () async {
+                                                    if (userId != null) {
+                                                      subscriptionProvider
+                                                          .cancelSuscription(
+                                                              userId,
+                                                              subscriptionProvider
+                                                                  .suscriptionEndDate);
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        const SnackBar(
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          duration: Duration(
+                                                              seconds: 3),
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  bottom: 50,
+                                                                  left: 60,
+                                                                  right: 50),
+                                                          content: Text(
+                                                              'Subscription canceled successfully.'),
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        const SnackBar(
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          duration: Duration(
+                                                              seconds: 3),
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  bottom: 50,
+                                                                  left: 60,
+                                                                  right: 50),
+                                                          content: Text(
+                                                              'Failed to cancel subscription: User ID is null.'),
+                                                        ),
+                                                      );
+                                                    }
+
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const Home(),
+                                                        ));
+                                                  },
+                                                  child: const Text("Ok")),
+                                              MaterialButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: const Text("Cancel"),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const PaymentScreen(),
+                                          ))
+                                  : showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text(
+                                            'You have a Member Suscription'),
+                                        actions: [
+                                          MaterialButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text("Cancel"),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                            },
+                            backgroundColor:
+                                infoCard[index].cat == SuscriptionCat.free
+                                    ? kpurpleColor
+                                    : Colors.red.withOpacity(.5),
+                          )
+                        : ButtonOne(
+                            text: infoCard[index].cat == SuscriptionCat.free
+                                ? 'Default'
+                                : "Buy",
+                            onPressed: () {
+                              suscription.cat == SuscriptionCat.premium
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PaymentScreen(),
+                                      ))
+                                  : showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text(
+                                            'You have Default Free Account'),
+                                        actions: [
+                                          MaterialButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text("Cancel"),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                            },
+                            backgroundColor: kpurpleColor,
+                          )
+                  ],
+                ),
+              );
+            },
+            separatorBuilder: (context, index) => const SizedBox(
+                  width: 10,
+                ),
+            itemCount: infoCard.length),
       ),
     );
   }
 }
-
-List<Map> infoCard(BuildContext context) => [
-      {
-        'icon': const Icon(Icons.coffee,
-            size: 50, color:Colors.white),
-        'title': 'Free',
-        'items': {
-          'items01': 'asset/verify.png',
-          'items02': 'asset/verify.png',
-          'items03': 'asset/verify.png',
-        },
-        'desc': {
-          'desc01': 'Templates Free',
-          'desc02': 'Limitated Chat Bot',
-          'desc03': '5 Coins for day IA Chat Bot'
-        }
-      },
-      {
-        'icon': const Icon(
-          Icons.rocket,
-          size: 100,
-          color: Colors.white,
-        ),
-        'title': 'Premium',
-        'items': {
-          'items01': 'asset/verify.png',
-          'items02': 'asset/verify.png',
-          'items03': 'asset/verify.png',
-        },
-        'desc': {
-          'desc01': 'Templates Premium',
-          'desc02': 'Ilimitated Chat Bot',
-          'desc03': 'Ilimitates coins IA Chat Bot'
-        }
-      },
-    ];
-
-/*
-
-class SubscriptionCardData {
-  final String icon;
-  final String title;
-  final Map<String, String> items;
-  final Map<String, String> desc;
-  final String type; // New field to store type (free/premium)
-
-  SubscriptionCardData({
-    required this.icon,
-    required this.title,
-    required this.items,
-    required this.desc,
-    required this.type,
-  });
-
-  factory SubscriptionCardData.fromDocument(DocumentSnapshot doc) {
-    return SubscriptionCardData(
-      icon: doc['icon'],
-      title: doc['title'],
-      items: Map<String, String>.from(doc['items']),
-      desc: Map<String, String>.from(doc['desc']),
-      type: doc['type'], // Access the type field from the document
-    );
-  }
-}
-
- */
-
-/*
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:templates_flutter_app/constants.dart';
-import 'package:templates_flutter_app/screens/suscription/widget/suscription_body_card_info.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-
-class SuscriptionBody extends StatelessWidget {
-  const SuscriptionBody({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(height: MediaQuery.of(context).size.height * .9),
-      items: infoCard
-          .map((item) => _buildSubscriptionCard(item, context))
-          .toList(),
-    );
-  }
-
-  Widget _buildSubscriptionCard(Map<dynamic, dynamic> item, context) {
-    return Center(
-      child: Container(
-        height: MediaQuery.of(context).size.height * .7,
-        width: MediaQuery.of(context).size.width * .8,
-        margin: EdgeInsets.symmetric(horizontal: 10.w),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: kpurpleColor, width: 10),
-            borderRadius: BorderRadius.circular(20.sp),
-            boxShadow: [
-              BoxShadow(
-                  blurRadius: 5.sp,
-                  offset: Offset(0, 5.sp),
-                  color: Colors.black,
-                  spreadRadius: 2.sp)
-            ]),
-        child: SuscriptionBodyCardInfo(item: item),
-      ),
-    );
-  }
-}
-
-List<Map> infoCard = [
-  {
-    'icon': const Icon(Icons.coffee, size: 50, color: Colors.white),
-    'title': 'Free',
-    'items': {
-      'items01': 'asset/verify.png',
-      'items02': 'asset/verify.png',
-      'items03': 'asset/verify.png',
-    },
-    'desc': {
-      'desc01': 'Templates Free',
-      'desc02': 'Limitated Chat Bot',
-      'desc03': '5 Coins for day IA Chat Bot'
-    }
-  },
-  {
-    'icon': const Icon(
-      Icons.rocket,
-      size: 100,
-      color: Colors.white,
-    ),
-    'title': 'Premium',
-    'items': {
-      'items01': 'asset/verify.png',
-      'items02': 'asset/verify.png',
-      'items03': 'asset/verify.png',
-    },
-    'desc': {
-      'desc01': 'Templates Premium',
-      'desc02': 'Ilimitated Chat Bot',
-      'desc03': 'Ilimitates coins IA Chat Bot'
-    }
-  },
-];
-
- */

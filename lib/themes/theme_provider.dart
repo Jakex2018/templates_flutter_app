@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:templates_flutter_app/themes/dark_mode.dart';
 import 'package:templates_flutter_app/themes/light_mode.dart';
 
@@ -15,7 +14,7 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void toogleTheme() async{
+  void toogleTheme() async {
     if (_themeData == lightMode) {
       themeData = darkMode;
     } else {

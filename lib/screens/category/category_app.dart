@@ -87,7 +87,7 @@ class _CategoryState extends State<Category> {
           return Container(
               height: 550.h,
               width: MediaQuery.of(context).size.width,
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.surface,
               child: const Center(child: CircularProgressIndicator()));
         }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 
@@ -44,11 +45,10 @@ class OrderBody extends StatelessWidget {
                   child: Column(
                     children: [
                       ButtonOne(
-                          text: 'View your ticket',
-                          onPressed: () {},
-                          width: 290,
-                          height: 40,
-                          margin: 0),
+                        text: 'View your ticket',
+                        onPressed: () {},
+                        backgroundColor: kpurpleColor,
+                      ),
                       TextButton(
                           onPressed: () {
                             Navigator.pushReplacement(
@@ -62,7 +62,9 @@ class OrderBody extends StatelessWidget {
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 20.sp,
-                                color: Theme.of(context).colorScheme.onPrimaryContainer),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer),
                           ))
                     ],
                   ),

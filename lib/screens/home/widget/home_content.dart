@@ -4,11 +4,13 @@ import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/error/error_screen.dart';
 import 'package:templates_flutter_app/screens/home/widget/home_card.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
 // ignore: must_be_immutable
 class HomeContent extends StatefulWidget {
-  const HomeContent({super.key, required this.isLoggedIn});
-  final bool isLoggedIn;
+  const HomeContent({
+    super.key,
+  });
 
   @override
   State<HomeContent> createState() => _HomeContentState();
@@ -20,9 +22,11 @@ class _HomeContentState extends State<HomeContent> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        showProgress = false;
-      });
+      if (mounted) {
+        setState(() {
+          showProgress = false;
+        });
+      }
     });
   }
 
@@ -36,9 +40,9 @@ class _HomeContentState extends State<HomeContent> {
           }
 
           return Container(
-            height: MediaQuery.of(context).size.height * .7,
+            height: MediaQuery.of(context).size.height * .8,
             width: MediaQuery.of(context).size.width,
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             child: SingleChildScrollView(
               child: Container(
                 margin:
@@ -48,7 +52,7 @@ class _HomeContentState extends State<HomeContent> {
                   child: Column(
                     children: [
                       snapshot.data != ConnectivityResult.none
-                          ? HomeCard(isLoggedIn: widget.isLoggedIn)
+                          ? const HomeCard()
                           : Stack(children: [
                               showProgress
                                   ? Center(
@@ -77,14 +81,3 @@ class _HomeContentState extends State<HomeContent> {
         });
   }
 }
-
-/*
-const Center(
-                            child: SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
- */
-

@@ -1,3 +1,4 @@
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -66,29 +67,6 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation platform('com.google.firebase:firebase-bom:32.7.2')
 }
-/*
-dependencies {
-  // Import the Firebase BoM
-  implementation platform('com.google.firebase:firebase-bom:30.2.0')
-
-  // Add the dependency for the Firebase SDK for Google Analytics
-  // When using the BoM, don't specify versions in Firebase dependencies
-  implementation 'com.google.firebase:firebase-analytics'
-compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
-  // Add the dependencies for any other desired Firebase products
-  // https://firebase.google.com/docs/android/setup#available-libraries
-}
- */
-
-/*
-dependencies {
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation platform('com.google.firebase:firebase-bom:32.7.2')
-}
-
- */
-
 
 /*
 plugins {
@@ -116,15 +94,17 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 android {
     namespace "com.example.templates_flutter_app"
     compileSdkVersion 34
     ndkVersion "26.3.11579264"
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 
     kotlinOptions {
         jvmTarget = '1.8'
@@ -146,11 +126,21 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias = keystoreProperties['keyAlias']
+            keyPassword = keystoreProperties['keyPassword']
+            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword = keystoreProperties['storePassword']
+        }
+    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            // Signing with the debug keys for now,
+            // so `flutter run --release` works.
+            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
         }
     }
 }
@@ -163,4 +153,6 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation platform('com.google.firebase:firebase-bom:32.7.2')
 }
- */
+apply plugin: 'com.google.gms.google-services'
+
+*/

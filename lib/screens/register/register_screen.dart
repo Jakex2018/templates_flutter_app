@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
 import 'package:templates_flutter_app/screens/register/widget/register_form.dart';
 

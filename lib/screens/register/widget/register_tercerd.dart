@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/login/login_screen.dart';
+import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
 class RegisterTercerd extends StatefulWidget {
   const RegisterTercerd({
@@ -18,9 +20,9 @@ class RegisterTercerd extends StatefulWidget {
 }
 
 class _RegisterTercerdState extends State<RegisterTercerd> {
-  bool isLoggedIn = true;
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthUserProvider>(context);
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
     return Center(
@@ -37,8 +39,8 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
           ),
           GestureDetector(
             onTap: () async {
-              await _signInGoogle(googleSignIn);
-              navigateHome();
+              await _signInGoogle(googleSignIn, authProvider);
+              navigateHome(context);
             },
             child: Image.asset(
               'asset/login_02.png',
@@ -50,15 +52,16 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
     );
   }
 
-  void navigateHome() {
-    Navigator.pushReplacement(
+  void navigateHome(BuildContext context) {
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const Home(),
         ));
   }
 
-  Future<void> _signInGoogle(googleSignIn) async {
+  Future<void> _signInGoogle(
+      googleSignIn, AuthUserProvider authProvider) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       Fluttertoast.showToast(
@@ -81,11 +84,24 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
           await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-      await FirebaseAuth.instance.signInWithCredential(credential);
 
-      setState(() {
-        isLoggedIn = true;
-      });
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = userCredential.user;
+      if (user != null) {
+        final userId = user.uid;
+        final email = user.email ?? 'No email';
+
+        final userModel = UserModel(
+            username: user.displayName, isSubscribed: false, email: email);
+
+        ///SAVE USER
+        final userDoc =
+            FirebaseFirestore.instance.collection('users').doc(userId);
+        await userDoc.set(userModel.toMap(), SetOptions(merge: true));
+        authProvider.setLoggedIn(true);
+      }
+
       Fluttertoast.showToast(
         msg: "Login Successfull!!!",
         toastLength: Toast.LENGTH_SHORT,

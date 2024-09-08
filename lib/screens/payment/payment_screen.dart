@@ -1,7 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/order/order_screen.dart';
+import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 
 class PaymentScreen extends StatelessWidget {
@@ -49,20 +55,58 @@ class PaymentBody extends StatelessWidget {
             const PaymentPaypal(),
             const PaymenPrice(),
             ButtonOne(
-                text: 'PLACE ORDER',
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OrderScreen()));
-                },
-                width: MediaQuery.of(context).size.width * .8,
-                height: 30.h,
-                margin: 0)
+              text: 'PLACE ORDER',
+              onPressed: () => userPay(context),
+              backgroundColor: kpurpleColor,
+            )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> userPay(BuildContext context) async {
+    final subscriptionProvider =
+        Provider.of<SuscriptionProvider>(context, listen: false);
+
+    final auth = FirebaseAuth.instance;
+    final userId = auth.currentUser?.uid;
+
+    //save subscribe
+    if (userId != null) {
+      await updateSubscription(
+          userId, true, DateTime.now().add(const Duration(days: 30)));
+
+      subscriptionProvider.setSuscription(
+          true, DateTime.now().add(const Duration(days: 30)));
+    }
+
+    var snackbar = const SnackBar(
+      content: Text('Suscription Successfully',
+          style: TextStyle(color: Colors.white)),
+      behavior: SnackBarBehavior.floating,
+      duration: Duration(seconds: 1),
+      margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
+      backgroundColor: Color.fromARGB(255, 12, 165, 53),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const OrderScreen()));
+  }
+
+  Future<void> updateSubscription(
+      String userId, bool isSubscribed, DateTime expirationDate) async {
+    final db = FirebaseFirestore.instance;
+
+    try {
+      await db.collection('users').doc(userId).update({
+        'isSubscribed': isSubscribed,
+        'subscriptionExpiration': expirationDate,
+      });
+      print('Suscripción actualizada correctamente');
+    } catch (error) {
+      print('Error al actualizar la suscripción:');
+    }
   }
 }
 

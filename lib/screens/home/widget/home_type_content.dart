@@ -14,6 +14,7 @@ class HomeTypeContent extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onTertiary,
+        border: Border.all(color: Colors.white12),
       ),
       child: Center(
           child: Text(

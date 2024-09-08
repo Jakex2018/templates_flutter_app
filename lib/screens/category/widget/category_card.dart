@@ -87,8 +87,11 @@ class _CategoryCardState extends State<CategoryCard> {
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
                               placeholder: (context, url) => ClipRRect(
-                                  borderRadius: BorderRadius.circular(20.sp),
-                                  child: Image.asset('asset/bg_01.jpg')),
+                                  borderRadius: BorderRadius.circular(50.sp),
+                                  child: Image.asset(
+                                    'asset/bg_01.jpg',
+                                    fit: BoxFit.cover,
+                                  )),
                               imageUrl: widget.image,
                               fit: BoxFit.fitHeight,
                               height: 210.h,

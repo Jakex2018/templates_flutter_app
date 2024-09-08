@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
-import 'package:templates_flutter_app/screens/home/widget/home_background.dart';
 import 'package:templates_flutter_app/screens/template/services/template_data_services.dart';
 import 'package:templates_flutter_app/screens/template/widget/template_body.dart';
 

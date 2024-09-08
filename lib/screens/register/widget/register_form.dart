@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/register/widget/register_tercerd.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 
@@ -101,7 +102,6 @@ class _RegisterFormState extends State<RegisterForm> {
               SizedBox(
                 height: 10.h,
               ),
-              
               const RegisterTercerd(),
               SizedBox(
                 height: 2.h,
@@ -138,9 +138,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     );
                   }
                 },
-                width: MediaQuery.of(context).size.width,
-                height: 40.h,
-                margin: 8,
+                backgroundColor: kpurpleColor,
               ),
             ],
           ),

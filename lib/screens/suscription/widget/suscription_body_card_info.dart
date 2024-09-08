@@ -62,7 +62,8 @@ class SuscriptionBodyCardInfo extends StatelessWidget {
                             ),
                             Text(
                               item['desc']['desc01'],
-                              style: TextStyle(fontSize: 14.sp, color:Colors.black),
+                              style: TextStyle(
+                                  fontSize: 14.sp, color: Colors.black),
                             ),
                           ],
                         ),
@@ -74,7 +75,8 @@ class SuscriptionBodyCardInfo extends StatelessWidget {
                             ),
                             Text(
                               item['desc']['desc02'],
-                              style: TextStyle(fontSize: 14.sp, color:Colors.black),
+                              style: TextStyle(
+                                  fontSize: 14.sp, color: Colors.black),
                             ),
                           ],
                         ),
@@ -86,7 +88,8 @@ class SuscriptionBodyCardInfo extends StatelessWidget {
                             ),
                             Text(
                               item['desc']['desc03'],
-                              style: TextStyle(fontSize: 14.sp, color:Colors.black),
+                              style: TextStyle(
+                                  fontSize: 14.sp, color: Colors.black),
                             ),
                           ],
                         )
@@ -102,9 +105,7 @@ class SuscriptionBodyCardInfo extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => const PaymentScreen()));
                     },
-                    width: 130,
-                    height: 40,
-                    margin: 0,
+                    backgroundColor: kpurpleColor,
                   ),
                 )
               ],
