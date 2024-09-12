@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:templates_flutter_app/constants.dart';
+import 'package:templates_flutter_app/screens/register/services/register_user.dart';
 import 'package:templates_flutter_app/screens/register/widget/register_tercerd.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 
@@ -112,31 +110,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   String username = usernameField.text;
                   String email = emailField.text;
                   String password = passwordField.text;
-
-                  try {
-                    await registerUser(username, email, password);
-                    Fluttertoast.showToast(
-                      msg: "Registration Successful!",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1, // 1 second for iOS/Web
-                      backgroundColor: Colors.green,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
-                    );
-                    // ignore: use_build_context_synchronously
-                    Navigator.pushNamed(context, '/home');
-                  } catch (e) {
-                    Fluttertoast.showToast(
-                      msg: "Registration Failed: $e",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1, // 1 second for iOS/Web
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
-                    );
-                  }
+                  await registerUser(username, email, password, context);
                 },
                 backgroundColor: kpurpleColor,
               ),
@@ -165,44 +139,5 @@ class RegisterFormForgot extends StatelessWidget {
             fontWeight: FontWeight.bold),
       ),
     );
-  }
-}
-
-Future<void> registerUser(
-    String username, String email, String password) async {
-  try {
-    final registerCredential = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: password);
-    if (registerCredential.user == null) {
-      Fluttertoast.showToast(
-        msg: "No User Register",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1, // 1 second for iOS/Web
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
-    final user = registerCredential.user;
-    final userDoc = FirebaseFirestore.instance.collection('users');
-    await userDoc
-        .doc(user!.uid)
-        .set({'username': username, 'email': email, 'password': password});
-    if (registerCredential.user != null) {
-      await registerCredential.user?.sendEmailVerification();
-      await registerCredential.user?.updateDisplayName(username);
-      Fluttertoast.showToast(
-        msg: "'An email has been sent to your registered email'",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1, // 1 second for iOS/Web
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-    }
-  } catch (e) {
-    throw Exception('Registration failed due to network error');
   }
 }

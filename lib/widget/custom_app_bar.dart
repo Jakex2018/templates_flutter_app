@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gif_view/gif_view.dart';
-import 'package:templates_flutter_app/constants.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({

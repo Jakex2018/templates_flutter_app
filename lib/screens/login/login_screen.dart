@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
+import 'package:templates_flutter_app/screens/login/services/login_services.dart';
 import 'package:templates_flutter_app/screens/register/widget/register_tercerd.dart';
+import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -16,13 +18,14 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final emailField = TextEditingController();
   final passwordField = TextEditingController();
-  bool isLoggedIn = false;
+
   String email = '';
   String password = '';
   bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthUserProvider>(context);
     return Material(
         child: Scaffold(
       appBar: AppBar(
@@ -111,8 +114,8 @@ class _LoginState extends State<Login> {
                       String emailData = emailField.text;
                       String passwordData = passwordField.text;
                       try {
-                        await loginUser(
-                            context, emailData, passwordData, isLoggedIn);
+                        await LoginServices().loginUser(emailData, passwordData,
+                            context, authProvider.isLogged);
                         // ignore: use_build_context_synchronously
                         Navigator.pushReplacement(
                             // ignore: use_build_context_synchronously
@@ -148,45 +151,6 @@ class _LoginState extends State<Login> {
         ),
       ),
     ));
-  }
-
-  Future<bool> loginUser(BuildContext context, String email, String password,
-      bool isLoggedIn) async {
-    try {
-      final loginCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      if (loginCredential.user == null) {
-        Fluttertoast.showToast(
-          msg: "No User Login",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1, // 1 second for iOS/Web
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      }
-
-      if (loginCredential.user != null) {
-        setState(() {
-          isLoggedIn = true;
-        });
-
-        Fluttertoast.showToast(
-          msg: "Login Successfull!!!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1, // 1 second for iOS/Web
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      }
-    } catch (e) {
-      throw Exception('Login failed due to network error');
-    }
-
-    return false;
   }
 }
 

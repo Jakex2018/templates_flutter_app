@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/category/category_app.dart';
 import 'package:templates_flutter_app/screens/home/services/home_data_services.dart';
+import 'package:templates_flutter_app/screens/home/widget/splash_subscribe.dart';
 import 'package:templates_flutter_app/screens/login/login_screen.dart';
 import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
 import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
@@ -208,7 +209,12 @@ void navigateToCategory(
           context,
           MaterialPageRoute(
               builder: (context) => SplashSuscribe(
+                    titleSuscription: 'Contratulations Are you Member!!!',
                     category: category,
+                    widgetScreen: Category(
+                      type: 'Premium',
+                      category: category['category'] as String,
+                    ),
                   )),
         );
       } else {
@@ -222,6 +228,7 @@ void navigateToCategory(
       context,
       MaterialPageRoute(
         builder: (context) => Category(
+          type: 'Free',
           category: category['category'] as String,
         ),
       ),
@@ -290,94 +297,3 @@ Category(
             ),
  */
 
-class SplashSuscribe extends StatefulWidget {
-  const SplashSuscribe({super.key, required this.category});
-  final Map<String, String> category;
-  @override
-  State<SplashSuscribe> createState() => _SplashSuscribeState();
-}
-
-class _SplashSuscribeState extends State<SplashSuscribe> {
-  late Timer _timer;
-  int _start = 3;
-  @override
-  void initState() {
-    super.initState();
-    //redirect();
-    _startTimer(widget.category);
-  }
-
-  void _startTimer(category) {
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      if (_start == 0) {
-        timer.cancel();
-        if (mounted) {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Category(
-                  category: widget.category['category'] as String,
-                ),
-              ));
-        }
-      } else {
-        setState(() {
-          _start--;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-        ),
-        Center(
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: aDefaultPadding * 2.5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Contratulations Are you Member!!!',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const SizedBox(
-                  child: Text(
-                    'Loading Templates.....',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
-                  ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                Text(
-                  'Redirecting in $_start seconds...',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-}

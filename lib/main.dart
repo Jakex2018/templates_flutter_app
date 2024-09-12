@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:templates_flutter_app/common/bloc_providers.dart';
+import 'package:templates_flutter_app/common/routes/name.dart';
 import 'package:templates_flutter_app/global.dart';
-import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/login/login_screen.dart';
-import 'package:templates_flutter_app/screens/register/register_screen.dart';
-import 'package:templates_flutter_app/screens/splash/splash_screeen.dart';
-import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
-import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/themes/theme_provider.dart';
@@ -24,7 +19,7 @@ class ConnectivityModel extends ChangeNotifier {
       _connectivityResult = result;
       notifyListeners();
     } catch (e) {
-      print('Error al verificar la conectividad: $e');
+      //print('Error al verificar la conectividad: $e');
     }
   }
 
@@ -40,29 +35,7 @@ Future<void> main() async {
   Connectivity().checkConnectivity();
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => ConnectivityModel()..initConnectivity(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ThemeProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => SuscriptionProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AuthUserProvider(),
-        ),
-        ChangeNotifierProxyProvider<AuthUserProvider, SuscriptionProvider>(
-          create: (context) => SuscriptionProvider(),
-          update: (context, authProvider, subscriptionProvider) {
-            subscriptionProvider?.loadSubscriptionState(authProvider.isLogged
-                ? 'userId'
-                : ''); // Asegúrate de pasar el userId correcto
-            return subscriptionProvider!;
-          },
-        ),
-      ],
+      providers: [...AppProvider.AllProviders],
       child: const MyApp(),
     ),
   );
@@ -96,18 +69,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-final routes = <String, WidgetBuilder>{
-  '/splash': (context) => const SplashScreeen(),
-  '/login': (context) => const Login(),
-  '/home': (context) => const Home(),
-  '/register': (context) => const RegisterScreen(),
-  '/suscription': (context) => const SuscriptionScreen()
-};
-
-
-
-/*
-./gradlew clean
-./gradlew build
- */

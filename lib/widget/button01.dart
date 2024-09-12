@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:templates_flutter_app/constants.dart';
 
 class ButtonOne extends StatelessWidget {
   final String text;

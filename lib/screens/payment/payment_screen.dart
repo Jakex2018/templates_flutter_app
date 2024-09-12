@@ -1,6 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -74,11 +72,14 @@ class PaymentBody extends StatelessWidget {
 
     //save subscribe
     if (userId != null) {
-      await updateSubscription(
-          userId, true, DateTime.now().add(const Duration(days: 30)));
+      final expiryTime = DateTime.now().add(const Duration(seconds: 20));
 
-      subscriptionProvider.setSuscription(
-          true, DateTime.now().add(const Duration(days: 30)));
+      final nowTime = DateTime.now();
+
+      await subscriptionProvider.activateSubscription(
+          userId, true, nowTime, expiryTime);
+
+      // subscriptionProvider.setSuscription(true);
     }
 
     var snackbar = const SnackBar(
@@ -92,21 +93,6 @@ class PaymentBody extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const OrderScreen()));
-  }
-
-  Future<void> updateSubscription(
-      String userId, bool isSubscribed, DateTime expirationDate) async {
-    final db = FirebaseFirestore.instance;
-
-    try {
-      await db.collection('users').doc(userId).update({
-        'isSubscribed': isSubscribed,
-        'subscriptionExpiration': expirationDate,
-      });
-      print('Suscripción actualizada correctamente');
-    } catch (error) {
-      print('Error al actualizar la suscripción:');
-    }
   }
 }
 

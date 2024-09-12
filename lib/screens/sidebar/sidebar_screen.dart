@@ -37,7 +37,7 @@ class _SidebarState extends State<Sidebar> {
           BoxShadow(offset: Offset(0, 15), spreadRadius: 5, blurRadius: 10)
         ], borderRadius: BorderRadius.circular(30.sp)),
         child: SideBarBody(
-          isLoggedIn: widget.isLoggedIn.isLogged,
+          isLoggedIn: widget.isLoggedIn,
           username: widget.username,
         ));
   }

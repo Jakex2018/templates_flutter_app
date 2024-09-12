@@ -40,6 +40,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
           GestureDetector(
             onTap: () async {
               await _signInGoogle(googleSignIn, authProvider);
+              // ignore: use_build_context_synchronously
               navigateHome(context);
             },
             child: Image.asset(

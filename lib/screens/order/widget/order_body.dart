@@ -51,7 +51,7 @@ class OrderBody extends StatelessWidget {
                       ),
                       TextButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const Home(),

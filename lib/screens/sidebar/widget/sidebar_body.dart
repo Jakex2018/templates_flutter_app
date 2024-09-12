@@ -22,7 +22,7 @@ class SideBarBody extends StatefulWidget {
       required this.isLoggedIn,
       required this.username});
   //bool isDarkMode;
-  bool isLoggedIn;
+  AuthUserProvider isLoggedIn;
   final String username;
   @override
   State<SideBarBody> createState() => _SideBarBodyState();
@@ -41,7 +41,8 @@ class _SideBarBodyState extends State<SideBarBody> {
               child: Text(
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.inversePrimary),
-                widget.isLoggedIn == false
+                // ignore: unrelated_type_equality_checks
+                !widget.isLoggedIn.isLogged
                     ? 'Hola, Invitado!'
                     : widget.username.isNotEmpty
                         ? 'Hola,${widget.username}'
@@ -50,7 +51,7 @@ class _SideBarBodyState extends State<SideBarBody> {
             ),
           ),
           linkNotUser(context),
-          if (widget.isLoggedIn) linkToUser(context),
+          if (widget.isLoggedIn.isLogged) linkToUser(context),
           themeModeOption(),
         ],
       ),
@@ -120,6 +121,7 @@ class _SideBarBodyState extends State<SideBarBody> {
               );
               // ignore: use_build_context_synchronously
               Navigator.pushAndRemoveUntil(
+                // ignore: use_build_context_synchronously
                 context,
                 MaterialPageRoute(
                   builder: (context) => const Home(),
@@ -165,7 +167,7 @@ class _SideBarBodyState extends State<SideBarBody> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!widget.isLoggedIn)
+        if (!widget.isLoggedIn.isLogged)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

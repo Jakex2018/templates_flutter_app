@@ -4,7 +4,6 @@ import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/error/error_screen.dart';
 import 'package:templates_flutter_app/screens/home/widget/home_card.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
 // ignore: must_be_immutable
 class HomeContent extends StatefulWidget {

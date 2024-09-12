@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserModel {
   String? email;
   String? username;
-  bool isSubscribed;
+  bool? isSubscribed;
 
   UserModel({this.email = '', this.username = "", this.isSubscribed = false});
 
@@ -16,6 +16,7 @@ class UserModel {
       isSubscribed: map['isSubscribed'] ?? false,
     );
   }
+
   Map<String, dynamic> toMap() {
     return {'email': email, 'username': username, 'isSubscribed': isSubscribed};
   }
@@ -54,8 +55,8 @@ class AuthUserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  String? getUserId() {
+  String getUserId() {
     final user = FirebaseAuth.instance.currentUser;
-    return user?.uid;
+    return user!.uid;
   }
 }
