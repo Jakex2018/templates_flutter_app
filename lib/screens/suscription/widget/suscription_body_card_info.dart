@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/payment/payment_screen.dart';
+import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 
 class SuscriptionBodyCardInfo extends StatelessWidget {
   const SuscriptionBodyCardInfo({
     super.key,
     required this.item,
+    required this.suscription,
   });
+  final SuscriptionModel suscription;
   final Map<dynamic, dynamic> item;
   @override
   Widget build(BuildContext context) {
@@ -79,7 +82,9 @@ class SuscriptionBodyCardInfo extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PaymentScreen()));
+                        builder: (context) => PaymentScreen(
+                              suscription: suscription,
+                            )));
               },
               backgroundColor: kpurpleColor,
             ),

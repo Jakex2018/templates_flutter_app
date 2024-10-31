@@ -21,7 +21,9 @@ class _CategoryCardState extends State<CategoryCard> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ConnectivityResult>(
-        stream: Connectivity().onConnectivityChanged,
+        stream: Connectivity()
+            .onConnectivityChanged
+            .map((results) => results.first),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Text('Error de conectividad');
@@ -87,7 +89,7 @@ class _CategoryCardState extends State<CategoryCard> {
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
                               placeholder: (context, url) => ClipRRect(
-                                  borderRadius: BorderRadius.circular(50.sp),
+                                  borderRadius: BorderRadius.circular(30.sp),
                                   child: Image.asset(
                                     'asset/bg_01.jpg',
                                     fit: BoxFit.cover,

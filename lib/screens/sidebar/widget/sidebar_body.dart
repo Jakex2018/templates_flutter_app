@@ -36,24 +36,27 @@ class _SideBarBodyState extends State<SideBarBody> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
-            child: Center(
-              child: Text(
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary),
-                // ignore: unrelated_type_equality_checks
-                !widget.isLoggedIn.isLogged
-                    ? 'Hola, Invitado!'
-                    : widget.username.isNotEmpty
-                        ? 'Hola,${widget.username}'
-                        : 'Hola, Invitado!',
-              ),
-            ),
-          ),
+          _buildHeader(context),
           linkNotUser(context),
           if (widget.isLoggedIn.isLogged) linkToUser(context),
           themeModeOption(),
         ],
+      ),
+    );
+  }
+
+  DrawerHeader _buildHeader(BuildContext context) {
+    return DrawerHeader(
+      child: Center(
+        child: Text(
+          style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+          // ignore: unrelated_type_equality_checks
+          !widget.isLoggedIn.isLogged
+              ? 'Hola, Invitado!'
+              : widget.username.isNotEmpty
+                  ? 'Hola,${widget.username}'
+                  : 'Hola, Invitado!',
+        ),
       ),
     );
   }
@@ -98,6 +101,7 @@ class _SideBarBodyState extends State<SideBarBody> {
                 Provider.of<AuthUserProvider>(context, listen: false);
             final connectivityResult =
                 await (Connectivity().checkConnectivity());
+            // ignore: unrelated_type_equality_checks
             if (connectivityResult == ConnectivityResult.none) {
               Fluttertoast.showToast(
                 msg: 'No internet connection.',
@@ -110,15 +114,16 @@ class _SideBarBodyState extends State<SideBarBody> {
               await FirebaseAuth.instance.signOut();
               await GoogleSignIn().signOut();
               authProvider.setLoggedIn(false);
-              Fluttertoast.showToast(
-                msg: 'Logout Successfully',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0,
+              // ignore: use_build_context_synchronously
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: Duration(seconds: 4),
+                  margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
+                  content: Text('Logout Successfully'),
+                ),
               );
+
               // ignore: use_build_context_synchronously
               Navigator.pushAndRemoveUntil(
                 // ignore: use_build_context_synchronously

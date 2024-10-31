@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
@@ -25,7 +24,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthUserProvider>(context);
+    final authProvider =
+        Provider.of<AuthUserProvider>(context, listen: false).isLogged;
     return Material(
         child: Scaffold(
       appBar: AppBar(
@@ -113,27 +113,9 @@ class _LoginState extends State<Login> {
                     onPressed: () async {
                       String emailData = emailField.text;
                       String passwordData = passwordField.text;
-                      try {
-                        await LoginServices().loginUser(emailData, passwordData,
-                            context, authProvider.isLogged);
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushReplacement(
-                            // ignore: use_build_context_synchronously
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Home(),
-                            ));
-                      } catch (e) {
-                        Fluttertoast.showToast(
-                          msg: "Login Failed: $e",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1, // 1 second for iOS/Web
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
-                      }
+
+                      await LoginServices().loginUser(
+                          emailData, passwordData, context, authProvider);
                     },
                     child: Text(
                       'Iniciar sesión',

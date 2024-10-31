@@ -64,6 +64,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
   Future<void> _signInGoogle(
       googleSignIn, AuthUserProvider authProvider) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
+    // ignore: unrelated_type_equality_checks
     if (connectivityResult == ConnectivityResult.none) {
       Fluttertoast.showToast(
         msg: 'No internet connection.',
@@ -102,15 +103,14 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
         await userDoc.set(userModel.toMap(), SetOptions(merge: true));
         authProvider.setLoggedIn(true);
       }
-
-      Fluttertoast.showToast(
-        msg: "Login Successfull!!!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
+// ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 4),
+          margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
+          content: Text("Login Successfull!!!"),
+        ),
       );
     } on FirebaseAuthException {
       Fluttertoast.showToast(

@@ -1,9 +1,11 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:templates_flutter_app/common/back_services.dart';
 import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
 
 class SuscriptionModel {
   final String title;
@@ -11,8 +13,10 @@ class SuscriptionModel {
   final SuscriptionCat? cat;
   final Map<String, String> desc;
   final Map<String, String> items;
+  final double? price;
 
   SuscriptionModel({
+    this.price,
     required this.cat,
     required this.desc,
     required this.items,
@@ -38,6 +42,7 @@ final List<SuscriptionModel> infoCard = [
     cat: SuscriptionCat.free,
   ),
   SuscriptionModel(
+      price: 4.99,
       title: 'Premium',
       desc: {
         'desc01': 'Templates Premium',
@@ -193,6 +198,30 @@ class SuscriptionProvider with ChangeNotifier {
                   ),
                 );
               }
+              const InitializationSettings initializationSettings =
+                  InitializationSettings(
+                android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+              );
+              // ignore: use_build_context_synchronously
+              flutterLocalNotificationsPlugin.initialize(
+                initializationSettings,
+                onDidReceiveNotificationResponse:
+                    (NotificationResponse response) {
+                  final payload = response.payload;
+                  if (payload != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SuscriptionScreen(),
+                      ),
+                    );
+
+                    flutterLocalNotificationsPlugin.cancel(13123);
+                  }
+                },
+              );
+              // ignore: use_build_context_synchronously
+              showrNotificacions(context);
             } else {
               //('Subscription is still valid.');
             }
@@ -235,3 +264,29 @@ class SuscriptionProvider with ChangeNotifier {
     _timer?.cancel();
   }
 }
+
+/*
+const InitializationSettings initializationSettings =
+                  InitializationSettings(
+                android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+              );
+ */
+/*
+ flutterLocalNotificationsPlugin.initialize(
+                initializationSettings,
+                onDidReceiveNotificationResponse:
+                    (NotificationResponse response) {
+                  final payload = response.payload;
+                  if (payload != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SuscriptionScreen(),
+                      ),
+                    );
+
+                    flutterLocalNotificationsPlugin.cancel(13123);
+                  }
+                },
+              );
+ */

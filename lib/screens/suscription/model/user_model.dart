@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,13 @@ class UserModel {
       email: map['email'] ?? '',
       username: map['username'] ?? '',
       isSubscribed: map['isSubscribed'] ?? false,
+    );
+  }
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      email: json['email'] as String,
+      username: json['username'] as String,
+      isSubscribed: json['isSubscribed'] as bool,
     );
   }
 
@@ -58,5 +66,19 @@ class AuthUserProvider with ChangeNotifier {
   String getUserId() {
     final user = FirebaseAuth.instance.currentUser;
     return user!.uid;
+  }
+
+  Future<UserModel> getUserData() async {
+    // Reemplaza 'users' con el nombre real de tu colección de usuarios
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(_userId).get();
+
+    if (userDoc.exists) {
+      final userData = userDoc.data() as Map<String, dynamic>;
+
+      return UserModel.fromJson(userData);
+    } else {
+      throw Exception('User not found');
+    }
   }
 }

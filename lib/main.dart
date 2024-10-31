@@ -1,41 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:templates_flutter_app/common/bloc_providers.dart';
 import 'package:templates_flutter_app/common/routes/name.dart';
+import 'package:templates_flutter_app/common/services/admob_services.dart';
+import 'package:templates_flutter_app/common/services/intialize_app.dart';
 import 'package:templates_flutter_app/global.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/themes/theme_provider.dart';
-
-class ConnectivityModel extends ChangeNotifier {
-  ConnectivityResult _connectivityResult = ConnectivityResult.none;
-
-  ConnectivityResult get connectivityResult => _connectivityResult;
-
-  Future<void> initConnectivity() async {
-    try {
-      final result = await Connectivity().checkConnectivity();
-      _connectivityResult = result;
-      notifyListeners();
-    } catch (e) {
-      //print('Error al verificar la conectividad: $e');
-    }
-  }
-
-  void onConnectivityChanged(ConnectivityResult result) {
-    _connectivityResult = result;
-    notifyListeners();
-  }
-}
 
 Future<void> main() async {
   await Global.init();
   WidgetsFlutterBinding.ensureInitialized();
-  Connectivity().checkConnectivity();
+  await initializeApp();
+  final initAd = MobileAds.instance.initialize();
+  final admobServices = AdmobServices(initAd);
+
   runApp(
     MultiProvider(
-      providers: [...AppProvider.AllProviders],
+      providers: [
+        ...AppProvider.AllProviders,
+        Provider.value(value: admobServices)
+      ],
       child: const MyApp(),
     ),
   );
@@ -46,6 +33,18 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
+}
+
+final navigatorKey = GlobalKey<NavigatorState>();
+void dialogi() {
+  showDialog(
+    context: navigatorKey.currentContext!,
+    builder: (context) {
+      return AlertDialog(
+        actions: [ElevatedButton(onPressed: () {}, child: const Text('asdas'))],
+      );
+    },
+  );
 }
 
 class _MyAppState extends State<MyApp> {
@@ -61,6 +60,7 @@ class _MyAppState extends State<MyApp> {
     ]);
     return ScreenUtilInit(
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         theme: Provider.of<ThemeProvider>(context).themeData,
         debugShowCheckedModeBanner: false,
         initialRoute: '/splash',

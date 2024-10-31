@@ -12,14 +12,30 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:templates_flutter_app/constants.dart';
 
 class TemplateDataService {
+  Future<void> getData(
+      TemplateDataService dataService,
+      String image,
+      Function setState,
+      String name,
+      String urlRepository,
+      String nameImage) async {
+    final getNameTemplate = await dataService.fetchNameTemplate(image);
+    final fetchUrlTemplate = await dataService.fetchUrlTemplate(image);
+    final fetchGetNameImage = await dataService.fetchGetNameImage(image);
+    setState(() {
+      name = getNameTemplate ?? "";
+      urlRepository = fetchUrlTemplate ?? "";
+      nameImage = fetchGetNameImage ?? "";
+    });
+  }
+
   Future<WebApp?> accessDemo(String image) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('templates')
         .where('image', isEqualTo: image)
         .get();
     if (snapshot.docs.isNotEmpty) {
-      final url =
-          snapshot.docs[0].get('urlDemo');
+      final url = snapshot.docs[0].get('urlDemo');
       return WebApp(url: url);
     } else {
       return null;

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Your Web App</title>
+</head>
+
+<body>
+    <input type="file" id="fileInput" style="display: none;">
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            // Send the file information to Flutter (explained later)
+            window.postMessage({ type: 'fileSelected', data: file });
+        });
+    </script>
+</body>
+
+</html>

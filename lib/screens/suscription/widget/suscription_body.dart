@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
-import 'package:templates_flutter_app/screens/home/home_app.dart';
 import 'package:templates_flutter_app/screens/payment/payment_screen.dart';
 import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
 import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/suscription/services/suscription_services.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 
-class SuscriptionBody extends StatelessWidget {
+class SuscriptionBody extends StatefulWidget {
   const SuscriptionBody({
     super.key,
   });
 
   @override
+  State<SuscriptionBody> createState() => _SuscriptionBodyState();
+}
+
+class _SuscriptionBodyState extends State<SuscriptionBody> {
+  @override
   Widget build(BuildContext context) {
+    final suscriptionServices = SuscriptionServices();
     final authProvider = Provider.of<AuthUserProvider>(context);
     final userId = authProvider.userId;
     return Center(
@@ -22,12 +28,13 @@ class SuscriptionBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         height: MediaQuery.of(context).size.height * .75,
         width: MediaQuery.of(context).size.width * .9,
-        child: listViewSuscriptions(userId),
+        child: listViewSuscriptions(userId, suscriptionServices),
       ),
     );
   }
 
-  Widget listViewSuscriptions(String? userId) {
+  Widget listViewSuscriptions(
+      String? userId, SuscriptionServices suscriptionServices) {
     return ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -35,8 +42,8 @@ class SuscriptionBody extends StatelessWidget {
           final subscriptionProvider =
               Provider.of<SuscriptionProvider>(context, listen: false);
           final suscription = infoCard[index];
-          return listViewContent(
-              context, suscription, subscriptionProvider, index, userId);
+          return listViewContent(context, suscription, subscriptionProvider,
+              index, userId, suscriptionServices);
         },
         separatorBuilder: (context, index) => const SizedBox(
               width: 10,
@@ -44,8 +51,13 @@ class SuscriptionBody extends StatelessWidget {
         itemCount: infoCard.length);
   }
 
-  Widget listViewContent(BuildContext context, SuscriptionModel suscription,
-      SuscriptionProvider subscriptionProvider, int index, String? userId) {
+  Widget listViewContent(
+      BuildContext context,
+      SuscriptionModel suscription,
+      SuscriptionProvider subscriptionProvider,
+      int index,
+      String? userId,
+      SuscriptionServices suscriptionServices) {
     return Container(
       width: MediaQuery.of(context).size.width * .8,
       padding: const EdgeInsetsDirectional.symmetric(vertical: 20),
@@ -79,13 +91,13 @@ class SuscriptionBody extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: Container(
-                  margin: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Image.asset(
                         suscription.items['items0${i + 1}']!,
-                        height: 65,
+                        height: 60,
                       ),
                       SizedBox(
                         width: 100,
@@ -101,7 +113,15 @@ class SuscriptionBody extends StatelessWidget {
               ),
           ]),
           const SizedBox(
-            height: 43,
+            height: 20,
+          ),
+          Text(
+            suscription.price != null ? '\$${suscription.price}/Month' : '',
+            style: const TextStyle(
+                fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: 3),
+          ),
+          const SizedBox(
+            height: 30,
           ),
           subscriptionProvider.isSuscribed
               ? ButtonOne(
@@ -112,8 +132,8 @@ class SuscriptionBody extends StatelessWidget {
                       : infoCard[index].cat == SuscriptionCat.free
                           ? 'Default'
                           : "Buy",
-                  onPressed: () => handleCancelSuscription(
-                      context, suscription, subscriptionProvider, userId),
+                  onPressed: () => handleCancelSuscription(context, suscription,
+                      subscriptionProvider, userId, suscriptionServices),
                   backgroundColor: infoCard[index].cat == SuscriptionCat.free
                       ? kpurpleColor
                       : Colors.red.withOpacity(.5),
@@ -140,7 +160,9 @@ class SuscriptionBody extends StatelessWidget {
         ? Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const PaymentScreen(),
+              builder: (context) => PaymentScreen(
+                suscription: suscription,
+              ),
             ))
         : showDialog(
             context: context,
@@ -156,79 +178,23 @@ class SuscriptionBody extends StatelessWidget {
           );
   }
 
-  handleCancelSuscription(BuildContext context, SuscriptionModel suscription,
-      SuscriptionProvider subscriptionProvider, String? userId) {
+  handleCancelSuscription(
+      BuildContext context,
+      SuscriptionModel suscription,
+      SuscriptionProvider subscriptionProvider,
+      String? userId,
+      SuscriptionServices suscriptionServices) {
     suscription.cat == SuscriptionCat.premium
         ? subscriptionProvider.isSuscribed
-            ? dialogCancelSuscription(context, userId, subscriptionProvider)
+            ? suscriptionServices.dialogCancelSuscription(
+                context, userId, subscriptionProvider)
             : Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const PaymentScreen(),
+                  builder: (context) => PaymentScreen(
+                    suscription: suscription,
+                  ),
                 ))
-        : dialogMemberSuscription(context);
-  }
-
-  Future<dynamic> dialogMemberSuscription(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('You have a Member Suscription'),
-        actions: [
-          MaterialButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<dynamic> dialogCancelSuscription(BuildContext context, String? userId,
-      SuscriptionProvider subscriptionProvider) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Are you sure you want cancel Suscription?'),
-        actions: [
-          MaterialButton(
-              onPressed: () async {
-                if (userId != null) {
-                  subscriptionProvider.cancelSuscription(
-                      userId, subscriptionProvider.suscriptionEndDate);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      duration: Duration(seconds: 3),
-                      margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
-                      content: Text('Subscription canceled successfully.'),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      duration: Duration(seconds: 3),
-                      margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
-                      content: Text(
-                          'Failed to cancel subscription: User ID is null.'),
-                    ),
-                  );
-                }
-
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Home(),
-                    ));
-              },
-              child: const Text("Ok")),
-          MaterialButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-        ],
-      ),
-    );
+        : suscriptionServices.dialogMemberSuscription(context);
   }
 }

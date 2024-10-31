@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:templates_flutter_app/screens/login/login_screen.dart';
 import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
 Future<void> registerUser(String username, String email, String password,
     BuildContext context) async {
   try {
-    final registerCredential = await FirebaseAuth.instance
+    final UserCredential registerCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
+
     if (registerCredential.user == null) {
       Fluttertoast.showToast(
         msg: "No User Register",
@@ -21,15 +23,21 @@ Future<void> registerUser(String username, String email, String password,
       );
     }
 
-    final userModel =
-        UserModel(username: username, isSubscribed: false, email: email);
-    final userDoc = FirebaseFirestore.instance.collection('users').doc();
-    await userDoc.set(userModel.toMap(), SetOptions(merge: true));
     if (registerCredential.user != null) {
+      final User? user = registerCredential.user;
+      final userId = user?.uid;
+      final emailUser = user?.email ?? 'No email';
+      final userModel =
+          UserModel(username: username, isSubscribed: false, email: emailUser);
+
+      final userDoc =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      await userDoc.set(userModel.toMap(), SetOptions(merge: true));
       await registerCredential.user?.sendEmailVerification();
       await registerCredential.user?.updateDisplayName(username);
       Fluttertoast.showToast(
-        msg: "Registration Successful!",
+        msg:
+            "Registration Successfull!\nCheck your email and verify your account",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1, // 1 second for iOS/Web
@@ -37,10 +45,25 @@ Future<void> registerUser(String username, String email, String password,
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, '/home');
+      Navigator.push(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Login(),
+          ));
     }
-  } catch (e) {
-    throw Exception('Registration failed due to network error');
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+    } else if (e.code == 'wrong-password') {
+    } else {}
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.only(bottom: 50, left: 60, right: 50),
+        content: Text(e.code),
+      ),
+    );
   }
 }
