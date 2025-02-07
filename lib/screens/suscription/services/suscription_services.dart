@@ -3,6 +3,7 @@ import 'package:templates_flutter_app/screens/home/home_app.dart';
 import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
 
 class SuscriptionServices {
+  
   Future<dynamic> dialogMemberSuscription(BuildContext context) {
     return showDialog(
       context: context,

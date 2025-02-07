@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
@@ -13,6 +15,20 @@ class LoginServices {
           .signInWithEmailAndPassword(email: email, password: password);
 
       authProvider.setLoggedIn(true);
+
+      //GET TOKEN FCM
+      await FirebaseMessaging.instance.requestPermission();
+      String? token = await FirebaseMessaging.instance.getToken();
+     
+      if (token != null) {
+        final uid = FirebaseAuth.instance.currentUser?.uid;
+        if (uid != null) {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .set({'fcm_token': token}, SetOptions(merge: true));
+        }
+      }
 
       //SAVE USER
       // ignore: use_build_context_synchronously

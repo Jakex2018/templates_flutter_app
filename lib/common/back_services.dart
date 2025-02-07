@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:provider/provider.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -15,35 +12,6 @@ Future<void> initializeService() async {
     initializeSettings,
   );
 }
-
-Future<void> showrNotificacions(context) async {
-  const AndroidNotificationDetails androidNotificationDetails =
-      AndroidNotificationDetails('3213', 'show');
-
-  const NotificationDetails notificationDetails =
-      NotificationDetails(android: androidNotificationDetails);
-  final authProvider = Provider.of<AuthUserProvider>(context,
-      listen: false); // Avoid unnecessary rebuilds
-
-  final userId = authProvider.userId;
-
-  // Fetch username from Firestore (assuming username is stored in 'users' collection)
-  final usersCollection = FirebaseFirestore.instance.collection('users');
-  final userDoc = await usersCollection.doc(userId).get();
-
-  final username = userDoc.data()!['username'];
-
-  await flutterLocalNotificationsPlugin.show(
-      1,
-      payload: '/suscription',
-      '¡Hola $username,Tu suscripción ha expirado!',
-      'Renueva tu suscripción para seguir disfrutando de nuestras funciones.',
-      notificationDetails);
-}
-
-late AndroidNotificationChannel channel;
-
-bool isFlutterLocalNotificationsInitialized = false;
 
 
 

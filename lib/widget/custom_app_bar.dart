@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gif_view/gif_view.dart';
+//import 'package:gif_view/gif_view.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -13,12 +13,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      GifView(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        image: const AssetImage('asset/bg_01_animate.gif'),
+      /*
+      GifView.asset(
+        'asset/bg_01_animate.gif',
         fit: BoxFit.cover,
+         width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
       ),
+       */
       Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,

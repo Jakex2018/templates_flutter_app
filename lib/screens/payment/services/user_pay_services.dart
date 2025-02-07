@@ -15,7 +15,7 @@ Future<void> userPay(BuildContext context) async {
 
   //save subscribe
   if (userId != null) {
-    final expiryTime = DateTime.now().add(const Duration(seconds: 60));
+    final expiryTime = DateTime.now().add(const Duration(seconds: 20));
 
     final nowTime = DateTime.now();
 

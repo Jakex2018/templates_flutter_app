@@ -1,156 +1,232 @@
-// ignore_for_file: avoid_print
-
-import 'dart:async';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
+import 'package:templates_flutter_app/common/back_services.dart';
+import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
 class NotificacionMessages {
-  final notify = FirebaseMessaging.instance;
-  static final StreamController _messageStream = StreamController.broadcast();
-
-  static Stream get messageStream => _messageStream.stream;
-  static Future _backgroundHandler(RemoteMessage message) async {
-    print('Background ${message.messageId}');
-    _messageStream.add(message.notification?.title ?? 'no Title');
+  static Future<void> requestPermissionLocalNotifications() async {
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
   }
 
-  static Future _onMessageHandler(RemoteMessage message) async {
-    print('On Message ${message.messageId}');
-    _messageStream.add(message.notification?.title ?? 'no Title');
-  }
+  static Future<void> initializeLocalNotifications() async {
+    final flutterLocalnotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  Future<void> initializeNotification(BuildContext context) async {
-    ///await Firebase.initializeApp();
-    final token = await notify.getToken();
-    print('Token: $token');
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // Extract data from the notification payload for potential routing logic
-      final data = message.data;
-
-      // Example: Navigate to SubscriptionScreen based on data in the notification
-      if (data.containsKey('action') && data['action'] == 'goToSubscription') {
-        Navigator.push(
-          // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SuscriptionScreen(),
-          ),
-        ); // Replace with your route name
-      } else {
-        // Handle other notification actions or display a generic notification screen
-        _messageStream.add(message.notification?.title ?? 'no Title');
-      }
-    });
-    FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
-    FirebaseMessaging.onMessage.listen(_onMessageHandler);
-  }
-
-  static closeStream() {
-    _messageStream.close();
-  }
-}
-
-/*
-class NotificacionMessages {
-  final notify = FirebaseMessaging.instance;
-  static final StreamController _messageStream = StreamController.broadcast();
-
-  static Stream get messageStream => _messageStream.stream;
-  static Future _backgroundHandler(RemoteMessage message) async {
-    print('Background ${message.messageId}');
-    _messageStream.add(message.notification?.title ?? 'no Title');
-  }
-
-  static Future _onMessageHandler(RemoteMessage message) async {
-    print('On Message ${message.messageId}');
-    _messageStream.add(message.notification?.title ?? 'no Title');
-  }
-
-  static Future _onOpenMessage(RemoteMessage message) async {
-    print('On MessageOpenApp ${message.messageId}');
-    _messageStream.add(message.notification?.title ?? 'no Title');
-  }
-
-  Future<void> initializeNotification() async {
-    ///await Firebase.initializeApp();
-    final token = await notify.getToken();
-    print('Token: $token');
-
-    FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
-    FirebaseMessaging.onMessage.listen(_onMessageHandler);
-    FirebaseMessaging.onMessageOpenedApp.listen(_onOpenMessage);
-  }
-
-  static closeStream() {
-    _messageStream.close();
-  }
-}
-
- */
-
-
-/*
-Future<void> handleBg(RemoteMessage? message) async {
-  if (message != null) {
-    print(message);
-  }
-}
-
-class NotificacionMessages {
-  final notify = FirebaseMessaging.instance;
-  final AndroidNotificationChannel channel = const AndroidNotificationChannel(
-      'notification', 'notification',
-      importance: Importance.max, playSound: true, showBadge: true);
-  final localNotification = FlutterLocalNotificationsPlugin();
-
-  Future<void> initializeNotification() async {
-    NotificationSettings settings = await notify.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: true,
-      criticalAlert: true,
-      provisional: false,
-      sound: true,
+    const initializationsSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
     );
 
-    if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      print('PERMISSION DENIED');
-    }
+    await flutterLocalnotificationsPlugin.initialize(initializationsSettings);
+  }
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      final fcmToken = await notify.getToken();
-      print('TOKEN $fcmToken');
-    }
+  static void showLocalNotification(
+      {required int id, String? title, String? body, String? data}) {
+    const androidDetails = AndroidNotificationDetails(
+        'channelId', 'channelName',
+        playSound: true, importance: Importance.max, priority: Priority.high);
 
-    FirebaseMessaging.onBackgroundMessage(handleBg);
-    initPushNotification();
+    const notificationDetails = NotificationDetails(
+      android: androidDetails,
+    );
+
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails);
   }
 }
 
-Future<void> initPushNotification() async {
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
-  FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-}
+Future<void> sendNotification() async {
+  try {
+    final token =
+        "d9u8sTQnSfiiEyqxcV_02i:APA91bHSy-lN3M8wB2FA8xn-NXy6wA8O1GrFmI2lcQy_MaRh17vNkGAiZ0fedWAEGlEHbf9P2Lg1Jn0x0FxMp0O95BBGwyOZpVmm9N5wyhhLuUckmPbXx03LRC_QVgxniHuvDsEaMjzr";
 
-void handleMessage(RemoteMessage? message) {
-  if (message != null) {
-    print(message);
+    final response = await http.post(
+      Uri.parse('https://fcmtemplate-app.onrender.com'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "token": token,
+        "title": "¡Tu suscripción ha expirado!",
+        "body":
+            "Renueva tu suscripción para seguir disfrutando de nuestras funciones."
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Notificación enviada con éxito');
+    } else {
+      print('Error al enviar notificación: ${response.body}');
+    }
+  } catch (e) {
+    print('Error en la solicitud HTTP: $e');
   }
 }
 
-void subscribeTopic() {
-  FirebaseMessaging.instance.subscribeToTopic('notification');
+Future<void> showNotification(
+      String title, String body, BuildContext context) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('3213', 'show');
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+
+    final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
+    final userId = authProvider.userId;
+
+    final usersCollection = FirebaseFirestore.instance.collection('users');
+    final userDoc = await usersCollection.doc(userId).get();
+    final username = userDoc.data()!['username'];
+
+    await flutterLocalNotificationsPlugin.show(
+      1,
+      '¡Hola $username, $title',
+      body,
+      notificationDetails,
+      payload: '/suscription',
+    );
+  }
+
+
+
+
+/*
+import 'dart:async';
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
+import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
+import 'package:http/http.dart' as http;
+
+class NotificacionMessages {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  // Inicializa notificaciones locales y permisos
+  Future<void> requestPermission() async {
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
+  // Inicialización de notificaciones locales
+  Future<void> initializeNotification(BuildContext context) async {
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        final payload = response.payload;
+        if (payload != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SuscriptionScreen(),
+            ),
+          );
+        }
+      },
+    );
+
+    final token = await _firebaseMessaging.getToken();
+    print('FCM Token: $token');
+
+    // Escucha mensajes en primer plano
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // Aquí puedes manejar el mensaje que llega en primer plano
+      print('Notificación recibida en primer plano: ${message.messageId}');
+      showNotification(
+        message.notification?.title ?? 'Notificación',
+        message.notification?.body ?? 'Mensaje de notificación',
+        context,
+      );
+    });
+  }
+
+  Future<void> backgroundHandler(RemoteMessage message) async {
+    print('Notificación recibida en segundo plano: ${message.messageId}');
+    await sendNotification();
+  }
+
+  // Muestra la notificación local
+  Future<void> showNotification(
+      String title, String body, BuildContext context) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('3213', 'show');
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+
+    final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
+    final userId = authProvider.userId;
+
+    final usersCollection = FirebaseFirestore.instance.collection('users');
+    final userDoc = await usersCollection.doc(userId).get();
+    final username = userDoc.data()!['username'];
+
+    await flutterLocalNotificationsPlugin.show(
+      1,
+      '¡Hola $username, $title',
+      body,
+      notificationDetails,
+      payload: '/suscription',
+    );
+  }
+
+  // Función para enviar una notificación manualmente
+  Future<void> sendNotification() async {
+    try {
+      final token =
+          "d9u8sTQnSfiiEyqxcV_02i:APA91bHSy-lN3M8wB2FA8xn-NXy6wA8O1GrFmI2lcQy_MaRh17vNkGAiZ0fedWAEGlEHbf9P2Lg1Jn0x0FxMp0O95BBGwyOZpVmm9N5wyhhLuUckmPbXx03LRC_QVgxniHuvDsEaMjzr";
+
+      final response = await http.post(
+        Uri.parse('https://fcmtemplate-app.onrender.com'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "token": token,
+          "title": "¡Tu suscripción ha expirado!",
+          "body":
+              "Renueva tu suscripción para seguir disfrutando de nuestras funciones."
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('Notificación enviada con éxito');
+      } else {
+        print('Error al enviar notificación: ${response.body}');
+      }
+    } catch (e) {
+      print('Error en la solicitud HTTP: $e');
+    }
+  }
 }
 
-
-
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 
  */
