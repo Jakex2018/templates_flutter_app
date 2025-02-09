@@ -202,7 +202,14 @@ class SuscriptionProvider with ChangeNotifier {
                     content: Text('Subscription expired successfully.'),
                   ),
                 );
-                await showNotification('', '', context);
+                await sendNotification();
+                /*
+                showNotification(
+                  'Suscripción',
+                  'Renueva tu suscripción para seguir disfrutando de nuestras funciones.',
+                  context,
+                );
+                 */
               }
             }
           }

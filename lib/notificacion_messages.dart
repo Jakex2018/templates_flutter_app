@@ -27,21 +27,6 @@ class NotificacionMessages {
 
     await flutterLocalnotificationsPlugin.initialize(initializationsSettings);
   }
-
-  static void showLocalNotification(
-      {required int id, String? title, String? body, String? data}) {
-    const androidDetails = AndroidNotificationDetails(
-        'channelId', 'channelName',
-        playSound: true, importance: Importance.max, priority: Priority.high);
-
-    const notificationDetails = NotificationDetails(
-      android: androidDetails,
-    );
-
-    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails);
-  }
 }
 
 Future<void> sendNotification() async {
@@ -73,29 +58,27 @@ Future<void> sendNotification() async {
 }
 
 Future<void> showNotification(
-      String title, String body, BuildContext context) async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('3213', 'show');
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+    String title, String body, BuildContext context) async {
+  const AndroidNotificationDetails androidNotificationDetails =
+      AndroidNotificationDetails('3213', 'show');
+  const NotificationDetails notificationDetails =
+      NotificationDetails(android: androidNotificationDetails);
 
-    final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
-    final userId = authProvider.userId;
+  final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
+  final userId = authProvider.userId;
 
-    final usersCollection = FirebaseFirestore.instance.collection('users');
-    final userDoc = await usersCollection.doc(userId).get();
-    final username = userDoc.data()!['username'];
+  final usersCollection = FirebaseFirestore.instance.collection('users');
+  final userDoc = await usersCollection.doc(userId).get();
+  final username = userDoc.data()!['username'];
 
-    await flutterLocalNotificationsPlugin.show(
-      1,
-      '¡Hola $username, $title',
-      body,
-      notificationDetails,
-      payload: '/suscription',
-    );
-  }
-
-
+  await flutterLocalNotificationsPlugin.show(
+    1,
+    '¡Hola $username, $title',
+    body,
+    notificationDetails,
+    payload: '/suscription',
+  );
+}
 
 
 /*
