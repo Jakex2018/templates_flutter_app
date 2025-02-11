@@ -29,11 +29,11 @@ class NotificacionMessages {
   }
 }
 
-Future<void> sendNotification() async {
+Future<void> sendNotification(token) async {
+  if (token.isEmpty) {
+    return;
+  }
   try {
-    final token =
-        "d9u8sTQnSfiiEyqxcV_02i:APA91bHSy-lN3M8wB2FA8xn-NXy6wA8O1GrFmI2lcQy_MaRh17vNkGAiZ0fedWAEGlEHbf9P2Lg1Jn0x0FxMp0O95BBGwyOZpVmm9N5wyhhLuUckmPbXx03LRC_QVgxniHuvDsEaMjzr";
-
     final response = await http.post(
       Uri.parse('https://fcmtemplate-app.onrender.com'),
       headers: <String, String>{

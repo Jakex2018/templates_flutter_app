@@ -24,6 +24,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthUserProvider>(context);
+   
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
     return Center(
@@ -64,6 +65,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
 
   Future<void> _signInGoogle(
       googleSignIn, AuthUserProvider authProvider) async {
+       
     final connectivityResult = await (Connectivity().checkConnectivity());
     // ignore: unrelated_type_equality_checks
     if (connectivityResult == ConnectivityResult.none) {
@@ -93,10 +95,11 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
       final User? user = userCredential.user;
       if (user != null) {
         final userId = user.uid;
+        
         final email = user.email ?? 'No email';
 
         final userModel = UserModel(
-            username: user.displayName, isSubscribed: false, email: email);
+            username: user.displayName, isSubscribed: false, email: email, id: userId);
 
         //GET TOKEN FCM
         await FirebaseMessaging.instance.requestPermission();

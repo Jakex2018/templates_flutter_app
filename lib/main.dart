@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:templates_flutter_app/common/back_services.dart';
 import 'package:templates_flutter_app/common/bloc_providers.dart';
 import 'package:templates_flutter_app/common/routes/name.dart';
 import 'package:templates_flutter_app/common/services/admob_services.dart';
@@ -23,6 +22,7 @@ Future<void> main() async {
   FirebaseMessaging.onMessage.listen(showFlutterNotification);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print('A new onMessageOpenedApp event was published!');
+    navigatorKey.currentState!.pushNamed('/suscription');
   });
 
   runApp(
@@ -69,24 +69,50 @@ class _MyAppState extends State<MyApp> {
 }
 
 void showFlutterNotification(RemoteMessage message) {
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null) {
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-          android: AndroidNotificationDetails('channelId', 'channelName',
-              playSound: true,
-              importance: Importance.max,
-              priority: Priority.high)),
-    );
-  }
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  const notificationDetails = NotificationDetails(
+    android: AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      importance: Importance.high,
+      priority: Priority.high,
+    ),
+  );
+  flutterLocalNotificationsPlugin.show(
+    0,
+    message.notification?.title,
+    message.notification?.body,
+    notificationDetails,
+  );
 }
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Recibido en segundo plano');
+
+  // Verifica si el mensaje contiene datos
+  if (message.data.isNotEmpty) {
+    // Maneja el mensaje de datos aquí, si es necesario
+    print('Data: ${message.data}');
+
+    // Mostrar la notificación usando flutter_local_notifications_plugin
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const notificationDetails = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'channel_id',
+        'channel_name',
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+    );
+
+    // Asegúrate de que el título y el cuerpo no sean null
+    flutterLocalNotificationsPlugin.show(
+      0,
+      message.notification?.title ?? 'Título por defecto',
+      message.notification?.body ?? 'Cuerpo por defecto',
+      notificationDetails,
+    );
+  }
 }
 
 void dialogi() {

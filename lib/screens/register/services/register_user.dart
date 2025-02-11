@@ -28,7 +28,7 @@ Future<void> registerUser(String username, String email, String password,
       final userId = user?.uid;
       final emailUser = user?.email ?? 'No email';
       final userModel =
-          UserModel(username: username, isSubscribed: false, email: emailUser);
+          UserModel(username: username, isSubscribed: false, email: emailUser,id: userId!);
 
       final userDoc =
           FirebaseFirestore.instance.collection('users').doc(userId);

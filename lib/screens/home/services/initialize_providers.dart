@@ -11,8 +11,8 @@ Future<void> initializeProviders(BuildContext context) async {
   await authProvider.checkLoginStatus();
 
   if (authProvider.isLogged && subscriptionProvider.isSuscribed) {
-    final userId = authProvider.userId;
+    final userId = authProvider.getUserId().toString();  
     // ignore: use_build_context_synchronously
-    await subscriptionProvider.startSubscriptionGlobal(userId!, context);
+    await subscriptionProvider.startSubscriptionGlobal(userId, context);
   }
 }

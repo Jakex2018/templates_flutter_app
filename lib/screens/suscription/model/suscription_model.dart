@@ -202,7 +202,13 @@ class SuscriptionProvider with ChangeNotifier {
                     content: Text('Subscription expired successfully.'),
                   ),
                 );
-                await sendNotification();
+
+                final token = await getFCMTokenFromFirestore(userId);
+                if (token != null) {
+                  await sendNotification(token);
+                } else {
+                  print('No se ha obtenido el token de FCM');
+                }
                 /*
                 showNotification(
                   'Suscripción',
