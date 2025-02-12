@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
 import 'package:templates_flutter_app/screens/login/services/login_services.dart';
+import 'package:templates_flutter_app/screens/login/widget/login_with.dart';
 import 'package:templates_flutter_app/screens/register/widget/register_tercerd.dart';
 import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
@@ -133,40 +134,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     ));
-  }
-}
-
-class LoginWith extends StatelessWidget {
-  const LoginWith({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 40.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            width: 70.w,
-            height: 1.5.h,
-            color: Colors.black38,
-          ),
-          Text(
-            'Or Signin with',
-            style: TextStyle(
-                fontSize: 15.sp,
-                color: Colors.black,
-                fontWeight: FontWeight.bold),
-          ),
-          Container(
-            width: 70.w,
-            height: 1.5.h,
-            color: Colors.black38,
-          )
-        ],
-      ),
-    );
   }
 }
