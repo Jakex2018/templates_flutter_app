@@ -69,17 +69,7 @@ class _HomeContentState extends State<HomeContent>
         if (snapshot.hasError) {
           return const Text('Error de conectividad');
         }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-            margin:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height * .1),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * .5,
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
+        
         return Container(
           height: MediaQuery.of(context).size.height * .8,
           width: MediaQuery.of(context).size.width,

@@ -142,7 +142,7 @@ class SuscriptionProvider with ChangeNotifier {
 
     // Create a new timer that checks the subscription status periodically
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer t) async {
-      await checkAndExpireSubscription(userId, context);
+      await checkAndExpireSubscription(userId);
 
       // Stop the timer if the subscription is expired
       if (!_isSuscribed) {
@@ -169,8 +169,7 @@ class SuscriptionProvider with ChangeNotifier {
     }
   }
 
-  Future<void> checkAndExpireSubscription(
-      String userId, BuildContext context) async {
+  Future<void> checkAndExpireSubscription(String userId) async {
     try {
       final snapshot =
           await _firebaseFirestore.collection('users').doc(userId).get();
@@ -194,28 +193,12 @@ class SuscriptionProvider with ChangeNotifier {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               await prefs.setBool(_subscriptionKey, _isSuscribed);
               if (!_isSuscribed) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    behavior: SnackBarBehavior.floating,
-                    duration: Duration(seconds: 3),
-                    margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
-                    content: Text('Subscription expired successfully.'),
-                  ),
-                );
-
                 final token = await getFCMTokenFromFirestore(userId);
                 if (token != null) {
-                  await sendNotification(token);
+                  await sendNotification(token); // Enviar la notificación
                 } else {
                   print('No se ha obtenido el token de FCM');
                 }
-                /*
-                showNotification(
-                  'Suscripción',
-                  'Renueva tu suscripción para seguir disfrutando de nuestras funciones.',
-                  context,
-                );
-                 */
               }
             }
           }
@@ -259,6 +242,17 @@ class SuscriptionProvider with ChangeNotifier {
 
 
 
+
+/*
+ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    duration: Duration(seconds: 3),
+                    margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
+                    content: Text('Subscription expired successfully.'),
+                  ),
+                );
+ */
 
 /*
 // ignore_for_file: avoid_print

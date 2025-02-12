@@ -12,8 +12,7 @@ class UserModel {
       {this.email = '',
       this.username = "",
       this.isSubscribed = false,
-      required this.id
-    });
+      required this.id});
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
@@ -50,6 +49,9 @@ class AuthUserProvider with ChangeNotifier {
     if (_isLogged) {
       final user = FirebaseAuth.instance.currentUser;
       _userId = user?.uid;
+      if (_userId != null) {
+        await prefs.setString('userId', _userId!);
+      }
     } else {
       _userId = null;
     }
@@ -64,6 +66,9 @@ class AuthUserProvider with ChangeNotifier {
     if (_isLogged) {
       final user = FirebaseAuth.instance.currentUser;
       _userId = user?.uid;
+      if (_userId != null) {
+        await prefs.setString('userId', _userId!);
+      }
     } else {
       _userId = null;
     }
@@ -75,14 +80,18 @@ class AuthUserProvider with ChangeNotifier {
     return user!.uid;
   }
 
+  Future<String?> getUserIdFromPreferences() {
+    final prefs = SharedPreferences.getInstance();
+    return prefs.then((prefs) => prefs.getString('userId'));
+  }
+
+  
   Future<UserModel> getUserData() async {
-    // Reemplaza 'users' con el nombre real de tu colección de usuarios
     final userDoc =
         await FirebaseFirestore.instance.collection('users').doc(_userId).get();
 
     if (userDoc.exists) {
       final userData = userDoc.data() as Map<String, dynamic>;
-
       return UserModel.fromJson(userData);
     } else {
       throw Exception('User not found');

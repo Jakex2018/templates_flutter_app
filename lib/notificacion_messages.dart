@@ -1,13 +1,41 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/common/back_services.dart';
+import 'package:templates_flutter_app/main.dart';
 import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
 
 class NotificacionMessages {
+  static Future<void> initializeMessagin() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      navigatorKey.currentState!.pushNamed('/suscription');
+    });
+  }
+
+  static Future<void> firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    await Firebase.initializeApp();
+    print("Handling a background message: ${message.messageId}");
+  }
+
   static Future<void> requestPermissionLocalNotifications() async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
@@ -26,6 +54,24 @@ class NotificacionMessages {
     );
 
     await flutterLocalnotificationsPlugin.initialize(initializationsSettings);
+  }
+
+  static void showFlutterNotification(RemoteMessage message) {
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const notificationDetails = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'channel_id',
+        'channel_name',
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+    );
+    flutterLocalNotificationsPlugin.show(
+      0,
+      message.notification?.title,
+      message.notification?.body,
+      notificationDetails,
+    );
   }
 }
 
