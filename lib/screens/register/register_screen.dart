@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/login/login_screen.dart';
+import 'package:templates_flutter_app/screens/login/widget/login_with.dart';
 import 'package:templates_flutter_app/screens/register/services/register_user.dart';
 import 'package:templates_flutter_app/screens/register/widget/register_tercerd.dart';
 
