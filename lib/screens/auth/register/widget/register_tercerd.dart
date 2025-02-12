@@ -9,7 +9,7 @@ import 'package:templates_flutter_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 
 class RegisterTercerd extends StatefulWidget {
   const RegisterTercerd({

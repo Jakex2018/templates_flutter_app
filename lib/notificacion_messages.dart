@@ -8,7 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/common/back_services.dart';
 import 'package:templates_flutter_app/main.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 
 class NotificacionMessages {
   static Future<void> initializeMessagin() async {

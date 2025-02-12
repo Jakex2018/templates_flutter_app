@@ -4,10 +4,11 @@ import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/main.dart';
+import 'package:templates_flutter_app/screens/payment/model/payment_model.dart';
+import 'package:templates_flutter_app/screens/payment/provider/payment_provider.dart';
 import 'package:templates_flutter_app/screens/payment/services/user_pay_services.dart';
 import 'package:templates_flutter_app/screens/payment/widget/payment_paypal.dart';
 import 'package:templates_flutter_app/screens/payment/widget/payment_price.dart';
-import 'package:templates_flutter_app/screens/suscription/model/payment_model.dart';
 import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 

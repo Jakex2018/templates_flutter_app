@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 
 class LoginServices {
   Future<void> loginUser(

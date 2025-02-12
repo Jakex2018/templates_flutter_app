@@ -4,7 +4,7 @@ import 'package:templates_flutter_app/screens/home/services/initialize_providers
 import 'package:templates_flutter_app/screens/home/widget/home_content.dart';
 import 'package:templates_flutter_app/screens/home/widget/home_type_content.dart';
 import 'package:templates_flutter_app/screens/sidebar/sidebar_screen.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 import 'package:templates_flutter_app/widget/custom_app_bar.dart';
 
 class Home extends StatefulWidget {

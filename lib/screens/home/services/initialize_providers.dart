@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
+import 'package:templates_flutter_app/screens/suscription/provider/suscription_provider.dart';
 
 Future<void> initializeProviders(BuildContext context) async {
   final authProvider = Provider.of<AuthUserProvider>(context, listen: false);

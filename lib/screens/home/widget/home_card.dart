@@ -8,9 +8,9 @@ import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/category/category_app.dart';
 import 'package:templates_flutter_app/screens/home/services/home_data_services.dart';
 import 'package:templates_flutter_app/screens/home/widget/splash_subscribe.dart';
-import 'package:templates_flutter_app/screens/login/login_screen.dart';
-import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/login/login_screen.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
+import 'package:templates_flutter_app/screens/suscription/provider/suscription_provider.dart';
 import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
 
 // ignore: must_be_immutable

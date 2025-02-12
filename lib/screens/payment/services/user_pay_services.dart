@@ -1,10 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/screens/order/order_screen.dart';
-import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
+import 'package:templates_flutter_app/screens/suscription/provider/suscription_provider.dart';
 
 Future<void> userPay(BuildContext context) async {
   final subscriptionProvider =

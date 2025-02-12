@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/login/widget/login_with.dart';
-import 'package:templates_flutter_app/screens/register/services/register_user.dart';
-import 'package:templates_flutter_app/screens/register/widget/register_tercerd.dart';
+import 'package:templates_flutter_app/screens/auth/login/services/login_services.dart';
+import 'package:templates_flutter_app/screens/auth/login/widget/login_with.dart';
+import 'package:templates_flutter_app/screens/auth/register/widget/register_tercerd.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<Login> createState() => _LoginState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final usernameField = TextEditingController();
+class _LoginState extends State<Login> {
   final emailField = TextEditingController();
   final passwordField = TextEditingController();
-  String username = '';
+
   String email = '';
   String password = '';
   bool obscureText = true;
+
   @override
   Widget build(BuildContext context) {
+    final authProvider =
+        Provider.of<AuthUserProvider>(context, listen: false).isLogged;
     return Material(
         child: Scaffold(
       appBar: AppBar(
@@ -33,40 +37,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   MaterialPageRoute(builder: (context) => const Home()));
             },
             child: const Icon(Icons.arrow_back_rounded)),
-        title: const Text('Register'),
+        title: const Text('Login'),
       ),
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height * .8,
           width: MediaQuery.of(context).size.width,
           child: Form(
-            key: _formKey,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextFormField(
-                    controller: usernameField,
-                    decoration: InputDecoration(
-                      labelText: 'Enter your username',
-                      errorText: usernameField.text.isEmpty
-                          ? 'Please enter a valid username'
-                          : null,
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 20.w),
-                      labelStyle: const TextStyle(color: Colors.black26),
-                      fillColor: const Color(0xFFF3F3F3),
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20.sp),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
                   TextFormField(
                     controller: emailField,
                     decoration: InputDecoration(
@@ -87,8 +69,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 25,
+                  SizedBox(
+                    height: aDefaultPadding.h,
                   ),
                   TextFormField(
                     controller: passwordField,
@@ -130,26 +112,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        String username = usernameField.text;
-                        String email = emailField.text;
-                        String password = passwordField.text;
-                        await registerUser(username, email, password, context);
-                      } else {
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            duration: Duration(seconds: 3),
-                            margin: EdgeInsets.only(
-                                bottom: 50, left: 60, right: 50),
-                            content: Text('Input required values'),
-                          ),
-                        );
-                      }
+                      String emailData = emailField.text;
+                      String passwordData = passwordField.text;
+
+                      await LoginServices().loginUser(
+                          emailData, passwordData, context, authProvider);
                     },
                     child: Text(
-                      'Register',
+                      'Iniciar sesión',
                       style: TextStyle(
                           color:
                               Theme.of(context).colorScheme.onPrimaryContainer),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/common/services/admob_services.dart';
-import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
+import 'package:templates_flutter_app/screens/suscription/provider/suscription_provider.dart';
 import 'package:templates_flutter_app/screens/template/widget/template_option.dart';
 import 'package:templates_flutter_app/screens/template/widget/template_web_app.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

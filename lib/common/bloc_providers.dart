@@ -1,8 +1,8 @@
 import 'package:provider/provider.dart';
-import 'package:templates_flutter_app/screens/suscription/model/payment_model.dart';
-import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
+import 'package:templates_flutter_app/screens/payment/provider/payment_provider.dart';
 import 'package:templates_flutter_app/screens/suscription/model/timer_model.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
+import 'package:templates_flutter_app/screens/suscription/provider/suscription_provider.dart';
 import 'package:templates_flutter_app/themes/theme_provider.dart';
 
 class AppProvider {

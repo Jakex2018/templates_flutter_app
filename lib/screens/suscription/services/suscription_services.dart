@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
+import 'package:templates_flutter_app/screens/suscription/provider/suscription_provider.dart';
 
 class SuscriptionServices {
   

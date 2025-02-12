@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:templates_flutter_app/screens/login/login_screen.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/login/login_screen.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 
 Future<void> registerUser(String username, String email, String password,
     BuildContext context) async {

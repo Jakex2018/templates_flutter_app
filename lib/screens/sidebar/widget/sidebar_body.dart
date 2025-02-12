@@ -7,10 +7,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/login/login_screen.dart';
-import 'package:templates_flutter_app/screens/register/register_screen.dart';
+import 'package:templates_flutter_app/screens/auth/login/login_screen.dart';
+import 'package:templates_flutter_app/screens/auth/register/register_screen.dart';
 import 'package:templates_flutter_app/screens/sidebar/widget/sidebar_link.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
 import 'package:templates_flutter_app/themes/theme_provider.dart';
 

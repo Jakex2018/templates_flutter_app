@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/constants.dart';
 import 'package:templates_flutter_app/screens/payment/payment_screen.dart';
 import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
+import 'package:templates_flutter_app/screens/suscription/provider/suscription_provider.dart';
 import 'package:templates_flutter_app/screens/suscription/services/suscription_services.dart';
 import 'package:templates_flutter_app/widget/button01.dart';
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:templates_flutter_app/screens/payment/model/payment_model.dart';
 import 'package:templates_flutter_app/screens/payment/payment_screen.dart';
-import 'package:templates_flutter_app/screens/suscription/model/payment_model.dart';
+import 'package:templates_flutter_app/screens/payment/provider/payment_provider.dart';
 
 class PaymentPaypal extends StatelessWidget {
   const PaymentPaypal({

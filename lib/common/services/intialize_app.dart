@@ -1,9 +1,9 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:templates_flutter_app/notificacion_messages.dart';
-import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
-import 'package:templates_flutter_app/screens/suscription/model/user_model.dart';
+import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 import 'package:background_fetch/background_fetch.dart';
+import 'package:templates_flutter_app/screens/suscription/provider/suscription_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> initializeApp() async {
