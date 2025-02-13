@@ -32,7 +32,7 @@ class _CategoryState extends State<Category> {
   @override
   void initState() {
     super.initState();
-    
+
     _templatesStream = FirebaseFirestore.instance
         .collection('templates')
         .where('category', isEqualTo: widget.category)
@@ -45,16 +45,15 @@ class _CategoryState extends State<Category> {
       future: fetchCategoryType(widget.type),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Container(
+              height: 60,
+              width: 60,
+              color: Theme.of(context).colorScheme.surface,
+              child: Center(child: CircularProgressIndicator()));
         }
 
-        final categoryType = snapshot.data;
-        return categoryType != null
-            ? _buildCategoryContent(categoryType)
-            : const SizedBox(
-                height: 60,
-                width: 60,
-                child: Center(child: CircularProgressIndicator()));
+        final categoryType = snapshot.data!;
+        return _buildCategoryContent(categoryType);
       },
     );
   }

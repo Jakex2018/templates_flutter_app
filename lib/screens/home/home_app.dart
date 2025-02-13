@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      color: Colors.black.withOpacity(0.6),
+      color: Theme.of(context).colorScheme.surface,
       child: Center(child: CircularProgressIndicator()),
     );
   }
