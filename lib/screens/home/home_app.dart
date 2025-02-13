@@ -14,9 +14,12 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home> {
   String username = '';
-  
+  Future<void> loadData() async {
+    await Future.delayed(Duration(seconds: 3));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -28,23 +31,51 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     final authProvider = Provider.of<AuthUserProvider>(context);
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+    return Stack(
+      children: [
+        FutureBuilder(
+          future: loadData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _buildLoadScreen(context);
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              return _buildHomeContent(scaffoldKey, authProvider);
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error al cargar los datos'));
+            }
+            return SizedBox();
+          },
+        ),
+      ],
+    );
+  }
+
+  Scaffold _buildHomeContent(
+      GlobalKey<ScaffoldState> scaffoldKey, AuthUserProvider authProvider) {
     return Scaffold(
       key: scaffoldKey,
       appBar: CustomAppBar(onTap: () => scaffoldKey.currentState!.openDrawer()),
-      body: const SingleChildScrollView(
-        child: Stack(children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              HomeTypeContent(
-                title: 'Choose a Category',
-              ),
-              HomeContent()
-            ],
-          ),
-        ]),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            HomeTypeContent(title: 'Choose a Category'),
+            HomeContent(),
+          ],
+        ),
       ),
       drawer: Sidebar(isLoggedIn: authProvider, username: username),
+    );
+  }
+
+  Container _buildLoadScreen(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      color: Colors.black.withOpacity(0.6),
+      child: Center(child: CircularProgressIndicator()),
     );
   }
 }

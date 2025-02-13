@@ -25,7 +25,6 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  bool showProgress = true;
   int currentPage = 0;
   int itemsPerPage = 2;
   Stream<QuerySnapshot<Map<String, dynamic>>>? _templatesStream;
@@ -33,11 +32,7 @@ class _CategoryState extends State<Category> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      setState(() {
-        showProgress = false;
-      });
-    });
+    
     _templatesStream = FirebaseFirestore.instance
         .collection('templates')
         .where('category', isEqualTo: widget.category)
@@ -49,6 +44,10 @@ class _CategoryState extends State<Category> {
     return FutureBuilder(
       future: fetchCategoryType(widget.type),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
         final categoryType = snapshot.data;
         return categoryType != null
             ? _buildCategoryContent(categoryType)
@@ -71,13 +70,6 @@ class _CategoryState extends State<Category> {
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        }
-        if (showProgress) {
-          return Container(
-              height: 550.h,
-              width: MediaQuery.of(context).size.width,
-              color: Theme.of(context).colorScheme.surface,
-              child: const Center(child: CircularProgressIndicator()));
         }
 
         final documents = snapshot.data!.docs;
@@ -130,36 +122,26 @@ class _CategoryState extends State<Category> {
     final subscriptionProvider = Provider.of<SuscriptionProvider>(context);
     if (categoryType == 'Free' || subscriptionProvider.isSuscribed == true) {
       return Material(
-          child: showProgress
-              ? Center(
-                  child: Container(
-                    margin: EdgeInsets.only(top: 50.h),
-                    width: 50,
-                    height: 50,
-                    child: const CircularProgressIndicator(),
-                  ),
-                )
-              : Scaffold(
-                  appBar: AppBar(
-                    title: Text(
-                      'Category',
-                      style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer),
-                    ),
-                  ),
-                  body: Stack(children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CategoryTypeContent(
-                          title: widget.category,
-                        ),
-                        showTemplates(stream: _templatesStream!),
-                      ],
-                    ),
-                  ]),
-                ));
+          child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Category',
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer),
+          ),
+        ),
+        body: Stack(children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CategoryTypeContent(
+                title: widget.category,
+              ),
+              showTemplates(stream: _templatesStream!),
+            ],
+          ),
+        ]),
+      ));
     } else if (categoryType == 'Premium') {
       return const SplashSuscribe(
         widgetScreen: Home(),
