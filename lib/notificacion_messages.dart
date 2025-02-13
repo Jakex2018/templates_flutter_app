@@ -25,7 +25,6 @@ class NotificacionMessages {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
       navigatorKey.currentState!.pushNamed('/suscription');
     });
   }
@@ -33,7 +32,6 @@ class NotificacionMessages {
   static Future<void> firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
     await Firebase.initializeApp();
-    print("Handling a background message: ${message.messageId}");
   }
 
   static Future<void> requestPermissionLocalNotifications() async {
@@ -94,12 +92,12 @@ Future<void> sendNotification(token) async {
     );
 
     if (response.statusCode == 200) {
-      print('Notificación enviada con éxito');
+      return;
     } else {
-      print('Error al enviar notificación: ${response.body}');
+      throw Exception('Error al enviar notificación: ${response.body}');
     }
   } catch (e) {
-    print('Error en la solicitud HTTP: $e');
+    throw Exception('Error en la solicitud HTTP: $e');
   }
 }
 

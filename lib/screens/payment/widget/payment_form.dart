@@ -217,14 +217,14 @@ class _PaymentFormState extends State<PaymentForm> {
             ],
             note: "Contact us for any questions on your order.",
             onSuccess: (Map params) async {
-              print("onSuccess: $params");
               dialogi();
+              return;
             },
             onError: (error) {
-              print("onError: $error");
+              throw Exception("onError: $error");
             },
             onCancel: (params) {
-              print('cancelled: $params');
+             throw Exception('cancelled: $params');
             }),
       ),
     );

@@ -105,8 +105,7 @@ class SuscriptionProvider with ChangeNotifier {
       }
       return null;
     } catch (e) {
-      print('Error al obtener el FCM Token: $e');
-      return null;
+      throw Exception(e);
     }
   }
 
@@ -138,7 +137,7 @@ class SuscriptionProvider with ChangeNotifier {
                 if (token != null) {
                   await sendNotification(token); // Enviar la notificación
                 } else {
-                  print('No se ha obtenido el token de FCM');
+                  throw Exception('No se ha obtenido el token de FCM');
                 }
               }
             }
@@ -147,7 +146,7 @@ class SuscriptionProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      print('Error al verificar la expiración de la suscripción: $e');
+      throw Exception('Error al verificar la expiración de la suscripción: $e');
     }
   }
 

@@ -27,7 +27,6 @@ Future<void> initializeApp() async {
 }
 
 Future<void> backgroundFetchHeadlessTask() async {
-  print('[BackgroundFetch] Headless task started');
   final userId = await AuthUserProvider().getUserIdFromPreferences();
   if (userId != null) {
     await SuscriptionProvider().checkAndExpireSubscription(userId);
