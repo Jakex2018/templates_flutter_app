@@ -137,7 +137,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
                       subscriptionProvider, userId, suscriptionServices),
                   backgroundColor: infoCard[index].cat == SuscriptionCat.free
                       ? kpurpleColor
-                      : Colors.red.withOpacity(.5),
+                      : Colors.red.withValues(alpha: 0.5),
                 )
               : ButtonOne(
                   text: infoCard[index].cat == SuscriptionCat.free

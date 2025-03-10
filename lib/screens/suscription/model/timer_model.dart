@@ -45,3 +45,4 @@ class ConnectivityModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+

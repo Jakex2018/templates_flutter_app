@@ -21,7 +21,7 @@ class CardLabel extends StatelessWidget {
           margin: const EdgeInsets.only(right: 50),
           decoration: BoxDecoration(
             color:
-                type == "Free" ? Colors.red : Colors.yellow.withOpacity(.8),
+                type == "Free" ? Colors.red : Colors.yellow.withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: Center(

@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:templates_flutter_app/screens/template/widget/template_web_app.dart';
@@ -8,7 +7,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:saver_gallery/saver_gallery.dart';
 import 'package:templates_flutter_app/constants.dart';
 
 class TemplateDataService {
@@ -86,12 +85,31 @@ class TemplateDataService {
   }
 
   Future<void> saveImageToGallery(File image) async {
-    final bytes = await image.readAsBytes();
-    final result = await ImageGallerySaver.saveImage(bytes);
-    if (result['isSuccess']) {
+    try {
+      // Guardar la imagen en la galería usando gallery_saver
+     await SaverGallery.saveImage(image.readAsBytesSync(),
+          fileName: image.path, skipIfExists: true);
+      Fluttertoast.showToast(
+        msg: "Imagen guardada en la galería",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 4,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 18.0,
+      );
       print('Imagen guardada exitosamente en la galería.');
-    } else {
-      print('Error al guardar la imagen en la galería.');
+    } catch (e) {
+      print('Error al guardar la imagen en la galería: $e');
+      Fluttertoast.showToast(
+        msg: "Error al guardar la imagen en la galería",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 4,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 18.0,
+      );
     }
   }
 

@@ -1,5 +1,5 @@
-// ignore_for_file: avoid_print
 
+// ignore_for_file: avoid_print
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';

@@ -8,6 +8,6 @@ ThemeData lightMode = ThemeData(
         onTertiary: const Color.fromARGB(255, 11, 11, 54),
         secondary: Colors.grey.shade100,
         tertiary: Colors.white,
-        tertiaryFixed: kblueColor.withOpacity(.5),
+        tertiaryFixed: kblueColor.withValues(alpha: 0.5),
         onPrimaryContainer: Colors.black,
         inversePrimary: Colors.grey.shade700));

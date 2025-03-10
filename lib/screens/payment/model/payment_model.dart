@@ -1,7 +1,7 @@
-enum PaymentMethod { card, paypal }
+enum PaymentOp { card, paypal }
 
 class PaymentMethodModel {
-  final PaymentMethod payment;
+  final PaymentOp payment;
   final String name; // Optional: Display name for the payment method
 
   const PaymentMethodModel({required this.payment, required this.name});
@@ -9,6 +9,6 @@ class PaymentMethodModel {
 
 final List<PaymentMethodModel> paymentMethods = [
   const PaymentMethodModel(
-      payment: PaymentMethod.card, name: 'Credit/Debit Card'),
-  const PaymentMethodModel(payment: PaymentMethod.paypal, name: 'PayPal'),
+      payment: PaymentOp.card, name: 'Credit/Debit Card'),
+  const PaymentMethodModel(payment: PaymentOp.paypal, name: 'PayPal'),
 ];

@@ -1,13 +1,98 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:templates_flutter_app/constants.dart';
-import 'package:templates_flutter_app/screens/payment/model/payment_model.dart';
 import 'package:templates_flutter_app/screens/payment/provider/payment_provider.dart';
-import 'package:templates_flutter_app/screens/payment/widget/payment_credit_content.dart';
+import 'package:templates_flutter_app/screens/payment/services/user_pay_services.dart';
 import 'package:templates_flutter_app/screens/suscription/model/suscription_model.dart';
+import 'package:provider/provider.dart';
 
+class PaymentScreen extends StatelessWidget {
+  const PaymentScreen({super.key, required this.suscription});
+  final SuscriptionModel suscription;
+
+  @override
+  Widget build(BuildContext context) {
+    final UserPayServices userServices = UserPayServices.instance;
+    final paymentProvider = Provider.of<PaymentMethodProvider>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Eligir Método de Pago"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              "Resumen del Pago",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text("Producto: Suscripción Premium"),
+                    Text("Total: \$5.00"),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Selecciona un Método de Pago",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            ListTile(
+              leading: Icon(Icons.payment),
+              title: Text("Pagar con PayPal"),
+              tileColor: paymentProvider.paymentMethod == PaymentOp.paypal
+                  ? Colors.blue.withOpacity(0.2)
+                  : null,
+              onTap: () {
+                paymentProvider.setPaymentMethod(PaymentOp.paypal);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.credit_card),
+              title: Text("Pagar con Stripe"),
+              tileColor: paymentProvider.paymentMethod == PaymentOp.stripe
+                  ? Colors.blue.withOpacity(0.2)
+                  : null,
+              onTap: () {
+                paymentProvider.setPaymentMethod(PaymentOp.stripe);
+              },
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                if (paymentProvider.paymentMethod == PaymentOp.paypal) {
+                  userServices.navigatePaypal(context);
+                } else if (paymentProvider.paymentMethod == PaymentOp.stripe) {
+                  userServices.makePayment(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content:
+                            Text("Por favor, selecciona un método de pago")),
+                  );
+                }
+              },
+              child: Text("Confirmar Pago"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+/*
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({super.key, required this.suscription});
   final SuscriptionModel suscription;
@@ -50,7 +135,7 @@ class PaymentCreditOption extends StatefulWidget {
     required this.paymentMethod,
     required this.selected,
   });
-  final PaymentMethod paymentMethod;
+  final PaymentOp paymentMethod;
   final bool selected;
 
   @override
@@ -90,3 +175,5 @@ class _PaymentCreditOptionState extends State<PaymentCreditOption> {
     );
   }
 }
+
+ */

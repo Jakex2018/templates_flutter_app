@@ -135,7 +135,7 @@ class SuscriptionProvider with ChangeNotifier {
               if (!_isSuscribed) {
                 final token = await getFCMTokenFromFirestore(userId);
                 if (token != null) {
-                  await sendNotification(token); // Enviar la notificación
+                  await NotificacionMessages.sendNotification(token); // Enviar la notificación
                 } else {
                   throw Exception('No se ha obtenido el token de FCM');
                 }
@@ -162,14 +162,11 @@ class SuscriptionProvider with ChangeNotifier {
       });
       _isSuscribed = isSubscribed;
 
-      ///print(_isSuscribed);
       _suscriptionEnd = subscriptionExpirated;
 
-      notifyListeners();
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool(
-          _subscriptionKey, _isSuscribed); // Notify listeners when data changes
-      ///print('PAGASTE UNA SUSCRIPCION');
+      await prefs.setBool(_subscriptionKey, _isSuscribed);
+      notifyListeners();
     } catch (error) {
       //print('Error al actualizar la suscripción:');
     }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/constants.dart';
 
-
 class LoginBackground extends StatelessWidget {
   const LoginBackground(
       {super.key,
@@ -22,11 +21,10 @@ class LoginBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      
       Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        color: kblueColor.withOpacity(.73),
+        color: kblueColor.withValues(alpha: 0.5),
       ),
       Positioned(
         top: 40.h,

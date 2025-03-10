@@ -7,8 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/auth/login/login_screen.dart';
-import 'package:templates_flutter_app/screens/auth/register/register_screen.dart';
 import 'package:templates_flutter_app/screens/sidebar/widget/sidebar_link.dart';
 import 'package:templates_flutter_app/screens/auth/model/user_model.dart';
 import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
@@ -158,6 +156,7 @@ class _SideBarBodyState extends State<SideBarBody> {
                 MaterialPageRoute(
                   builder: (context) => const SuscriptionScreen(),
                 ));
+             
           },
           icon: Icon(
             Icons.sell,
@@ -179,12 +178,12 @@ class _SideBarBodyState extends State<SideBarBody> {
               SideBarLink(
                 title: 'Iniciar Sesion',
                 onTap: () {
-                  Navigator.pop(context);
+                 /* Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const Login(),
-                      ));
+                      )); */
                 },
                 icon: Icon(
                   Icons.login,
@@ -194,12 +193,14 @@ class _SideBarBodyState extends State<SideBarBody> {
               SideBarLink(
                 title: 'Registrarse',
                 onTap: () {
+                 /*
                   Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const RegisterScreen(),
                       ));
+                  */
                 },
                 icon: Icon(
                   Icons.supervised_user_circle_rounded,
@@ -209,12 +210,14 @@ class _SideBarBodyState extends State<SideBarBody> {
               SideBarLink(
                 title: 'Chat Bot',
                 onTap: () {
+                 /*
                   Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const RegisterScreen(),
                       ));
+                  */
                 },
                 icon: Icon(
                   Icons.chat_rounded,

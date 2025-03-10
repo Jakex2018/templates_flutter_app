@@ -33,6 +33,7 @@ class _CategoryCardState extends State<CategoryCard> {
           return GestureDetector(
               onTap: () {
                 if (snapshot.data != ConnectivityResult.none) {
+                
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -41,6 +42,7 @@ class _CategoryCardState extends State<CategoryCard> {
                       ),
                     ),
                   );
+                  
                 } else if (snapshot.data == ConnectivityResult.none) {
                   showDialog(
                     context: context,

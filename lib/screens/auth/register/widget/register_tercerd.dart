@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+///import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -102,6 +102,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
             username: user.displayName, isSubscribed: false, email: email, id: userId);
 
         //GET TOKEN FCM
+        /*
         await FirebaseMessaging.instance.requestPermission();
         String? token = await FirebaseMessaging.instance.getToken();
         
@@ -113,6 +114,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
           await userDoc.set({...userModel.toMap(), 'fcm_token': token},
               SetOptions(merge: true));
         }
+         */
 
         ///SAVE USER
         final userDoc =

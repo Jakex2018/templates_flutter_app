@@ -17,6 +17,7 @@ class LoginServices {
       authProvider.setLoggedIn(true);
 
       //GET TOKEN FCM
+      
       await FirebaseMessaging.instance.requestPermission();
       String? token = await FirebaseMessaging.instance.getToken();
      
@@ -29,6 +30,7 @@ class LoginServices {
               .set({'fcm_token': token}, SetOptions(merge: true));
         }
       }
+      
 
       //SAVE USER
       // ignore: use_build_context_synchronously
