@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:templates_flutter_app/screens/home/home_app.dart';
-import 'package:templates_flutter_app/screens/auth/login/login_screen.dart';
-import 'package:templates_flutter_app/screens/auth/register/register_screen.dart';
-import 'package:templates_flutter_app/screens/splash/splash_screeen.dart';
-import 'package:templates_flutter_app/screens/suscription/suscription_screen.dart';
+import 'package:templates_flutter_app/views/home_app.dart';
+import 'package:templates_flutter_app/views/login_screen.dart';
+import 'package:templates_flutter_app/views/register_screen.dart';
+import 'package:templates_flutter_app/views/splash_screeen.dart';
+import 'package:templates_flutter_app/views/suscription_screen.dart';
 
 final routes = <String, WidgetBuilder>{
   '/splash': (context) => const SplashScreeen(),

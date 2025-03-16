@@ -47,14 +47,13 @@ dependencies:
   number_paginator:
   google_sign_in:
   fluttertoast:
-  flutter_credit_card:
-  flutter_paypal:
   google_mobile_ads:
   permission_handler:
   firebase_messaging:
   url_launcher:
   path_provider:
-  webview_flutter:
+  flutter_paypal_payment: ^1.0.8
+  webview_flutter: ^4.10.0
   http:
   saver_gallery:
   flutter_stripe:
