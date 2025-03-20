@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:templates_flutter_app/services/auth_services.dart';
 
 class AuthController {
+  final AuthServices authServices;
+
+  // Constructor con inyección de dependencias
+  AuthController({AuthServices? authServices})
+      : authServices = authServices ?? AuthServices();
+
   // Método para hacer login
   Future<void> loginUser(
       String email, String password, BuildContext context, formKey) async {
-    await AuthServices().loginUser(email, password, context, formKey);
+    await authServices.loginUser(email, password, context, formKey);
   }
 
   Future<void> registerUser(String username, String email, String password,
       BuildContext context, formKey) async {
-    AuthServices().registerUser(username, email, password, formKey);
+    await authServices.registerUser(
+        username, email, password, context, formKey);
   }
 
-  Future<void> logoutUser(
-      String email, String password, BuildContext context, formKey) async {
-    await AuthServices().logoutUser(context);
+  Future<void> logoutUser(BuildContext context) async {
+    await authServices.logoutUser(context);
   }
 }

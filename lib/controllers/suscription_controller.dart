@@ -4,19 +4,18 @@ import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/services/suscription_services.dart';
 
 class SuscriptionController {
-  final SuscriptionProvider subscriptionProvider;
   final SuscriptionServices subscriptionServices;
+  final SuscriptionProvider suscriptionProvider;
 
   SuscriptionController({
-    required this.subscriptionProvider,
     required this.subscriptionServices,
+    required this.suscriptionProvider,
   });
 
-  bool get isSuscribed => subscriptionProvider.isSuscribed;
   Future<void> cancelSubscription(BuildContext context, String? userId,
       SuscriptionModel suscription) async {
     await subscriptionServices.cancelSubscription(
-        context, userId, subscriptionProvider, suscription);
+        context, userId, suscriptionProvider, suscription);
   }
 
   Future<void> handleSubscription(

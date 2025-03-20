@@ -1,7 +1,6 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ButtonOne extends StatelessWidget {
   final String text;
@@ -21,8 +20,8 @@ class ButtonOne extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 0),
-      width: 180.w,
-      height: 30.h,
+      width: 180,
+      height: 30,
       child: ElevatedButton(
         onPressed: onPressed,
         child: Text(text),
@@ -30,11 +29,11 @@ class ButtonOne extends StatelessWidget {
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
           textStyle: TextStyle(
-              fontSize: 16.sp,
+              fontSize: 16,
               fontWeight: FontWeight.bold), // Adjust font size as needed
           shape: RoundedRectangleBorder(
             borderRadius:
-                BorderRadius.circular(20.sp), // Customize button shape
+                BorderRadius.circular(20), // Customize button shape
           ),
         ),
       ),

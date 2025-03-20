@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CardLabel extends StatelessWidget {
   const CardLabel({
@@ -29,7 +28,7 @@ class CardLabel extends StatelessWidget {
               type,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 12.sp,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
               ),
             ),

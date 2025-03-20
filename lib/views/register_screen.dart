@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/controllers/auth_controller.dart';
 import 'package:templates_flutter_app/views/home_app.dart';
 import 'package:templates_flutter_app/widget/login_with.dart';
@@ -43,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Form(
             key: _formKey,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.w),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -55,13 +54,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ? 'Please enter a valid username'
                           : null,
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 20.w),
+                          EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                       labelStyle: const TextStyle(color: Colors.black26),
                       fillColor: const Color(0xFFF3F3F3),
                       filled: true,
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20.sp),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                   ),
@@ -78,13 +77,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ? 'Please enter a valid email'
                           : null,
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 20.w),
+                          EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                       labelStyle: const TextStyle(color: Colors.black26),
                       fillColor: const Color(0xFFF3F3F3),
                       filled: true,
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20.sp),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                   ),
@@ -109,13 +108,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ? 'Please enter your passord max 8 caracter'
                           : null,
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 20.w),
+                          EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                       labelStyle: const TextStyle(color: Colors.black26),
                       fillColor: const Color(0xFFF3F3F3),
                       filled: true,
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20.sp),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                     validator: (value) {
@@ -127,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onSaved: (value) => password = value!,
                   ),
                   SizedBox(
-                    height: 30.h,
+                    height: 30,
                   ),
                   ElevatedButton(
                     onPressed: () async {

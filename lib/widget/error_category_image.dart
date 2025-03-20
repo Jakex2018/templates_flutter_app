@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/common/constants/constants.dart';
 
 class ErrorCategoryImage extends StatelessWidget {
@@ -15,17 +14,17 @@ class ErrorCategoryImage extends StatelessWidget {
           vertical: aDefaultPadding,
         ),
         child: Container(
-          height: 210.h,
+          height: 210,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30.sp),
-              border: Border.all(color: Colors.black54, width: 2.sp)),
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.black54, width: 2)),
           child: Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error, color: Colors.red, size: 54.sp),
+              Icon(Icons.error, color: Colors.red, size: 54),
               SizedBox(
-                height: 5.sp,
+                height: 5,
               ),
               const Text(
                 'Please, Connect your Internet',

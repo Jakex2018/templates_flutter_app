@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,6 +10,7 @@ import 'package:templates_flutter_app/views/home_app.dart';
 import 'package:templates_flutter_app/views/register_screen.dart';
 import 'package:templates_flutter_app/views/suscription_screen.dart';
 import 'package:templates_flutter_app/providers/theme_provider.dart';
+import 'package:templates_flutter_app/widget/sidebar_link.dart';
 
 // ignore: must_be_immutable
 class Sidebar extends StatefulWidget {
@@ -23,14 +23,13 @@ class Sidebar extends StatefulWidget {
 
 class _SidebarState extends State<Sidebar> {
   @override
-  initState() {
+  void initState() {
     super.initState();
     _checkLoginStatus();
   }
 
   void _checkLoginStatus() async {
     final user = FirebaseAuth.instance.currentUser;
-
     setState(() {
       widget.username = user?.displayName ?? '';
     });
@@ -38,36 +37,21 @@ class _SidebarState extends State<Sidebar> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     return Container(
-        height: MediaQuery.of(context).size.height,
-        width: 230.w,
-        decoration: BoxDecoration(boxShadow: const [
+      height: MediaQuery.of(context).size.height,
+      width: 230,
+      decoration: BoxDecoration(
+        boxShadow: const [
           BoxShadow(offset: Offset(0, 15), spreadRadius: 5, blurRadius: 10)
-        ], borderRadius: BorderRadius.circular(30.sp)),
-        child: SideBarBody(
-          isLoggedIn: widget.isLoggedIn,
-          username: widget.username,
-        ));
+        ],
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: _sidebarBody(themeProvider),
+    );
   }
-}
 
-// ignore: must_be_immutable
-class SideBarBody extends StatefulWidget {
-  SideBarBody(
-      {super.key,
-      //required this.isDarkMode,
-      required this.isLoggedIn,
-      required this.username});
-  //bool isDarkMode;
-  AuthUserProvider isLoggedIn;
-  final String username;
-  @override
-  State<SideBarBody> createState() => _SideBarBodyState();
-}
-
-class _SideBarBodyState extends State<SideBarBody> {
-  @override
-  Widget build(BuildContext context) {
+  Widget _sidebarBody(ThemeProvider themeProvider) {
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.surface,
       child: ListView(
@@ -76,53 +60,48 @@ class _SideBarBodyState extends State<SideBarBody> {
           _buildHeader(context),
           linkNotUser(context),
           if (widget.isLoggedIn.isLogged) linkToUser(context),
-          themeModeOption(),
+          themeModeOption(themeProvider),
         ],
       ),
     );
   }
 
-  DrawerHeader _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context) {
     return DrawerHeader(
       child: Center(
         child: Text(
           style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
-          // ignore: unrelated_type_equality_checks
           !widget.isLoggedIn.isLogged
               ? 'Hola, Invitado!'
               : widget.username.isNotEmpty
-                  ? 'Hola,${widget.username}'
+                  ? 'Hola, ${widget.username}'
                   : 'Hola, Invitado!',
         ),
       ),
     );
   }
 
-  Padding themeModeOption() {
+  Padding themeModeOption(ThemeProvider themeProvider) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 300.h),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 300),
       child: Row(
         children: [
           Selector<ThemeProvider, bool>(
             selector: (context, themeProvider) => themeProvider.isDarkMode,
             builder: (context, value, child) {
               return CupertinoSwitch(
-                value: Provider.of<ThemeProvider>(context, listen: false)
-                    .isDarkMode,
+                value: value,
                 onChanged: (value) {
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .toogleTheme();
+                  themeProvider.toogleTheme();
                 },
               );
             },
           ),
-          const SizedBox(
-            width: 10,
-          ),
+          const SizedBox(width: 10),
           const Text(
             'Dark Mode',
             style: TextStyle(fontSize: 16),
-          )
+          ),
         ],
       ),
     );
@@ -238,14 +217,12 @@ class _SideBarBodyState extends State<SideBarBody> {
               SideBarLink(
                 title: 'Chat Bot',
                 onTap: () {
-                  
                   Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const RegisterScreen(),
                       ));
-                  
                 },
                 icon: Icon(
                   Icons.chat_rounded,
@@ -255,33 +232,6 @@ class _SideBarBodyState extends State<SideBarBody> {
             ],
           )
       ],
-    );
-  }
-}
-
-class SideBarLink extends StatelessWidget {
-  const SideBarLink({
-    super.key,
-    required this.title,
-    required this.onTap,
-    required this.icon,
-    //required this.isDarkMode,
-  });
-  //final bool isDarkMode;
-  final String title;
-  final Function()? onTap;
-  final Icon icon;
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: icon,
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.inversePrimary,
-        ),
-      ),
-      onTap: onTap,
     );
   }
 }

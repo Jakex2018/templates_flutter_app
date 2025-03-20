@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -144,11 +143,11 @@ class RegisterFormForgot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 165.w),
+      padding: EdgeInsets.only(left: 165),
       child: Text(
         'Forgot Password',
         style: TextStyle(
-            fontSize: 13.sp,
+            fontSize: 13,
             color: Colors.black26,
             fontWeight: FontWeight.bold),
       ),

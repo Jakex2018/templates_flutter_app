@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/common/constants/constants.dart';
 import 'package:templates_flutter_app/controllers/auth_controller.dart';
 import 'package:templates_flutter_app/views/home_app.dart';
@@ -42,7 +41,7 @@ class _LoginState extends State<Login> {
             child: Form(
               key: formKey,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                padding: EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -56,18 +55,18 @@ class _LoginState extends State<Login> {
                             ? 'Please enter a valid email'
                             : null,
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 2.h, horizontal: 20.w),
+                            vertical: 2, horizontal: 20),
                         labelStyle: const TextStyle(color: Colors.black26),
                         fillColor: const Color(0xFFF3F3F3),
                         filled: true,
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(20.sp),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: aDefaultPadding.h,
+                      height: aDefaultPadding,
                     ),
                     TextFormField(
                       controller: passwordField,
@@ -87,18 +86,18 @@ class _LoginState extends State<Login> {
                             ? 'Please enter your password (min 8 characters)'
                             : null,
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 2.h, horizontal: 20.w),
+                            vertical: 2, horizontal: 20),
                         labelStyle: const TextStyle(color: Colors.black26),
                         fillColor: const Color(0xFFF3F3F3),
                         filled: true,
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(20.sp),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: 30.h,
+                      height: 30,
                     ),
                     ElevatedButton(
                       onPressed: () async {

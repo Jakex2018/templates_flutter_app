@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/common/constants/constants.dart';
 import 'package:templates_flutter_app/controllers/suscription_controller.dart';
@@ -39,11 +38,10 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    suscriptionProvider = Provider.of<SuscriptionProvider>(context);
     suscriptionServices = SuscriptionServices();
     suscriptionController = SuscriptionController(
-      subscriptionProvider: suscriptionProvider,
       subscriptionServices: suscriptionServices,
+      suscriptionProvider: suscriptionProvider, // Pasar el provider aquí
     );
   }
 
@@ -78,6 +76,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
 
   Widget listViewContent(BuildContext context, SuscriptionModel suscription,
       SuscriptionController controller, int index, String? userId) {
+    final isSuscribed = Provider.of<SuscriptionProvider>(context).isSuscribed;
     return Container(
       width: MediaQuery.of(context).size.width * .8,
       padding: const EdgeInsetsDirectional.symmetric(vertical: 20),
@@ -90,11 +89,11 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
         children: [
           Container(
             margin: const EdgeInsets.only(bottom: 10),
-            height: 170.h,
+            height: 170,
             width: MediaQuery.of(context).size.width * .7,
             decoration: BoxDecoration(
               color: kpurpleColor,
-              borderRadius: BorderRadius.circular(20.sp),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -105,7 +104,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 30.sp,
+                    fontSize: 30,
                   ),
                 ),
               ],
@@ -130,7 +129,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
                           child: Text(
                             suscription.desc['desc0${i + 1}']!,
                             style:
-                                TextStyle(fontSize: 14.sp, color: Colors.black),
+                                TextStyle(fontSize: 14, color: Colors.black),
                           ),
                         ),
                       ],
@@ -141,7 +140,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
           ),
           const SizedBox(height: 20),
           Text(
-            suscription.price != null ? '\$${suscription.price}/Month' : '',
+            '\$${suscription.price}/Month',
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -149,9 +148,9 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
             ),
           ),
           const SizedBox(height: 30),
-          controller.isSuscribed
+          isSuscribed
               ? ButtonOne(
-                  text: controller.isSuscribed
+                  text: isSuscribed
                       ? suscription.cat == SuscriptionCat.free
                           ? 'Default'
                           : "Cancel"

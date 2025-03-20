@@ -15,9 +15,11 @@ import 'package:templates_flutter_app/models/user_model.dart';
 class AuthServices {
   Future<void> loginUser(
       String email, String password, BuildContext context, formKey) async {
+       
     final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
     try {
-      await FirebaseAuth.instance
+       if(formKey.currentState!.validate()){
+        await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
       authProvider.setLoggedIn(true);
@@ -55,6 +57,8 @@ class AuthServices {
           MaterialPageRoute(
             builder: (context) => const Home(),
           ));
+       }
+      
     } on FirebaseAuthException catch (e) {
       String message;
       if (e.code == 'user-not-found') {
@@ -77,7 +81,7 @@ class AuthServices {
   }
 
   Future<void> registerUser(String username, String email, String password,
-      BuildContext context) async {
+      BuildContext context,GlobalKey<FormState> formKey) async {
     try {
       final UserCredential registerCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TemplateOption extends StatelessWidget {
   const TemplateOption({
@@ -16,19 +15,19 @@ class TemplateOption extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.only(right: 50.w),
+        padding: EdgeInsets.only(right: 50),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             icon,
             SizedBox(
-              width: 20.w,
+              width: 20,
             ),
             Container(
-              width: 200.w,
-              height: 40.h,
+              width: 200,
+              height: 40,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.sp),
+                  borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                   boxShadow: const [
                     BoxShadow(
@@ -42,7 +41,7 @@ class TemplateOption extends StatelessWidget {
                 title,
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold),
               )),
             )

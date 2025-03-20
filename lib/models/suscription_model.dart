@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 
 class SuscriptionModel {
@@ -7,22 +6,56 @@ class SuscriptionModel {
   final SuscriptionCat? cat;
   final Map<String, String> desc;
   final Map<String, String> items;
-  final double? price;
+  final double price;
 
   SuscriptionModel({
-    this.price,
+    required this.price,
     required this.cat,
     required this.desc,
     required this.items,
     required this.title,
     required this.icon,
   });
+
+  factory SuscriptionModel.fromJson(Map<String, dynamic> json) {
+    return SuscriptionModel(
+      title: json['title'] as String,
+      icon: Icon(IconData(json['icon']['codePoint'], fontFamily: 'MaterialIcons'),
+          color: Color(json['icon']['color'])), 
+      cat: SuscriptionCat.values.firstWhere(
+        (e) => e.toString() == json['cat'],
+        orElse: () => SuscriptionCat.free, // Valor por defecto
+      ),
+      desc: Map<String, String>.from(json['desc']),
+      items: Map<String, String>.from(json['items']),
+      price:  json['price'] as double,
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'icon': {
+        'codePoint': icon.icon!.codePoint,
+        'size': icon.size,
+        'color': icon.color!.value,
+      },
+      'cat': cat,
+      'desc': desc,
+      'items': items,
+      
+    };
+  }
 }
 
-final List<SuscriptionModel> infoCard = [
+final infoCard = [
   SuscriptionModel(
     title: 'Free',
-    icon: const Icon(Icons.coffee, size: 100, color: Colors.white),
+    icon: Icon(
+      Icons.coffee,
+      size: 24,
+      color: Colors.black,
+    ),
+    cat: SuscriptionCat.free,
     desc: {
       'desc01': 'Templates Free',
       'desc02': 'Limitated Chat Bot',
@@ -33,27 +66,28 @@ final List<SuscriptionModel> infoCard = [
       'items02': 'asset/verify.png',
       'items03': 'asset/verify.png',
     },
-    cat: SuscriptionCat.free,
+    price: 0.0,
   ),
   SuscriptionModel(
-      price: 4.99,
-      title: 'Premium',
-      desc: {
-        'desc01': 'Templates Premium',
-        'desc02': 'Ilimitated Chat Bot',
-        'desc03': 'Ilimitates coins IA Chat Bot'
-      },
-      items: {
-        'items01': 'asset/verify.png',
-        'items02': 'asset/verify.png',
-        'items03': 'asset/verify.png',
-      },
-      icon: const Icon(
-        Icons.rocket,
-        size: 100,
-        color: Colors.white,
-      ),
-      cat: SuscriptionCat.premium),
+    title: 'Premium',
+    icon: Icon(
+      Icons.coffee,
+      size: 24,
+      color: Colors.black,
+    ),
+    cat: SuscriptionCat.premium,
+    desc: {
+      'desc01': 'Templates Premium',
+      'desc02': 'Unlimited Chat Bot',
+      'desc03': '10 Coins for day IA Chat Bot'
+    },
+    items: {
+      'items01': 'asset/verify.png',
+      'items02': 'asset/verify.png',
+      'items03': 'asset/verify.png',
+    },
+    price: 5.0,
+  ),
 ];
 
 enum SuscriptionCat { free, premium }

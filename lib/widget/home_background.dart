@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/common/constants/constants.dart';
 
 class HomeBackground extends StatelessWidget {
@@ -39,28 +38,28 @@ class HomeBackground extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 32.sp),
+                      fontSize: 32),
                 ),
                 SizedBox(
-                  height: 10.h,
+                  height: 10,
                 ),
                 Text(
                   desc ?? "",
                   style: TextStyle(
                       color: kLightText,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20.sp),
+                      fontSize: 20),
                 ),
               ],
             ),
             Container(
-                padding: EdgeInsets.only(left: 0.w, bottom: 53.h),
+                padding: EdgeInsets.only(left: 0, bottom: 53),
                 child: IconButton(
                   onPressed: onPressed,
                   icon: Icon(
                     sidebarIcon,
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    size: 26.sp,
+                    size: 26,
                   ),
                 ))
           ],

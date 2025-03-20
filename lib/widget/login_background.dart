@@ -1,6 +1,5 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:templates_flutter_app/common/constants/constants.dart';
 
 class LoginBackground extends StatelessWidget {
@@ -27,8 +26,8 @@ class LoginBackground extends StatelessWidget {
         color: kblueColor.withOpacity(.5),
       ),
       Positioned(
-        top: 40.h,
-        left: 10.w,
+        top: 40,
+        left: 10,
         child: Row(
           children: [
             Column(
@@ -37,26 +36,26 @@ class LoginBackground extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset('asset/flutter.png',
-                        fit: BoxFit.cover, height: 100.h),
+                        fit: BoxFit.cover, height: 100),
                     Text(
                       title ?? "",
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 32.sp),
+                          fontSize: 32),
                     ),
                   ],
                 ),
               ],
             ),
             Container(
-                padding: EdgeInsets.only(left: 20.w),
+                padding: EdgeInsets.only(left: 20),
                 child: IconButton(
                   onPressed: onPressed,
                   icon: Icon(
                     sidebarIcon,
                     color: Colors.white,
-                    size: 30.sp,
+                    size: 30,
                   ),
                 ))
           ],

@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
-import 'package:templates_flutter_app/main.dart';
 
 class NotificacionMessages {
   static Future<void> initializeMessagin() async {
@@ -19,9 +18,7 @@ class NotificacionMessages {
     );
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      navigatorKey.currentState!.pushNamed('/suscription');
-    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
   }
 
   static Future<void> firebaseMessagingBackgroundHandler(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ErrorPage extends StatelessWidget {
   const ErrorPage({
@@ -13,7 +12,7 @@ class ErrorPage extends StatelessWidget {
       children: [
         Icon(
           Icons.error_outline,
-          size: 80.sp,
+          size: 80,
           color: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
         RichText(
@@ -25,7 +24,7 @@ class ErrorPage extends StatelessWidget {
                 text: 'FAILED 501\n',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontSize: 30.sp,
+                  fontSize: 30,
                 ),
               ),
               TextSpan(

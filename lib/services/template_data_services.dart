@@ -10,6 +10,16 @@ import 'package:saver_gallery/saver_gallery.dart';
 import 'package:templates_flutter_app/common/constants/constants.dart';
 
 class TemplateDataService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getTemplatesByCategory(
+      String category) {
+    return _firestore
+        .collection('templates')
+        .where('category', isEqualTo: category)
+        .snapshots();
+  }
+
   Future<void> getData(
       TemplateDataService dataService,
       String image,

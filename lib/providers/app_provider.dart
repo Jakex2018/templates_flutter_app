@@ -1,13 +1,15 @@
 import 'package:provider/provider.dart';
+import 'package:templates_flutter_app/controllers/category_controller.dart';
+import 'package:templates_flutter_app/models/connectivity_model.dart';
 import 'package:templates_flutter_app/providers/auth_user_provider.dart';
 import 'package:templates_flutter_app/providers/payment_provider.dart';
-import 'package:templates_flutter_app/models/timer_model.dart';
 import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/providers/theme_provider.dart';
+import 'package:templates_flutter_app/services/connectivity_services.dart';
+import 'package:templates_flutter_app/services/template_data_services.dart';
 
 class AppProvider {
-  // ignore: non_constant_identifier_names
-  static get AllProviders => [
+  static get allProviders => [
         ChangeNotifierProvider(
           create: (context) => ConnectivityModel()..initConnectivity(),
         ),
@@ -16,9 +18,6 @@ class AppProvider {
         ),
         ChangeNotifierProvider(
           create: (context) => PaymentMethodProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => SuscriptionProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => AuthUserProvider(),
@@ -31,5 +30,12 @@ class AppProvider {
             return subscriptionProvider!;
           },
         ),
+        ChangeNotifierProvider<CategoryController>(
+          create: (context) => CategoryControllerImpl(
+            templateService: TemplateDataService(),
+            connectivityService: ConnectivityService(),
+          ),
+        ),
+        // Aquí solo mantenemos la implementación concreta, CategoryControllerImpl.
       ];
 }

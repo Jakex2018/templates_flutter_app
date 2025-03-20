@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:templates_flutter_app/common/routes/name.dart';
 import 'package:templates_flutter_app/common/services/admob_services.dart';
@@ -22,8 +21,8 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ...AppProvider.AllProviders,
-        Provider.value(value: admobServices)
+        ...AppProvider.allProviders,
+        Provider.value(value: admobServices),
       ],
       child: const MyApp(),
     ),
@@ -37,8 +36,6 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-final navigatorKey = GlobalKey<NavigatorState>();
-
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
@@ -50,14 +47,11 @@ class _MyAppState extends State<MyApp> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    return ScreenUtilInit(
-      child: MaterialApp(
-        navigatorKey: navigatorKey,
-        theme: Provider.of<ThemeProvider>(context).themeData,
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/splash',
-        routes: routes,
-      ),
+    return MaterialApp(
+      theme: Provider.of<ThemeProvider>(context).themeData,
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/splash',
+      routes: routes,
     );
   }
 }

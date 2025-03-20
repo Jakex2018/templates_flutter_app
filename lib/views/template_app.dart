@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/common/services/admob_services.dart';
 import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/widget/template_option.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Template extends StatefulWidget {
@@ -130,7 +129,7 @@ class _TemplateBodyState extends State<TemplateBody> {
     final subscriptionProvider =
         Provider.of<SuscriptionProvider>(context, listen: false);
     return Container(
-      height: 560.h,
+      height: MediaQuery.of(context).size.height * .82,
       width: MediaQuery.of(context).size.width,
       color: Theme.of(context).colorScheme.secondary,
       child: SingleChildScrollView(
@@ -138,14 +137,14 @@ class _TemplateBodyState extends State<TemplateBody> {
           children: [
             CachedNetworkImage(
               placeholder: (context, url) => ClipRRect(
-                borderRadius: BorderRadius.circular(20.sp),
+                borderRadius: BorderRadius.circular(20),
                 child: Image.asset('asset/bg_01.jpg'),
               ),
               imageUrl: widget.image,
               fit: BoxFit.fitHeight,
-              height: 250.h,
+              height: MediaQuery.of(context).size.height * .4,
             ),
-            SizedBox(height: 50.h),
+            SizedBox(height: 50),
             TemplateOption(
               title: 'Download Image',
               onTap: () async {
@@ -160,7 +159,7 @@ class _TemplateBodyState extends State<TemplateBody> {
                 size: 40,
               ),
             ),
-            SizedBox(height: 30.h),
+            SizedBox(height: 30),
             TemplateOption(
               title: 'Source Code',
               icon: Icon(
@@ -175,7 +174,7 @@ class _TemplateBodyState extends State<TemplateBody> {
                 await widget.fetchSaveUrlTemplate(widget.url);
               },
             ),
-            SizedBox(height: 30.h),
+            SizedBox(height: 30),
             TemplateOption(
               title: 'Demo',
               icon: Icon(
@@ -184,6 +183,9 @@ class _TemplateBodyState extends State<TemplateBody> {
                 size: 40,
               ),
               onTap: () async {
+                if (!subscriptionProvider.isSuscribed) {
+                  await _showRewardAd();
+                }
                 final urlDemo = await widget.accessDemo;
                 if (urlDemo != null) {
                   print("URL-------> $urlDemo");
@@ -200,20 +202,6 @@ class _TemplateBodyState extends State<TemplateBody> {
                 } else {
                   print("URl NULL");
                 }
-                /*if (!subscriptionProvider.isSuscribed) {
-                  await _showRewardAd();
-                } */
-
-                /*
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => WebApp(
-                      url: widget.url,
-                    ),
-                  ),
-                );
-                 */
               },
             ),
           ],
@@ -224,7 +212,7 @@ class _TemplateBodyState extends State<TemplateBody> {
 
   Container _templateName(BuildContext context) {
     return Container(
-      height: 53.h,
+      height: 53,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onTertiary,
@@ -233,8 +221,8 @@ class _TemplateBodyState extends State<TemplateBody> {
         child: Text(
           widget.title,
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 20.sp,
+            color: Theme.of(context).colorScheme.tertiary,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),

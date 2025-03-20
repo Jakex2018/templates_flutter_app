@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/common/constants/constants.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -31,10 +30,10 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
           Image.asset(
             'asset/login_01.png',
             color: Theme.of(context).colorScheme.inversePrimary,
-            height: 50.h,
+            height: 50,
           ),
           SizedBox(
-            width: aDefaultPadding.w,
+            width: aDefaultPadding,
           ),
           GestureDetector(
             onTap: () async {
@@ -45,7 +44,7 @@ class _RegisterTercerdState extends State<RegisterTercerd> {
             },
             child: Image.asset(
               'asset/login_02.png',
-              height: 50.h,
+              height: 50,
             ),
           ),
         ],
