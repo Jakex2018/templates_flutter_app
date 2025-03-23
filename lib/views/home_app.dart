@@ -32,7 +32,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _homeController = HomeController();
-    _homeController.initializeAnimations(this);
+
     _providerService.initializeProviders(context);
 
     // Use the Timer here
@@ -53,7 +53,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthUserProvider>(context);
+    final authProvider = Provider.of<AuthUserProvider>(context,listen: false);
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return SizedBox(
@@ -82,7 +82,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
-      drawer: Sidebar(isLoggedIn: authProvider, username: username),
+      drawer: Sidebar(
+          isLoggedIn: authProvider,
+          username: authProvider.username ?? "Invitado"),
     );
   }
 

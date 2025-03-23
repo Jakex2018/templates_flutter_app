@@ -16,11 +16,11 @@ class _LoginState extends State<Login> {
   final emailField = TextEditingController();
   final passwordField = TextEditingController();
   bool obscureText = true;
+  final AuthController loginController = AuthController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final AuthController loginController = AuthController();
-    final formKey = GlobalKey<FormState>();
     return Material(
       child: Scaffold(
         appBar: AppBar(
@@ -54,8 +54,8 @@ class _LoginState extends State<Login> {
                                 !emailField.text.contains('.')
                             ? 'Please enter a valid email'
                             : null,
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 2, horizontal: 20),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                         labelStyle: const TextStyle(color: Colors.black26),
                         fillColor: const Color(0xFFF3F3F3),
                         filled: true,
@@ -85,8 +85,8 @@ class _LoginState extends State<Login> {
                                 passwordField.text.length < 8
                             ? 'Please enter your password (min 8 characters)'
                             : null,
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 2, horizontal: 20),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                         labelStyle: const TextStyle(color: Colors.black26),
                         fillColor: const Color(0xFFF3F3F3),
                         filled: true,

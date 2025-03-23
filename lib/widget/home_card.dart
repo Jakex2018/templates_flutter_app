@@ -6,7 +6,7 @@ import 'package:templates_flutter_app/common/constants/constants.dart';
 import 'package:templates_flutter_app/providers/auth_user_provider.dart';
 import 'package:templates_flutter_app/views/category_app.dart';
 import 'package:templates_flutter_app/services/home_data_services.dart';
-import 'package:templates_flutter_app/widget/splash_subscribe.dart';
+
 import 'package:templates_flutter_app/views/login_screen.dart';
 import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/views/suscription_screen.dart';
@@ -223,14 +223,11 @@ class _HomeCardState extends State<HomeCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => SplashSuscribe(
-                      titleSuscription: 'Contratulations Are you Member!!!',
-                      category: category,
-                      widgetScreen: Category(
-                        type: 'Premium',
-                        category: category['category'] as String,
-                      ),
-                    )),
+              builder: (context) => Category(
+                type: 'Premium',
+                category: category['category'] as String,
+              ),
+            ),
           );
         } else {
           __showPremiumDialog(context);
@@ -264,7 +261,7 @@ class _HomeCardState extends State<HomeCard> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Login(),
+                        builder: (context) => Login(),
                       ));
                 },
                 child: const Text('Go to Login'),
@@ -306,25 +303,3 @@ class _HomeCardState extends State<HomeCard> {
     );
   }
 }
-
-
-
-/*
-/*
-void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider<CategoryController>(
-          create: (_) => CategoryController(
-            templateService: TemplateDataService(),
-            connectivityService: ConnectivityService(),
-          ),
-        ),
-      ],
-      child: MyApp(),
-    ),
-  );
-}
- */
- */

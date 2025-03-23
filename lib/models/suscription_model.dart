@@ -52,7 +52,7 @@ final infoCard = [
     title: 'Free',
     icon: Icon(
       Icons.coffee,
-      size: 24,
+      size: 40,
       color: Colors.black,
     ),
     cat: SuscriptionCat.free,
@@ -72,7 +72,7 @@ final infoCard = [
     title: 'Premium',
     icon: Icon(
       Icons.coffee,
-      size: 24,
+      size: 40,
       color: Colors.black,
     ),
     cat: SuscriptionCat.premium,

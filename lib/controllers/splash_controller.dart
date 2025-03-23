@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SplashController {
-  late AnimationController _controller;
+  AnimationController? _controller;
 
   void redirect(BuildContext context) {
     Future.delayed(const Duration(seconds: 2), () {
@@ -13,6 +13,6 @@ class SplashController {
   }
 
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
   }
 }

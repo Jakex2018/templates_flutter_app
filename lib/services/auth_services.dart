@@ -15,50 +15,48 @@ import 'package:templates_flutter_app/models/user_model.dart';
 class AuthServices {
   Future<void> loginUser(
       String email, String password, BuildContext context, formKey) async {
-       
     final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
     try {
-       if(formKey.currentState!.validate()){
+      if (formKey.currentState!.validate()) {
         await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+            .signInWithEmailAndPassword(email: email, password: password);
 
-      authProvider.setLoggedIn(true);
+        authProvider.setLoggedIn(true);
 
-      //GET TOKEN FCM
+        //GET TOKEN FCM
 
-      await FirebaseMessaging.instance.requestPermission();
-      String? token = await FirebaseMessaging.instance.getToken();
+        await FirebaseMessaging.instance.requestPermission();
+        String? token = await FirebaseMessaging.instance.getToken();
 
-      if (token != null) {
-        final uid = FirebaseAuth.instance.currentUser?.uid;
-        if (uid != null) {
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(uid)
-              .set({'fcm_token': token}, SetOptions(merge: true));
+        if (token != null) {
+          final uid = FirebaseAuth.instance.currentUser?.uid;
+          if (uid != null) {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(uid)
+                .set({'fcm_token': token}, SetOptions(merge: true));
+          }
         }
+
+        //SAVE USER
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 4),
+            margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
+            content: Text('Login Successfull!!!'),
+          ),
+        );
+
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ));
       }
-
-      //SAVE USER
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 4),
-          margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
-          content: Text('Login Successfull!!!'),
-        ),
-      );
-
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Home(),
-          ));
-       }
-      
     } on FirebaseAuthException catch (e) {
       String message;
       if (e.code == 'user-not-found') {
@@ -81,8 +79,23 @@ class AuthServices {
   }
 
   Future<void> registerUser(String username, String email, String password,
-      BuildContext context,GlobalKey<FormState> formKey) async {
+      BuildContext context, GlobalKey<FormState> formKey) async {
     try {
+      final userQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+      if (userQuery.docs.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 3),
+            margin: EdgeInsets.only(bottom: 50, left: 60, right: 50),
+            content: Text('El correo electrónico ya está registrado.'),
+          ),
+        );
+        return;
+      }
       final UserCredential registerCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
@@ -96,6 +109,7 @@ class AuthServices {
           textColor: Colors.white,
           fontSize: 16.0,
         );
+        return;
       }
 
       if (registerCredential.user != null) {
@@ -111,11 +125,10 @@ class AuthServices {
         final userDoc =
             FirebaseFirestore.instance.collection('users').doc(userId);
         await userDoc.set(userModel.toMap(), SetOptions(merge: true));
-        await registerCredential.user?.sendEmailVerification();
+        //await registerCredential.user?.sendEmailVerification();
         await registerCredential.user?.updateDisplayName(username);
         Fluttertoast.showToast(
-          msg:
-              "Registration Successfull!\nCheck your email and verify your account",
+          msg: "Registration Successfull!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1, // 1 second for iOS/Web
@@ -123,12 +136,7 @@ class AuthServices {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        Navigator.push(
-            // ignore: use_build_context_synchronously
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Login(),
-            ));
+        await loginUser(email, password, context, formKey);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

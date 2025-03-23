@@ -15,7 +15,7 @@ class SuscriptionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose a Suscription'),
+        title: const Text('Choose a Subscription'),
         centerTitle: true,
       ),
       body: const SuscriptionBody(),
@@ -32,16 +32,15 @@ class SuscriptionBody extends StatefulWidget {
 
 class _SuscriptionBodyState extends State<SuscriptionBody> {
   late SuscriptionController suscriptionController;
-  late SuscriptionProvider suscriptionProvider;
-  late SuscriptionServices suscriptionServices;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    suscriptionServices = SuscriptionServices();
+    final suscriptionServices = SuscriptionServices();
+    final suscriptionProvider = Provider.of<SuscriptionProvider>(context);
     suscriptionController = SuscriptionController(
       subscriptionServices: suscriptionServices,
-      suscriptionProvider: suscriptionProvider, // Pasar el provider aquí
+      suscriptionProvider: suscriptionProvider,
     );
   }
 
@@ -55,19 +54,18 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         height: MediaQuery.of(context).size.height * .75,
         width: MediaQuery.of(context).size.width * .9,
-        child: listViewSuscriptions(userId, suscriptionController),
+        child: listViewSuscriptions(userId),
       ),
     );
   }
 
-  Widget listViewSuscriptions(
-      String? userId, SuscriptionController controller) {
+  Widget listViewSuscriptions(String? userId) {
     return ListView.separated(
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         final suscription = infoCard[index];
-        return listViewContent(context, suscription, controller, index, userId);
+        return listViewContent(context, suscription, index, userId);
       },
       separatorBuilder: (context, index) => const SizedBox(width: 10),
       itemCount: infoCard.length,
@@ -75,8 +73,9 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
   }
 
   Widget listViewContent(BuildContext context, SuscriptionModel suscription,
-      SuscriptionController controller, int index, String? userId) {
+      int index, String? userId) {
     final isSuscribed = Provider.of<SuscriptionProvider>(context).isSuscribed;
+
     return Container(
       width: MediaQuery.of(context).size.width * .8,
       padding: const EdgeInsetsDirectional.symmetric(vertical: 20),
@@ -87,6 +86,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          // Contenido de la tarjeta de suscripción
           Container(
             margin: const EdgeInsets.only(bottom: 10),
             height: 170,
@@ -99,13 +99,15 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 suscription.icon,
+                SizedBox(
+                  width: 10,
+                ),
                 Text(
                   suscription.title,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40),
                 ),
               ],
             ),
@@ -128,8 +130,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
                           width: 100,
                           child: Text(
                             suscription.desc['desc0${i + 1}']!,
-                            style:
-                                TextStyle(fontSize: 14, color: Colors.black),
+                            style: TextStyle(fontSize: 14, color: Colors.black),
                           ),
                         ),
                       ],
@@ -142,10 +143,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
           Text(
             '\$${suscription.price}/Month',
             style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 3,
-            ),
+                fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: 3),
           ),
           const SizedBox(height: 30),
           isSuscribed
@@ -157,7 +155,7 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
                       : suscription.cat == SuscriptionCat.free
                           ? 'Default'
                           : "Buy",
-                  onPressed: () => controller.cancelSubscription(
+                  onPressed: () => suscriptionController.cancelSubscription(
                       context, userId, suscription),
                   backgroundColor: suscription.cat == SuscriptionCat.free
                       ? kpurpleColor
@@ -167,8 +165,8 @@ class _SuscriptionBodyState extends State<SuscriptionBody> {
                   text: suscription.cat == SuscriptionCat.free
                       ? 'Default'
                       : "Buy",
-                  onPressed: () =>
-                      controller.handleSubscription(context, suscription),
+                  onPressed: () => suscriptionController.handleSubscription(
+                      context, suscription),
                   backgroundColor: kpurpleColor,
                 ),
         ],

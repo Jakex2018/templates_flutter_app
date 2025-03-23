@@ -1,36 +1,23 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:templates_flutter_app/services/connectivity_services.dart';
+import 'package:templates_flutter_app/services/loading_services.dart';
+import 'package:templates_flutter_app/services/provider_services.dart';
 
 class HomeController {
-  late AnimationController controller;
-  late Animation<double> fadeInAnimation;
-  late Animation<Offset> offsetAnimation;
+  final LoadingService _loadingService = LoadingService();
+  final ConnectivityService _connectivityService = ConnectivityService();
+  final ProviderService _providerService = ProviderService();
 
-  void initializeAnimations(TickerProvider tickerProvider) {
-    controller = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: tickerProvider,
-    );
+  Stream<ConnectivityResult> get connectivityStream =>
+      _connectivityService.connectivityStream;
 
-    fadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeIn,
-      ),
-    );
-
-    offsetAnimation =
-        Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    // Inicia la animación
-    controller.forward();
+  Future<void> initialize(BuildContext context) async {
+    _providerService.initializeProviders(context);
+    await _loadingService.simulateLoading();
   }
 
   void dispose() {
-    controller.dispose();
+    // Limpiar recursos si es necesario
   }
 }

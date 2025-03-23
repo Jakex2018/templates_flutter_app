@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:templates_flutter_app/providers/payment_provider.dart';
-import 'package:templates_flutter_app/services/user_pay_services.dart';
-import 'package:templates_flutter_app/models/suscription_model.dart';
 import 'package:provider/provider.dart';
+import 'package:templates_flutter_app/controllers/payment_controller.dart';
+import 'package:templates_flutter_app/models/payment_model.dart';
+import 'package:templates_flutter_app/models/suscription_model.dart';
+import 'package:templates_flutter_app/services/user_pay_services.dart';
 
 class PaymentScreen extends StatelessWidget {
   const PaymentScreen({super.key, required this.suscription});
@@ -11,16 +13,22 @@ class PaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserPayServices userServices = UserPayServices.instance;
-    final paymentProvider = Provider.of<PaymentMethodProvider>(context);
+    final userServices = UserPayServices.instance;
+    final paymentController = Provider.of<PaymentController>(context);
 
     return Scaffold(
-      appBar: _buildApp(),
-      body: _buildBody(paymentProvider, userServices, context),
+      appBar: _buildAppBar(),
+      body: _buildBody(paymentController, userServices, context),
     );
   }
 
-  Padding _buildBody(PaymentMethodProvider paymentProvider,
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text("Elegir Método de Pago"),
+    );
+  }
+
+  Widget _buildBody(PaymentController paymentController,
       UserPayServices userServices, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -52,47 +60,32 @@ class PaymentScreen extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.payment),
             title: Text("Pagar con PayPal"),
-            tileColor: paymentProvider.paymentMethod == PaymentOp.paypal
+            tileColor: paymentController.paymentMethod == PaymentOp.paypal
                 ? Colors.blue.withOpacity(0.2)
                 : null,
             onTap: () {
-              paymentProvider.setPaymentMethod(PaymentOp.paypal);
+              paymentController.setPaymentMethod(PaymentOp.paypal);
             },
           ),
           ListTile(
             leading: Icon(Icons.credit_card),
             title: Text("Pagar con Stripe"),
-            tileColor: paymentProvider.paymentMethod == PaymentOp.stripe
+            tileColor: paymentController.paymentMethod == PaymentOp.stripe
                 ? Colors.blue.withOpacity(0.2)
                 : null,
             onTap: () {
-              paymentProvider.setPaymentMethod(PaymentOp.stripe);
+              paymentController.setPaymentMethod(PaymentOp.stripe);
             },
           ),
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              if (paymentProvider.paymentMethod == PaymentOp.paypal) {
-                userServices.navigatePaypal(context);
-              } else if (paymentProvider.paymentMethod == PaymentOp.stripe) {
-                userServices.makePayment(context);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text("Por favor, selecciona un método de pago")),
-                );
-              }
+              paymentController.processPayment(context, userServices);
             },
             child: Text("Confirmar Pago"),
           ),
         ],
       ),
-    );
-  }
-
-  AppBar _buildApp() {
-    return AppBar(
-      title: Text("Eligir Método de Pago"),
     );
   }
 }

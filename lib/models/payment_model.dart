@@ -1,4 +1,4 @@
-enum PaymentOp { card, paypal }
+enum PaymentOp { card, paypal,none, stripe }
 
 class PaymentMethodModel {
   final PaymentOp payment;

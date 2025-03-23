@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:templates_flutter_app/services/auth_services.dart';
 
-class AuthController {
+class AuthController extends ChangeNotifier {
   final AuthServices authServices;
 
   // Constructor con inyección de dependencias

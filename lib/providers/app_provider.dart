@@ -1,5 +1,7 @@
 import 'package:provider/provider.dart';
+import 'package:templates_flutter_app/controllers/auth_controller.dart';
 import 'package:templates_flutter_app/controllers/category_controller.dart';
+import 'package:templates_flutter_app/controllers/payment_controller.dart';
 import 'package:templates_flutter_app/models/connectivity_model.dart';
 import 'package:templates_flutter_app/providers/auth_user_provider.dart';
 import 'package:templates_flutter_app/providers/payment_provider.dart';
@@ -11,6 +13,9 @@ import 'package:templates_flutter_app/services/template_data_services.dart';
 
 class AppProvider {
   static get allProviders => [
+        ChangeNotifierProvider(create: (_) => AuthController()),
+        ChangeNotifierProvider(create: (_) => PaymentController()),
+
         ChangeNotifierProvider(
           create: (context) => ConnectivityModel()..initConnectivity(),
         ),

@@ -8,7 +8,7 @@ import 'package:templates_flutter_app/views/suscription_screen.dart';
 final routes = <String, WidgetBuilder>{
   '/splash': (context) => const SplashScreen(),
   '/home': (context) => const Home(),
-  '/login': (context) => const Login(),
+  '/login': (context) =>  Login(),
   '/register': (context) => const RegisterScreen(),
   '/suscription': (context) => const SuscriptionScreen()
 };
