@@ -3,17 +3,10 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
 
-import 'package:cloud_firestore/cloud_firestore.dart' as _i2;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart' as _i5;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/mockito.dart';
-import 'package:mockito/src/dummies.dart' as _i6;
-import 'package:templates_flutter_app/controllers/category_controller.dart'
-    as _i3;
 import 'package:templates_flutter_app/controllers/category_controller.dart';
 
 // ignore_for_file: type=lint
@@ -28,28 +21,6 @@ import 'package:templates_flutter_app/controllers/category_controller.dart';
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
-
-class _FakeSnapshotMetadata_0 extends _i1.SmartFake
-    implements _i2.SnapshotMetadata {
-  _FakeSnapshotMetadata_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-class _FakeDocumentReference_1<T1 extends Object?> extends _i1.SmartFake
-    implements _i2.DocumentReference<T1> {
-  _FakeDocumentReference_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
 
 /// A class which mocks [CategoryController].
 ///
@@ -88,7 +59,7 @@ class MockCategoryController extends Mock implements CategoryController {
         Invocation.setter(#currentPage, value),
       );
 
-   @override
+  @override
   void changePage(int index) => super.noSuchMethod(
         Invocation.method(#changePage, [index]),
       );
@@ -119,4 +90,3 @@ class MockDocumentSnapshot extends Mock
         'description': 'Mock Description',
       };
 }
-

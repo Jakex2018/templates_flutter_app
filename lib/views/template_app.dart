@@ -1,14 +1,13 @@
-// ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 import 'package:templates_flutter_app/controllers/template_controller.dart';
+import 'package:templates_flutter_app/models/template_model.dart';
+import 'package:templates_flutter_app/services/ad_services.dart';
 import 'package:templates_flutter_app/services/template_data_services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'package:templates_flutter_app/common/services/admob_services.dart';
 import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/widget/template_option.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:templates_flutter_app/widget/web_app.dart';
 
 class Template extends StatefulWidget {
   const Template({super.key, required this.image});
@@ -19,26 +18,31 @@ class Template extends StatefulWidget {
 }
 
 class _TemplateState extends State<Template> {
-  final TemplateDataService _dataService = TemplateDataService();
   TemplateController? _templateController;
-
-  String _name = "";
-  String _urlRepository = "";
-  String _nameImage = "";
+  TemplateModel? _templateModel;
 
   @override
-  void initState() {
-    super.initState();
-    _templateController = TemplateController(_dataService);
-    _getData();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_templateController == null) {
+      final admobServices = context.read<AdService>();
+      final subscriptionProvider = context.read<SuscriptionProvider>();
+      final templateDataService = TemplateDataService();
+
+      _templateController = TemplateController(
+        templateDataService,
+        admobServices,
+        subscriptionProvider,
+      );
+
+      _getData();
+    }
   }
 
   Future<void> _getData() async {
     final data = await _templateController!.getTemplateData(widget.image);
     setState(() {
-      _name = data['name']!;
-      _urlRepository = data['url']!;
-      _nameImage = data['nameImage']!;
+      _templateModel = data;
     });
   }
 
@@ -47,24 +51,8 @@ class _TemplateState extends State<Template> {
     return Material(
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: _buildBody(),
+        body: _templateImage(context),
       ),
-    );
-  }
-
-  Widget _buildBody() {
-    return Stack(
-      children: [
-        TemplateBody(
-          image: widget.image,
-          title: _name,
-          url: _urlRepository,
-          nameImg: _nameImage,
-          accessDemo: _templateController!.accessDemo(widget.image),
-          fetchDownloadImage: _templateController!.downloadImage,
-          fetchSaveUrlTemplate: _templateController!.saveUrlTemplate,
-        ),
-      ],
     );
   }
 
@@ -77,81 +65,27 @@ class _TemplateState extends State<Template> {
       ),
     );
   }
-}
 
-class TemplateBody extends StatefulWidget {
-  const TemplateBody({
-    super.key,
-    required this.image,
-    required this.title,
-    required this.url,
-    required this.nameImg,
-    required this.accessDemo,
-    required this.fetchDownloadImage,
-    required this.fetchSaveUrlTemplate,
-  });
-
-  final String image;
-  final String title;
-  final String url;
-  final String nameImg;
-  final Function(String) fetchDownloadImage;
-  final Function(String) fetchSaveUrlTemplate;
-  final Future<String?> accessDemo;
-
-  @override
-  State<TemplateBody> createState() => _TemplateBodyState();
-}
-
-class _TemplateBodyState extends State<TemplateBody> {
-  late AdmobServices _admobServices;
-  RewardedAd? rewardedAd;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _admobServices = context.read<AdmobServices>();
-    _createRewardAd();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        _templateName(context),
-        _templateImage(context),
-      ],
-    );
-  }
-
-  Container _templateImage(BuildContext context) {
-    final subscriptionProvider =
-        Provider.of<SuscriptionProvider>(context, listen: false);
+  Widget _templateImage(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * .82,
+      height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       color: Theme.of(context).colorScheme.secondary,
       child: SingleChildScrollView(
         child: Column(
           children: [
             CachedNetworkImage(
-              placeholder: (context, url) => ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset('asset/bg_01.jpg'),
-              ),
               imageUrl: widget.image,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
               fit: BoxFit.fitHeight,
               height: MediaQuery.of(context).size.height * .4,
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             TemplateOption(
               title: 'Download Image',
               onTap: () async {
-                if (!subscriptionProvider.isSuscribed) {
-                  await _showRewardAd();
-                }
-                await widget.fetchDownloadImage(widget.image);
+                await _templateController!.downloadImage(widget.image);
               },
               icon: Icon(
                 Icons.download_for_offline_rounded,
@@ -159,7 +93,7 @@ class _TemplateBodyState extends State<TemplateBody> {
                 size: 40,
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             TemplateOption(
               title: 'Source Code',
               icon: Icon(
@@ -168,13 +102,10 @@ class _TemplateBodyState extends State<TemplateBody> {
                 size: 40,
               ),
               onTap: () async {
-                if (!subscriptionProvider.isSuscribed) {
-                  await _showRewardAd();
-                }
-                await widget.fetchSaveUrlTemplate(widget.url);
+                await _templateController!.saveUrlTemplate(_templateModel!.url);
               },
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             TemplateOption(
               title: 'Demo',
               icon: Icon(
@@ -183,24 +114,15 @@ class _TemplateBodyState extends State<TemplateBody> {
                 size: 40,
               ),
               onTap: () async {
-                if (!subscriptionProvider.isSuscribed) {
-                  await _showRewardAd();
-                }
-                final urlDemo = await widget.accessDemo;
-                if (urlDemo != null) {
-                  print("URL-------> $urlDemo");
-                  if (context.mounted) {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WebApp(
-                          url: urlDemo,
-                        ),
-                      ),
-                    );
-                  }
-                } else {
-                  print("URl NULL");
+                final urlDemo =
+                    await _templateController!.accessDemo(widget.image);
+                if (urlDemo != null && context.mounted) {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebApp(url: urlDemo),
+                    ),
+                  );
                 }
               },
             ),
@@ -210,7 +132,10 @@ class _TemplateBodyState extends State<TemplateBody> {
     );
   }
 
-  Container _templateName(BuildContext context) {
+ 
+}
+/*
+ Widget _templateName(BuildContext context) {
     return Container(
       height: 53,
       width: MediaQuery.of(context).size.width,
@@ -219,7 +144,7 @@ class _TemplateBodyState extends State<TemplateBody> {
       ),
       child: Center(
         child: Text(
-          widget.title,
+          _templateModel!.name,
           style: TextStyle(
             color: Theme.of(context).colorScheme.tertiary,
             fontSize: 20,
@@ -229,79 +154,4 @@ class _TemplateBodyState extends State<TemplateBody> {
       ),
     );
   }
-
-  void _createRewardAd() {
-    RewardedAd.load(
-      adUnitId: _admobServices.rewardsAdUid!,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
-          setState(() {
-            rewardedAd = ad;
-          });
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          setState(() {
-            rewardedAd = null;
-          });
-        },
-      ),
-    );
-  }
-
-  Future<void> _showRewardAd() async {
-    if (rewardedAd != null) {
-      rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (RewardedAd ad) {
-          ad.dispose();
-          _createRewardAd();
-        },
-        onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-          ad.dispose();
-          _createRewardAd();
-        },
-      );
-      await rewardedAd!.show(
-        onUserEarnedReward: (ad, reward) => ad.dispose(),
-      );
-    }
-  }
-}
-
-class WebApp extends StatefulWidget {
-  final String url;
-
-  const WebApp({super.key, required this.url});
-
-  @override
-  State<WebApp> createState() => _WebAppState();
-}
-
-class _WebAppState extends State<WebApp> {
-  late WebViewController controller;
-  @override
-  void initState() {
-    super.initState();
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Muestra una barra de progreso o algo similar
-          },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
-          onWebResourceError: (WebResourceError error) {
-            // Maneja errores de carga
-            print("Error loading URL: ${error.description}");
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.url));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return WebViewWidget(controller: controller);
-  }
-}
+ */

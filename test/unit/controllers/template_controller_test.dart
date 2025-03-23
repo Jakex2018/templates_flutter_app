@@ -1,8 +1,166 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:templates_flutter_app/controllers/template_controller.dart';
-import '../../mocks/template_controller_test.mocks.dart';
+import 'package:templates_flutter_app/models/template_model.dart';
+import '../../mocks/setup_firebase_auth_mocks.dart.dart';
+import '../../mocks/template_app_test.mocks.dart';
 
+// Genera el mock usando build_runner
+/*
+@GenerateMocks(
+    [TemplateDataService, AdService, SuscriptionProvider, TemplateController]) */
+void main() {
+  setupFirebaseAuthMocks();
+  late TemplateController templateController;
+  late MockTemplateDataService mockTemplateDataService;
+  late MockAdService mockAdService;
+  late MockSuscriptionProvider mockSuscriptionProvider;
+
+  setUp(() async {
+    await Firebase.initializeApp();
+    mockTemplateDataService = MockTemplateDataService();
+    mockAdService = MockAdService();
+    mockSuscriptionProvider = MockSuscriptionProvider();
+    templateController = TemplateController(
+      mockTemplateDataService,
+      mockAdService,
+      mockSuscriptionProvider,
+    );
+  });
+
+  group('TemplateController Tests', () {
+    test('getTemplateData returns a TemplateModel', () async {
+      // Arrange
+      when(mockTemplateDataService.fetchNameTemplate('image_url'))
+          .thenAnswer((_) async => 'Template Name');
+      when(mockTemplateDataService.fetchUrlTemplate('image_url'))
+          .thenAnswer((_) async => 'https://example.com');
+      when(mockTemplateDataService.fetchGetNameImage('image_url'))
+          .thenAnswer((_) async => 'image_name.jpg');
+
+      // Act
+      final result = await templateController.getTemplateData('image_url');
+
+      // Assert
+      expect(result, isA<TemplateModel>());
+      expect(result.name, 'Template Name');
+      expect(result.url, 'https://example.com');
+      expect(result.nameImage, 'image_name.jpg');
+    });
+
+    test(
+        'downloadImage calls showRewardedAd and fetchDownloadImage when not subscribed',
+        () async {
+      // Arrange
+      when(mockSuscriptionProvider.isSuscribed).thenReturn(false);
+      when(mockAdService.showRewardedAd()).thenAnswer((_) async {});
+      when(mockTemplateDataService.fetchDownloadImage('image_url'))
+          .thenAnswer((_) async {});
+
+      // Act
+      await templateController.downloadImage('image_url');
+
+      // Assert
+      verify(mockAdService.showRewardedAd()).called(1);
+      verify(mockTemplateDataService.fetchDownloadImage('image_url')).called(1);
+    });
+
+    test('downloadImage does not call showRewardedAd when subscribed',
+        () async {
+      // Arrange
+      when(mockSuscriptionProvider.isSuscribed).thenReturn(true);
+      when(mockTemplateDataService.fetchDownloadImage('image_url'))
+          .thenAnswer((_) async {});
+
+      // Act
+      await templateController.downloadImage('image_url');
+
+      // Assert
+      verifyNever(mockAdService.showRewardedAd());
+      verify(mockTemplateDataService.fetchDownloadImage('image_url')).called(1);
+    });
+
+    test(
+        'saveUrlTemplate calls showRewardedAd and fetchSaveUrlTemplate when not subscribed',
+        () async {
+      // Arrange
+      when(mockSuscriptionProvider.isSuscribed).thenReturn(false);
+      when(mockAdService.showRewardedAd()).thenAnswer((_) async {});
+      when(mockTemplateDataService.fetchSaveUrlTemplate('https://example.com'))
+          .thenAnswer((_) async {});
+
+      // Act
+      await templateController.saveUrlTemplate('https://example.com');
+
+      // Assert
+      verify(mockAdService.showRewardedAd()).called(1);
+      verify(mockTemplateDataService
+              .fetchSaveUrlTemplate('https://example.com'))
+          .called(1);
+    });
+
+    test('saveUrlTemplate does not call showRewardedAd when subscribed',
+        () async {
+      // Arrange
+      when(mockSuscriptionProvider.isSuscribed).thenReturn(true);
+      when(mockTemplateDataService.fetchSaveUrlTemplate('https://example.com'))
+          .thenAnswer((_) async {});
+
+      // Act
+      await templateController.saveUrlTemplate('https://example.com');
+
+      // Assert
+      verifyNever(mockAdService.showRewardedAd());
+      verify(mockTemplateDataService
+              .fetchSaveUrlTemplate('https://example.com'))
+          .called(1);
+    });
+
+    test(
+        'accessDemo calls showRewardedAd and returns demo URL when not subscribed',
+        () async {
+      // Arrange
+      when(mockSuscriptionProvider.isSuscribed).thenReturn(false);
+      when(mockAdService.showRewardedAd()).thenAnswer((_) async {});
+      when(mockTemplateDataService.accessDemo('image_url'))
+          .thenAnswer((_) async => 'https://demo.com');
+
+      // Act
+      final result = await templateController.accessDemo('image_url');
+
+      // Assert
+      expect(result, 'https://demo.com');
+      verify(mockAdService.showRewardedAd()).called(1);
+      verify(mockTemplateDataService.accessDemo('image_url')).called(1);
+    });
+
+    test('accessDemo does not call showRewardedAd when subscribed', () async {
+      // Arrange
+      when(mockSuscriptionProvider.isSuscribed).thenReturn(true);
+      when(mockTemplateDataService.accessDemo('image_url'))
+          .thenAnswer((_) async => 'https://demo.com');
+
+      // Act
+      final result = await templateController.accessDemo('image_url');
+
+      // Assert
+      expect(result, 'https://demo.com');
+      verifyNever(mockAdService.showRewardedAd());
+      verify(mockTemplateDataService.accessDemo('image_url')).called(1);
+    });
+  });
+}
+
+
+
+
+
+
+
+
+
+/*
 void main() {
   late TemplateController templateController;
   late MockTemplateDataService mockTemplateDataService;
@@ -80,3 +238,5 @@ void main() {
     });
   });
 }
+
+ */

@@ -73,8 +73,10 @@ class _CategoryState extends State<Category> {
       child: Consumer<CategoryController>(
         builder: (context, categoryController, child) {
           // Llamamos a getTemplatesByCategory aquí
-          final templatesStream = categoryController.getTemplatesByCategory(widget.category);
-          _combinedStream = _combineStreams(templatesStream, _connectivityStream);
+          final templatesStream =
+              categoryController.getTemplatesByCategory(widget.category);
+          _combinedStream =
+              _combineStreams(templatesStream, _connectivityStream);
 
           return StreamBuilder<Map<String, dynamic>>(
             stream: _combinedStream,
@@ -98,7 +100,8 @@ class _CategoryState extends State<Category> {
                 return const Text('Error de conectividad');
               }
 
-              return _categoryBody(widget.type, templateSnapshot, categoryController);
+              return _categoryBody(
+                  widget.type, templateSnapshot, categoryController);
             },
           );
         },
@@ -107,10 +110,13 @@ class _CategoryState extends State<Category> {
   }
 
   Widget _categoryBody(
-      String categoryType, QuerySnapshot<Map<String, dynamic>> snapshot, CategoryController categoryController) {
+      String categoryType,
+      QuerySnapshot<Map<String, dynamic>> snapshot,
+      CategoryController categoryController) {
     return Consumer<SuscriptionProvider>(
       builder: (context, subscriptionProvider, child) {
-        if (categoryType == 'Free' || subscriptionProvider.isSuscribed == true) {
+        if (categoryType == 'Free' ||
+            subscriptionProvider.isSuscribed == true) {
           return Material(
             child: Scaffold(
               appBar: AppBar(
@@ -146,7 +152,8 @@ class _CategoryState extends State<Category> {
     );
   }
 
-  Widget showTemplates(QuerySnapshot<Map<String, dynamic>> snapshot, CategoryController categoryController) {
+  Widget showTemplates(QuerySnapshot<Map<String, dynamic>> snapshot,
+      CategoryController categoryController) {
     if (snapshot.docs.isEmpty) {
       return const Text('No data available');
     }

@@ -5,6 +5,7 @@ import 'package:templates_flutter_app/providers/auth_user_provider.dart';
 import 'package:templates_flutter_app/providers/payment_provider.dart';
 import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/providers/theme_provider.dart';
+import 'package:templates_flutter_app/services/ad_services.dart';
 import 'package:templates_flutter_app/services/connectivity_services.dart';
 import 'package:templates_flutter_app/services/template_data_services.dart';
 
@@ -37,5 +38,10 @@ class AppProvider {
           ),
         ),
         // Aquí solo mantenemos la implementación concreta, CategoryControllerImpl.
+
+        Provider<AdService>(
+          // Aquí
+          create: (context) => AdService(),
+        ),
       ];
 }

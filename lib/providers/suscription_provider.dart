@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:templates_flutter_app/notificacion_messages.dart';
 import 'package:templates_flutter_app/models/user_model.dart';
 
-class SuscriptionProvider with ChangeNotifier {
+class SuscriptionProvider extends ChangeNotifier {
   //ID USER FOR EXPIRATED SUSCRIPTION
   UserModel? _user;
   UserModel? get user => _user;

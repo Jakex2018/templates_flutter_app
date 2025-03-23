@@ -1,11 +1,8 @@
 // ignore_for_file: unused_local_variable
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/controllers/category_controller.dart';
@@ -15,7 +12,7 @@ import 'package:templates_flutter_app/views/category_app.dart';
 import '../../mocks/category_app_test.mocks.dart';
 import '../../mocks/setup_firebase_auth_mocks.dart.dart';
 
-@GenerateMocks([CategoryController, QuerySnapshot, DocumentSnapshot])
+//@GenerateMocks([CategoryController, QuerySnapshot, DocumentSnapshot])
 void main() {
   setupFirebaseAuthMocks();
 
