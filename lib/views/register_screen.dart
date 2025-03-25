@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/controllers/auth_controller.dart';
-import 'package:templates_flutter_app/views/home_app.dart';
+import 'package:templates_flutter_app/providers/auth_user_provider.dart';
+import 'package:templates_flutter_app/widget/button01.dart';
+import 'package:templates_flutter_app/widget/loading_screen.dart';
 import 'package:templates_flutter_app/widget/login_with.dart';
 import 'package:templates_flutter_app/widget/register_tercerd.dart';
 
@@ -16,14 +19,125 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final usernameField = TextEditingController();
   final emailField = TextEditingController();
   final passwordField = TextEditingController();
-  String username = '';
-  String email = '';
-  String password = '';
   bool obscureText = true;
+  final AuthController registerController = AuthController();
   @override
   Widget build(BuildContext context) {
-    final AuthController registerController = AuthController();
-    return Material(
+    final authProvider = Provider.of<AuthUserProvider>(context);
+    if (authProvider.isLoading) {
+      return const LoadScreen();
+    }
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text('Register'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          child: SafeArea(
+            child: IntrinsicHeight(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      controller: usernameField,
+                      decoration: _buildInputDecoration('Username'),
+                    ),
+                    const SizedBox(height: 30),
+                    // Campo de email
+                    TextFormField(
+                      controller: emailField,
+                      decoration: _buildInputDecoration('Email'),
+                      validator: _validateEmail,
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Campo de contraseña
+                    TextFormField(
+                      controller: passwordField,
+                      obscureText: obscureText,
+                      decoration: _buildInputDecoration('Contraseña').copyWith(
+                        suffixIcon: IconButton(
+                          icon: Icon(obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          onPressed: () =>
+                              setState(() => obscureText = !obscureText),
+                        ),
+                      ),
+                      validator: _validatePassword,
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Botón de login
+                    SizedBox(
+                        width: double.infinity,
+                        child: ButtonOne(
+                            text: 'Registrarse',
+                            onPressed: () async {
+                              await registerController.registerUser(
+                                usernameField.text.trim(),
+                                emailField.text.trim(),
+                                passwordField.text.trim(),
+                                context,
+                                _formKey,
+                              );
+                            },
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onTertiary)),
+
+                    const LoginWith(),
+                    RegisterTercerd(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      filled: true,
+      fillColor: const Color(0xFFF3F3F3),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide.none,
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    );
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty || !value.contains('@')) {
+      return 'Ingrese un email válido';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.length < 8) {
+      return 'La contraseña debe tener al menos 8 caracteres';
+    }
+    return null;
+  }
+}
+
+
+
+/*
+return Material(
         child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -123,7 +237,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       }
                       return null;
                     },
-                    onSaved: (value) => password = value!,
                   ),
                   SizedBox(
                     height: 30,
@@ -165,5 +278,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     ));
-  }
-}
+ */

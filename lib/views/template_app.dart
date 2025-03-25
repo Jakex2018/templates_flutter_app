@@ -131,8 +131,6 @@ class _TemplateState extends State<Template> {
       ),
     );
   }
-
- 
 }
 /*
  Widget _templateName(BuildContext context) {

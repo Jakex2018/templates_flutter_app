@@ -23,7 +23,6 @@ class Sidebar extends StatefulWidget {
 class _SidebarState extends State<Sidebar> {
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final authController = Provider.of<AuthController>(context, listen: false);
 
     return Container(
@@ -35,23 +34,34 @@ class _SidebarState extends State<Sidebar> {
         ],
         borderRadius: BorderRadius.circular(30),
       ),
-      child: _sidebarBody(themeProvider, authController),
+      child: _sidebarBody(authController),
     );
   }
 
-  Widget _sidebarBody(
-      ThemeProvider themeProvider, AuthController authController) {
-    return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          _buildHeader(context),
-          linkNotUser(context),
-          if (widget.isLoggedIn.isLogged) linkToUser(context, authController),
-          themeModeOption(themeProvider),
-        ],
-      ),
+  Widget _sidebarBody(AuthController authController) {
+    return Selector<ThemeProvider, bool>(
+      selector: (context, themeProvider) => themeProvider.isDarkMode,
+      builder: (context, isDarkMode, child) {
+        return AnimatedTheme(
+          data: Theme.of(context).copyWith(
+            brightness: isDarkMode ? Brightness.dark : Brightness.light,
+          ),
+          duration: const Duration(milliseconds: 300),
+          child: Drawer(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                _buildHeader(context),
+                linkNotUser(context),
+                if (widget.isLoggedIn.isLogged)
+                  linkToUser(context, authController),
+                themeModeOption(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -71,7 +81,8 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
-  Padding themeModeOption(ThemeProvider themeProvider) {
+  Padding themeModeOption() {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 300),
       child: Row(
@@ -177,14 +188,6 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 }
-
-
-
-
-
-
-
-
 
 
 

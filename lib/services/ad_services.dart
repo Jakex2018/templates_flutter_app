@@ -4,10 +4,74 @@ import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdService {
-  /*
-  Future<InitializationStatus> initialization;
-  AdService(this.initialization);
-   */
+  RewardedAd? _rewardedAd;
+  bool _isAdLoaded = false;
+
+  Future<void> initialize() async {
+    await MobileAds.instance.initialize();
+    await _loadRewardedAd('$bannerAdUid');
+  }
+
+  Future<void> _loadRewardedAd(String rewardedAdUid) async {
+    try {
+      await RewardedAd.load(
+        adUnitId: rewardsAdUid!,
+        request: const AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (RewardedAd ad) {
+            _rewardedAd = ad;
+            _isAdLoaded = true;
+            _setAdListeners();
+            print('RewardedAd cargado correctamente');
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            _isAdLoaded = false;
+            _rewardedAd = null;
+            print('Error cargando RewardedAd: $error');
+          },
+        ),
+      );
+    } catch (e) {
+      print('Excepción al cargar anuncio: $e');
+    }
+  }
+
+  void _setAdListeners() {
+    _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (RewardedAd ad) {
+        ad.dispose();
+        _loadRewardedAd('$bannerAdUid');
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        ad.dispose();
+        _loadRewardedAd('$bannerAdUid');
+      },
+    );
+  }
+
+  Future<bool> showRewardedAd() async {
+    if (!_isAdLoaded) {
+      await _loadRewardedAd('$bannerAdUid');
+    }
+
+    if (_rewardedAd != null) {
+      try {
+        await _rewardedAd!.show(
+          onUserEarnedReward: (ad, reward) {
+            ad.dispose();
+            _loadRewardedAd('$bannerAdUid');
+          },
+        );
+        return true;
+      } catch (e) {
+        print('Error mostrando anuncio: $e');
+        return false;
+      }
+    }
+    return false;
+  }
+
+  // ... (mantén tus otros métodos existentes)
   RewardedAd? rewardedAd;
 
   String? get bannerAdUid {
@@ -26,7 +90,7 @@ class AdService {
   String? get interstitialAdUid {
     if (kReleaseMode) {
       if (Platform.isAndroid) {
-        return "ca-app-pub-5699804099110465/2925660861";
+        return "ca-app-pub-5699804099110465~1293005254";
       }
     } else {
       if (Platform.isAndroid) {
@@ -45,12 +109,14 @@ class AdService {
       }
     } else {
       if (Platform.isAndroid) {
-        return "ca-app-pub-3940256099942544/5224354917";
+        return "ca-app-pub-5699804099110465/1272262873";
       } else {
         return null;
       }
     }
   }
+
+  /*ca-app-pub-3940256099942544/5224354917*/
 
   final BannerAdListener bannerListener = BannerAdListener(
       onAdOpened: (Ad ad) => print('AD OPENED'),
@@ -74,24 +140,6 @@ class AdService {
         },
       ),
     );
-  }
-
-  Future<void> showRewardedAd() async {
-    if (rewardedAd != null) {
-      rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (RewardedAd ad) {
-          ad.dispose();
-          loadRewardedAd(rewardsAdUid!);
-        },
-        onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-          ad.dispose();
-          loadRewardedAd(rewardsAdUid!);
-        },
-      );
-      await rewardedAd!.show(
-        onUserEarnedReward: (ad, reward) => ad.dispose(),
-      );
-    }
   }
 
   Future<RewardedAd?> _createRewardAd() async {

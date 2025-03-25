@@ -10,6 +10,7 @@ import 'package:templates_flutter_app/services/home_data_services.dart';
 import 'package:templates_flutter_app/views/login_screen.dart';
 import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/views/suscription_screen.dart';
+import 'package:templates_flutter_app/widget/splash_subscribe.dart';
 
 class HomeCard extends StatefulWidget {
   const HomeCard({super.key});
@@ -221,14 +222,16 @@ class _HomeCardState extends State<HomeCard> {
       if (authProvider.isLogged) {
         if (subscriptionProvider.isSuscribed) {
           Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Category(
-                type: 'Premium',
-                category: category['category'] as String,
-              ),
-            ),
-          );
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SplashSuscribe(
+                        titleSuscription: 'Contratulations Are you Member!!!',
+                        category: category,
+                        widgetScreen: Category(
+                          type: 'Premium',
+                          category: category['category'] as String,
+                        ),
+                      )));
         } else {
           __showPremiumDialog(context);
         }
@@ -303,3 +306,46 @@ class _HomeCardState extends State<HomeCard> {
     );
   }
 }
+
+
+/*
+void navigateToCategory(
+      String type, BuildContext context, Map<String, String> category) {
+    final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
+    final subscriptionProvider =
+        Provider.of<SuscriptionProvider>(context, listen: false);
+
+    if (type == 'Premium') {
+      if (authProvider.isLogged) {
+        if (subscriptionProvider.isSuscribed) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SplashSuscribe(
+                      titleSuscription: 'Contratulations Are you Member!!!',
+                      category: category,
+                      widgetScreen: Category(
+                        type: 'Premium',
+                        category: category['category'] as String,
+                      ),
+                    )),
+          );
+        } else {
+          __showPremiumDialog(context);
+        }
+      } else {
+        __showLoginDialog(context);
+      }
+    } else if (type == 'Free') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Category(
+            type: 'Free',
+            category: category['category'] as String,
+          ),
+        ),
+      );
+    }
+  }
+ */

@@ -101,7 +101,6 @@ class MockAuthUserProvider extends _i1.Mock implements _i3.AuthUserProvider {
         returnValue: _i4.Future<String?>.value(),
       ) as _i4.Future<String?>);
 
-  @override
   _i4.Future<_i2.UserModel> getUserData() => (super.noSuchMethod(
         Invocation.method(
           #getUserData,

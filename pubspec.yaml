@@ -61,6 +61,7 @@ dependencies:
   mockito: ^5.4.4
   build_runner: ^2.4.13
   firebase_core_platform_interface: ^5.4.0
+  gif_view: ^1.0.1
 
 
 dev_dependencies:

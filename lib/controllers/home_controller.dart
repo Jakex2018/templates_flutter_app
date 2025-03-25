@@ -1,20 +1,34 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:templates_flutter_app/providers/auth_user_provider.dart';
 import 'package:templates_flutter_app/services/connectivity_services.dart';
 import 'package:templates_flutter_app/services/loading_services.dart';
 import 'package:templates_flutter_app/services/provider_services.dart';
 
 class HomeController {
-  final LoadingService _loadingService = LoadingService();
-  final ConnectivityService _connectivityService = ConnectivityService();
-  final ProviderService _providerService = ProviderService();
+  final LoadingService? _loadingService;
+  final ProviderService? _providerService;
+  final ConnectivityService?
+      _connectivityService; // Agregamos la dependencia de ConnectivityService
 
-  Stream<ConnectivityResult> get connectivityStream =>
-      _connectivityService.connectivityStream;
+  HomeController({
+    LoadingService? loadingService,
+    ProviderService? providerService,
+    ConnectivityService? connectivityService, // Recibimos la dependencia aquí
+    AuthUserProvider? authUserProvider,
+  })  : _loadingService = loadingService,
+        _providerService = providerService,
+        _connectivityService =
+            connectivityService; // Inicializamos la nueva propiedad
+
+  // Exponiendo _providerService para acceder desde fuera de la clase
+  ProviderService? get providerService => _providerService;
+
+  // Exponiendo _connectivityService para acceder desde fuera de la clase
+  ConnectivityService? get connectivityService => _connectivityService;
 
   Future<void> initialize(BuildContext context) async {
-    _providerService.initializeProviders(context);
-    await _loadingService.simulateLoading();
+    _providerService?.initializeProviders(context);
+    await _loadingService?.simulateLoading();
   }
 
   void dispose() {

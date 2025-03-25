@@ -1,18 +1,9 @@
-import 'package:flutter/material.dart';
-
 class SplashController {
-  AnimationController? _controller;
-
-  void redirect(BuildContext context) {
-    Future.delayed(const Duration(seconds: 2), () {
-      // Elimina la verificación de mounted
-      if (Navigator.of(context).mounted) {
-        Navigator.pushNamed(context, '/home');
-      }
-    });
+  void redirect(Function() onRedirect) {
+    Future.delayed(const Duration(seconds: 3), onRedirect);
   }
 
   void dispose() {
-    _controller?.dispose();
+    // Limpiar recursos si es necesario
   }
 }

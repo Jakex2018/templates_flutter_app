@@ -202,6 +202,7 @@ class _CategoryState extends State<Category> {
                   Theme.of(context).colorScheme.onTertiary,
             ),
             numberPages: totalPages,
+            initialPage: categoryController.currentPage,
             onPageChange: (index) =>
                 setState(() => categoryController.currentPage = index),
           ),

@@ -17,7 +17,10 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _controller = SplashController();
-    _controller?.redirect(context);
+    _controller?.redirect(() {
+      // Redirigir a la siguiente pantalla
+      Navigator.of(context).pushReplacementNamed('/home');
+    });
   }
 
   @override

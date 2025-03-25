@@ -21,7 +21,7 @@ class ButtonOne extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 0),
       width: 180,
-      height: 30,
+      height: 40,
       child: ElevatedButton(
         onPressed: onPressed,
         child: Text(text),

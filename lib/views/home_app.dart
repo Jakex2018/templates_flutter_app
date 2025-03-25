@@ -2,14 +2,92 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/controllers/home_controller.dart';
 import 'package:templates_flutter_app/providers/auth_user_provider.dart';
-import 'package:templates_flutter_app/services/connectivity_services.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:templates_flutter_app/services/loading_services.dart';
-import 'package:templates_flutter_app/services/provider_services.dart';
 import 'package:templates_flutter_app/views/sidebar_screen.dart';
 import 'package:templates_flutter_app/widget/custom_app_bar.dart';
 import 'package:templates_flutter_app/widget/home_card.dart';
 
+class Home extends StatelessWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final homeController = Provider.of<HomeController>(context);
+    final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
+
+    return Scaffold(
+      key: GlobalKey<ScaffoldState>(),
+      appBar: CustomAppBar(
+        onTap: () => Scaffold.of(context).openDrawer(),
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return _buildHomeContent(
+              authProvider, constraints, homeController, context);
+        },
+      ),
+      drawer: Sidebar(
+        isLoggedIn: authProvider,
+        username: authProvider.username ?? "Invitado",
+      ),
+    );
+  }
+
+  Widget _buildHomeContent(
+      AuthUserProvider authProvider,
+      BoxConstraints constraints,
+      HomeController homeController,
+      BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        _homeTypeContent('Choose a Category', constraints, context),
+        Expanded(child: _homeContent(homeController)),
+      ],
+    );
+  }
+
+  Widget _homeContent(HomeController homeController) {
+    return StreamBuilder<ConnectivityResult>(
+      stream: homeController.connectivityService?.connectivityStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Error de conectividad');
+        }
+        return Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: SingleChildScrollView(
+            child: HomeCard(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _homeTypeContent(
+      String title, BoxConstraints constraints, BuildContext context) {
+    return Container(
+      height: 41,
+      width: constraints.maxWidth,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onTertiary,
+      ),
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.tertiary,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/*
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -53,7 +131,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthUserProvider>(context,listen: false);
+    final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return SizedBox(
@@ -135,3 +213,5 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 }
+
+ */

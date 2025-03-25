@@ -10,11 +10,16 @@ class AuthUserProvider with ChangeNotifier {
   String? _userId;
   String? get userId => _userId;
 
-  final bool _isLoading = false;
+  // ignore: prefer_final_fields
+  bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   String? _username;
   String? get username => _username;
+  void setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
   Future<void> checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
