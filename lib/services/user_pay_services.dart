@@ -108,7 +108,7 @@ class UserPayServices {
 
     //save subscribe
     if (userId != null) {
-      final expiryTime = DateTime.now().add(const Duration(minutes: 5));
+      final expiryTime = DateTime.now().add(const Duration(seconds: 20));
 
       final nowTime = DateTime.now();
 

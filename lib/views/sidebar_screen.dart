@@ -24,6 +24,8 @@ class _SidebarState extends State<Sidebar> {
   @override
   Widget build(BuildContext context) {
     final authController = Provider.of<AuthController>(context, listen: false);
+    
+    print('USERNAME ${widget.username}');
 
     return Container(
       height: MediaQuery.of(context).size.height,

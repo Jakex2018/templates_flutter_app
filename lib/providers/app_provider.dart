@@ -10,7 +10,6 @@ import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/providers/theme_provider.dart';
 import 'package:templates_flutter_app/services/ad_services.dart';
 import 'package:templates_flutter_app/services/connectivity_services.dart';
-import 'package:templates_flutter_app/services/loading_services.dart';
 import 'package:templates_flutter_app/services/provider_services.dart';
 import 'package:templates_flutter_app/services/template_data_services.dart';
 
@@ -18,28 +17,17 @@ class AppProvider {
   static get allProviders => [
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => PaymentController()),
-        Provider<HomeController>(
-          create: (context) => HomeController(
-            loadingService: context.read<LoadingService>(),
-            providerService: context.read<ProviderService>(),
-            connectivityService: context
-                .read<ConnectivityService>(), // Inyectamos ConnectivityService
-            authUserProvider: context.read<AuthUserProvider>(),
-          ),
-        ),
+
+        // Ensure ProviderService is provided first
+        Provider<ProviderService>(create: (_) => ProviderService()),
+        Provider<ConnectivityService>(create: (_) => ConnectivityService()),
 
         ChangeNotifierProvider(
           create: (context) => ConnectivityModel()..initConnectivity(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => ThemeProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => PaymentMethodProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AuthUserProvider(),
-        ),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => PaymentMethodProvider()),
+        ChangeNotifierProvider(create: (context) => AuthUserProvider()),
         ChangeNotifierProxyProvider<AuthUserProvider, SuscriptionProvider>(
           create: (context) => SuscriptionProvider(),
           update: (context, authProvider, subscriptionProvider) {
@@ -54,11 +42,13 @@ class AppProvider {
             connectivityService: ConnectivityService(),
           ),
         ),
-        // Aquí solo mantenemos la implementación concreta, CategoryControllerImpl.
-
-        Provider<AdService>(
-          // Aquí
-          create: (context) => AdService(),
+        ChangeNotifierProvider<HomeController>(
+          create: (context) => HomeController(
+            providerService: context.read<ProviderService>(),
+            connectivityService: context.read<ConnectivityService>(),
+            authUserProvider: context.read<AuthUserProvider>(),
+          ),
         ),
+        Provider<AdService>(create: (context) => AdService()),
       ];
 }

@@ -14,11 +14,13 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeController = Provider.of<HomeController>(context);
     final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    
 
     return Scaffold(
-      key: GlobalKey<ScaffoldState>(),
+      key: scaffoldKey,
       appBar: CustomAppBar(
-        onTap: () => Scaffold.of(context).openDrawer(),
+        onTap: () => scaffoldKey.currentState!.openDrawer(),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
