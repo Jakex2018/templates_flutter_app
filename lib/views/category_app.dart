@@ -286,7 +286,7 @@ class _CategoryState extends State<Category> {
         await precacheImage(AssetImage(imageUrl), context);
       }
     } catch (e) {
-      debugPrint("Error al precargar la imagen: $e");
+      debugPrint("Errors al precargar la imagen: $e");
     }
   }
 }
