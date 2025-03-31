@@ -3,17 +3,20 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
-import 'dart:ui' as _i5;
+import 'dart:async' as _i4;
+import 'dart:ui' as _i7;
 
-import 'package:connectivity_plus/connectivity_plus.dart' as _i9;
-import 'package:flutter/material.dart' as _i4;
+import 'package:connectivity_plus/connectivity_plus.dart' as _i5;
+import 'package:flutter/material.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
+import 'package:mockito/src/dummies.dart' as _i3;
 import 'package:templates_flutter_app/controllers/home_controller.dart' as _i2;
-import 'package:templates_flutter_app/providers/auth_user_provider.dart' as _i6;
+import 'package:templates_flutter_app/providers/auth_user_provider.dart' as _i8;
+import 'package:templates_flutter_app/providers/suscription_provider.dart'
+    as _i11;
 import 'package:templates_flutter_app/services/connectivity_services.dart'
-    as _i8;
+    as _i10;
+import 'package:templates_flutter_app/services/provider_services.dart' as _i9;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -37,23 +40,70 @@ class MockHomeController extends _i1.Mock implements _i2.HomeController {
   }
 
   @override
+  bool get isLoading => (super.noSuchMethod(
+        Invocation.getter(#isLoading),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  String get username => (super.noSuchMethod(
+        Invocation.getter(#username),
+        returnValue: _i3.dummyValue<String>(
+          this,
+          Invocation.getter(#username),
+        ),
+      ) as String);
+
+  @override
+  bool get showProgress => (super.noSuchMethod(
+        Invocation.getter(#showProgress),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i4.Stream<_i5.ConnectivityResult> get connectivityStream =>
+      (super.noSuchMethod(
+        Invocation.getter(#connectivityStream),
+        returnValue: _i4.Stream<_i5.ConnectivityResult>.empty(),
+      ) as _i4.Stream<_i5.ConnectivityResult>);
+
+  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
       ) as bool);
 
   @override
-  _i3.Future<void> initialize(_i4.BuildContext? context) => (super.noSuchMethod(
+  _i4.Future<void> initialize(_i6.BuildContext? context) => (super.noSuchMethod(
         Invocation.method(
           #initialize,
           [context],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
+  _i4.Future<void> simulateLoading() => (super.noSuchMethod(
+        Invocation.method(
+          #simulateLoading,
+          [],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  void toggleProgress() => super.noSuchMethod(
+        Invocation.method(
+          #toggleProgress,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -62,7 +112,7 @@ class MockHomeController extends _i1.Mock implements _i2.HomeController {
       );
 
   @override
-  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -90,8 +140,9 @@ class MockHomeController extends _i1.Mock implements _i2.HomeController {
 }
 
 /// A class which mocks [AuthUserProvider].
+///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthUserProvider extends _i1.Mock implements _i6.AuthUserProvider {
+class MockAuthUserProvider extends _i1.Mock implements _i8.AuthUserProvider {
   MockAuthUserProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -124,24 +175,24 @@ class MockAuthUserProvider extends _i1.Mock implements _i6.AuthUserProvider {
       );
 
   @override
-  _i3.Future<void> checkLoginStatus() => (super.noSuchMethod(
+  _i4.Future<void> checkLoginStatus() => (super.noSuchMethod(
         Invocation.method(
           #checkLoginStatus,
           [],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<void> setLoggedIn(bool? loggedIn) => (super.noSuchMethod(
+  _i4.Future<void> setLoggedIn(bool? loggedIn) => (super.noSuchMethod(
         Invocation.method(
           #setLoggedIn,
           [loggedIn],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
   String getUserId() => (super.noSuchMethod(
@@ -149,31 +200,35 @@ class MockAuthUserProvider extends _i1.Mock implements _i6.AuthUserProvider {
           #getUserId,
           [],
         ),
-        returnValue:
-            _i7.dummyValue<String>(this, Invocation.method(#getUserId, [])),
+        returnValue: _i3.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getUserId,
+            [],
+          ),
+        ),
       ) as String);
 
   @override
-  _i3.Future<String?> getUserIdFromPreferences() => (super.noSuchMethod(
+  _i4.Future<String?> getUserIdFromPreferences() => (super.noSuchMethod(
         Invocation.method(
           #getUserIdFromPreferences,
           [],
         ),
-        returnValue: _i3.Future<String?>.value(),
-      ) as _i3.Future<String?>);
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
 
   @override
-  _i3.Future<String?> getUsername() => (super.noSuchMethod(
+  _i4.Future<String?> getUsername() => (super.noSuchMethod(
         Invocation.method(
           #getUsername,
           [],
         ),
-        returnValue: _i3.Future<String?>.value(
-            'test_user'), // Add this mock for getUsername
-      ) as _i3.Future<String?>);
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
 
   @override
-  void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -182,7 +237,7 @@ class MockAuthUserProvider extends _i1.Mock implements _i6.AuthUserProvider {
       );
 
   @override
-  void removeListener(_i5.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -209,19 +264,195 @@ class MockAuthUserProvider extends _i1.Mock implements _i6.AuthUserProvider {
       );
 }
 
+/// A class which mocks [ProviderService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockProviderService extends _i1.Mock implements _i9.ProviderService {
+  MockProviderService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<void> initializeProviders(_i6.BuildContext? context) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #initializeProviders,
+          [context],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+}
+
 /// A class which mocks [ConnectivityService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockConnectivityService extends _i1.Mock
-    implements _i8.ConnectivityService {
+    implements _i10.ConnectivityService {
   MockConnectivityService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Stream<_i9.ConnectivityResult> get connectivityStream =>
+  _i4.Stream<_i5.ConnectivityResult> get connectivityStream =>
       (super.noSuchMethod(
         Invocation.getter(#connectivityStream),
-        returnValue: _i3.Stream<_i9.ConnectivityResult>.empty(),
-      ) as _i3.Stream<_i9.ConnectivityResult>);
+        returnValue: _i4.Stream<_i5.ConnectivityResult>.empty(),
+      ) as _i4.Stream<_i5.ConnectivityResult>);
+}
+
+/// A class which mocks [SuscriptionProvider].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSuscriptionProvider extends _i1.Mock
+    implements _i11.SuscriptionProvider {
+  MockSuscriptionProvider() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  bool get isSuscribed => (super.noSuchMethod(
+        Invocation.getter(#isSuscribed),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get hasListeners => (super.noSuchMethod(
+        Invocation.getter(#hasListeners),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i4.Future<void> loadSubscriptionState(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #loadSubscriptionState,
+          [userId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  void cancelSuscription(
+    String? userId,
+    DateTime? suscriptionEndDate,
+  ) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #cancelSuscription,
+          [
+            userId,
+            suscriptionEndDate,
+          ],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i4.Future<void> expireSubscription(String? userId) => (super.noSuchMethod(
+        Invocation.method(
+          #expireSubscription,
+          [userId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> startSubscriptionGlobal(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #startSubscriptionGlobal,
+          [userId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<String?> getFCMTokenFromFirestore(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getFCMTokenFromFirestore,
+          [userId],
+        ),
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
+
+  @override
+  _i4.Future<void> checkAndExpireSubscription(String? userId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #checkAndExpireSubscription,
+          [userId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> activateSubscription(
+    String? userId,
+    bool? isSubscribed,
+    DateTime? subscriptionDate,
+    DateTime? subscriptionExpirated,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #activateSubscription,
+          [
+            userId,
+            isSubscribed,
+            subscriptionDate,
+            subscriptionExpirated,
+          ],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  void stopSubscriptionTimer() => super.noSuchMethod(
+        Invocation.method(
+          #stopSubscriptionTimer,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+        Invocation.method(
+          #addListener,
+          [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeListener(_i7.VoidCallback? listener) => super.noSuchMethod(
+        Invocation.method(
+          #removeListener,
+          [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void dispose() => super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void notifyListeners() => super.noSuchMethod(
+        Invocation.method(
+          #notifyListeners,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

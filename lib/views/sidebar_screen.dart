@@ -8,8 +8,178 @@ import 'package:templates_flutter_app/views/suscription_screen.dart';
 import 'package:templates_flutter_app/providers/theme_provider.dart';
 import 'package:templates_flutter_app/widget/sidebar_link.dart';
 
-// ignore: must_be_immutable
+class Sidebar extends StatefulWidget {
+  final AuthUserProvider isLoggedIn;
+  final String? username;
 
+  const Sidebar({super.key, required this.isLoggedIn, this.username});
+
+  @override
+  State<Sidebar> createState() => _SidebarState();
+}
+
+class _SidebarState extends State<Sidebar> {
+  @override
+  Widget build(BuildContext context) {
+    final authController = Provider.of<AuthController>(context, listen: false);
+
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: 230,
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(offset: Offset(0, 15), spreadRadius: 5, blurRadius: 10)
+        ],
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: _sidebarBody(authController),
+    );
+  }
+
+  Widget _sidebarBody(AuthController authController) {
+    return Drawer(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          _buildHeader(context),
+          linkNotUser(context),
+          if (widget.isLoggedIn.isLogged) linkToUser(context, authController),
+          themeModeOption(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    final username = widget.username;
+    return DrawerHeader(
+      child: Center(
+        child: Text(
+          style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
+          !widget.isLoggedIn.isLogged
+              ? 'Hola, Invitado!'
+              : username?.isNotEmpty == true
+                  ? 'Hola, $username'
+                  : 'Hola, Invitado!',
+        ),
+      ),
+    );
+  }
+
+  Padding themeModeOption() {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 300),
+      child: Row(
+        children: [
+          Selector<ThemeProvider, bool>(
+            selector: (context, themeProvider) => themeProvider.isDarkMode,
+            builder: (context, value, child) {
+              return CupertinoSwitch(
+                value: value,
+                onChanged: (value) {
+                  themeProvider.toogleTheme();
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 10),
+          const Text(
+            'Dark Mode',
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget linkToUser(BuildContext context, AuthController authController) {
+    return Column(
+      children: [
+        SideBarLink(
+          title: 'Logout',
+          onTap: () => authController.logoutUser(context),
+          icon: Icon(
+            Icons.logout,
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
+        ),
+        SideBarLink(
+          title: 'Suscription',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const SuscriptionScreen()),
+            );
+          },
+          icon: Icon(
+            Icons.sell,
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column linkNotUser(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!widget.isLoggedIn.isLogged)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SideBarLink(
+                title: 'Iniciar Sesion',
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/login');
+                },
+                icon: Icon(
+                  Icons.login,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+              ),
+              SideBarLink(
+                title: 'Registrarse',
+                onTap: () {
+                  Navigator.pushNamed(context, '/register');
+                },
+                icon: Icon(
+                  Icons.supervised_user_circle_rounded,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+              ),
+              SideBarLink(
+                title: 'Chat Bot',
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterScreen(),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.chat_rounded,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+
+
+
+
+/*
 class Sidebar extends StatefulWidget {
   final AuthUserProvider isLoggedIn;
   final String? username;
@@ -191,13 +361,12 @@ class _SidebarState extends State<Sidebar> {
   }
 }
 
-
-
+ */
 /*
 class Sidebar extends StatefulWidget {
-  Sidebar({super.key, required this.isLoggedIn, this.username});
+  Sidebar({super.key, required this.isLoggedIn, required this.username});
   AuthUserProvider isLoggedIn;
-  String? username;
+  String username;
   @override
   State<Sidebar> createState() => _SidebarState();
 }
@@ -254,7 +423,7 @@ class _SidebarState extends State<Sidebar> {
           style: TextStyle(color: Theme.of(context).colorScheme.inversePrimary),
           !widget.isLoggedIn.isLogged
               ? 'Hola, Invitado!'
-              : widget.username!.isNotEmpty
+              : widget.username.isNotEmpty
                   ? 'Hola, ${widget.username}'
                   : 'Hola, Invitado!',
         ),
@@ -392,7 +561,7 @@ class _SidebarState extends State<Sidebar> {
                 },
                 icon: Icon(
                   Icons.supervised_user_circle_rounded,
-                  color: Theme.of(context).colorScheme.inversePrimary,
+                  color: Theme.of(context).colorScheme.inversePrimary
                 ),
               ),
               SideBarLink(
@@ -417,4 +586,5 @@ class _SidebarState extends State<Sidebar> {
   }
 }
 
-*/
+
+ */

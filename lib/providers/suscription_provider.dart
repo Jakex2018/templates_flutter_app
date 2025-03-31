@@ -78,7 +78,8 @@ class SuscriptionProvider extends ChangeNotifier {
   }
 
   Future<void> startSubscriptionGlobal(
-      String userId, BuildContext context) async {
+    String userId,
+  ) async {
     _timer?.cancel();
 
     // Create a new timer that checks the subscription status periodically
@@ -135,7 +136,8 @@ class SuscriptionProvider extends ChangeNotifier {
               if (!_isSuscribed) {
                 final token = await getFCMTokenFromFirestore(userId);
                 if (token != null) {
-                  await NotificacionMessages.sendNotification(token); // Enviar la notificación
+                  await NotificacionMessages.sendNotification(
+                      token); // Enviar la notificación
                 } else {
                   throw Exception('No se ha obtenido el token de FCM');
                 }

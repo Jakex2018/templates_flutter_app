@@ -14,7 +14,7 @@ class ProviderService {
     if (authProvider.isLogged && subscriptionProvider.isSuscribed) {
       final userId = authProvider.getUserId().toString();
       // ignore: use_build_context_synchronously
-      await subscriptionProvider.startSubscriptionGlobal(userId, context);
+      await subscriptionProvider.startSubscriptionGlobal(userId);
     }
   }
 }

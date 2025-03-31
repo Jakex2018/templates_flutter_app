@@ -22,17 +22,15 @@ class AdService {
             _rewardedAd = ad;
             _isAdLoaded = true;
             _setAdListeners();
-            print('RewardedAd cargado correctamente');
           },
           onAdFailedToLoad: (LoadAdError error) {
             _isAdLoaded = false;
             _rewardedAd = null;
-            print('Error cargando RewardedAd: $error');
           },
         ),
       );
     } catch (e) {
-      print('Excepción al cargar anuncio: $e');
+      return;
     }
   }
 
@@ -64,7 +62,6 @@ class AdService {
         );
         return true;
       } catch (e) {
-        print('Error mostrando anuncio: $e');
         return false;
       }
     }
@@ -119,12 +116,11 @@ class AdService {
   /*ca-app-pub-3940256099942544/5224354917*/
 
   final BannerAdListener bannerListener = BannerAdListener(
-      onAdOpened: (Ad ad) => print('AD OPENED'),
-      onAdClosed: (Ad ad) => print('AD CLOSED'),
-      onAdLoaded: (Ad ad) => print('AD LOADED'),
+      onAdOpened: (Ad ad) => {},
+      onAdClosed: (Ad ad) => {},
+      onAdLoaded: (Ad ad) => {},
       onAdFailedToLoad: (Ad ad, LoadAdError error) {
         ad.dispose();
-        print('AD FAILED TO LOAD: $error');
       });
 
   Future<void> loadRewardedAd(String adUnitId) async {
@@ -142,6 +138,7 @@ class AdService {
     );
   }
 
+  /*
   Future<RewardedAd?> _createRewardAd() async {
     RewardedAd? rewardedAd;
     await RewardedAd.load(
@@ -158,4 +155,5 @@ class AdService {
     );
     return rewardedAd;
   }
+   */
 }

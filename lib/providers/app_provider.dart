@@ -10,8 +10,10 @@ import 'package:templates_flutter_app/providers/suscription_provider.dart';
 import 'package:templates_flutter_app/providers/theme_provider.dart';
 import 'package:templates_flutter_app/services/ad_services.dart';
 import 'package:templates_flutter_app/services/connectivity_services.dart';
+import 'package:templates_flutter_app/services/loading_services.dart';
 import 'package:templates_flutter_app/services/provider_services.dart';
 import 'package:templates_flutter_app/services/template_data_services.dart';
+import 'package:templates_flutter_app/views/home_app.dart';
 
 class AppProvider {
   static get allProviders => [
@@ -20,6 +22,7 @@ class AppProvider {
 
         // Ensure ProviderService is provided first
         Provider<ProviderService>(create: (_) => ProviderService()),
+        Provider<LoadingService>(create: (_) => LoadingService()),
         Provider<ConnectivityService>(create: (_) => ConnectivityService()),
 
         ChangeNotifierProvider(
@@ -37,7 +40,7 @@ class AppProvider {
           },
         ),
         ChangeNotifierProvider<CategoryController>(
-          create: (context) => CategoryControllerImpl(
+          create: (context) => CategoryController(
             templateService: TemplateDataService(),
             connectivityService: ConnectivityService(),
           ),
@@ -46,9 +49,11 @@ class AppProvider {
           create: (context) => HomeController(
             providerService: context.read<ProviderService>(),
             connectivityService: context.read<ConnectivityService>(),
-            authUserProvider: context.read<AuthUserProvider>(),
+            loadingService: context.read<LoadingService>(),
           ),
+          child: Home(),
         ),
         Provider<AdService>(create: (context) => AdService()),
+        
       ];
 }
