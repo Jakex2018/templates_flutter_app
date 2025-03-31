@@ -1,7 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:templates_flutter_app/controllers/category_controller.dart';
@@ -11,7 +10,7 @@ import 'package:templates_flutter_app/views/category_app.dart';
 import '../../mocks/category_app_test.mocks.dart';
 import '../../mocks/category_controller_test.mocks.dart';
 
-@GenerateMocks([CategoryController, SuscriptionProvider])
+///@GenerateMocks([CategoryController, SuscriptionProvider])
 void main() {
   group('Category Widget Tests', () {
     late MockCategoryController mockCategoryController;

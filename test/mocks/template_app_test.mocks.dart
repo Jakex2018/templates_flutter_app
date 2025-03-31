@@ -3,18 +3,21 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
-import 'dart:io' as _i6;
-import 'dart:ui' as _i9;
+import 'dart:async' as _i5;
+import 'dart:io' as _i7;
+import 'dart:ui' as _i10;
 
-import 'package:cloud_firestore/cloud_firestore.dart' as _i5;
+import 'package:cloud_firestore/cloud_firestore.dart' as _i6;
 import 'package:google_mobile_ads/google_mobile_ads.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:templates_flutter_app/controllers/template_controller.dart'
+    as _i11;
+import 'package:templates_flutter_app/models/template_model.dart' as _i3;
 import 'package:templates_flutter_app/providers/suscription_provider.dart'
-    as _i8;
-import 'package:templates_flutter_app/services/ad_services.dart' as _i7;
+    as _i9;
+import 'package:templates_flutter_app/services/ad_services.dart' as _i8;
 import 'package:templates_flutter_app/services/template_data_services.dart'
-    as _i3;
+    as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -40,17 +43,27 @@ class _FakeBannerAdListener_0 extends _i1.SmartFake
         );
 }
 
+class _FakeTemplateModel_1 extends _i1.SmartFake implements _i3.TemplateModel {
+  _FakeTemplateModel_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [TemplateDataService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTemplateDataService extends _i1.Mock
-    implements _i3.TemplateDataService {
+    implements _i4.TemplateDataService {
   MockTemplateDataService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Stream<_i5.QuerySnapshot<Map<String, dynamic>>> getTemplatesByCategory(
+  _i5.Stream<_i6.QuerySnapshot<Map<String, dynamic>>> getTemplatesByCategory(
           String? category) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -58,12 +71,12 @@ class MockTemplateDataService extends _i1.Mock
           [category],
         ),
         returnValue:
-            _i4.Stream<_i5.QuerySnapshot<Map<String, dynamic>>>.empty(),
-      ) as _i4.Stream<_i5.QuerySnapshot<Map<String, dynamic>>>);
+            _i5.Stream<_i6.QuerySnapshot<Map<String, dynamic>>>.empty(),
+      ) as _i5.Stream<_i6.QuerySnapshot<Map<String, dynamic>>>);
 
   @override
-  _i4.Future<void> getData(
-    _i3.TemplateDataService? dataService,
+  _i5.Future<void> getData(
+    _i4.TemplateDataService? dataService,
     String? image,
     Function? setState,
     String? name,
@@ -82,81 +95,81 @@ class MockTemplateDataService extends _i1.Mock
             nameImage,
           ],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<String?> accessDemo(String? image) => (super.noSuchMethod(
+  _i5.Future<String?> accessDemo(String? image) => (super.noSuchMethod(
         Invocation.method(
           #accessDemo,
           [image],
         ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
 
   @override
-  _i4.Future<String?> fetchGetNameImage(String? image) => (super.noSuchMethod(
+  _i5.Future<String?> fetchGetNameImage(String? image) => (super.noSuchMethod(
         Invocation.method(
           #fetchGetNameImage,
           [image],
         ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
 
   @override
-  _i4.Future<void> fetchDownloadImage(String? url) => (super.noSuchMethod(
+  _i5.Future<void> fetchDownloadImage(String? url) => (super.noSuchMethod(
         Invocation.method(
           #fetchDownloadImage,
           [url],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<void> saveImageToGallery(_i6.File? image) => (super.noSuchMethod(
+  _i5.Future<void> saveImageToGallery(_i7.File? image) => (super.noSuchMethod(
         Invocation.method(
           #saveImageToGallery,
           [image],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<String?> fetchNameTemplate(String? image) => (super.noSuchMethod(
+  _i5.Future<String?> fetchNameTemplate(String? image) => (super.noSuchMethod(
         Invocation.method(
           #fetchNameTemplate,
           [image],
         ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
 
   @override
-  _i4.Future<String?> fetchUrlTemplate(String? image) => (super.noSuchMethod(
+  _i5.Future<String?> fetchUrlTemplate(String? image) => (super.noSuchMethod(
         Invocation.method(
           #fetchUrlTemplate,
           [image],
         ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
 
   @override
-  _i4.Future<void> fetchSaveUrlTemplate(String? url) => (super.noSuchMethod(
+  _i5.Future<void> fetchSaveUrlTemplate(String? url) => (super.noSuchMethod(
         Invocation.method(
           #fetchSaveUrlTemplate,
           [url],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 }
 
 /// A class which mocks [AdService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAdService extends _i1.Mock implements _i7.AdService {
+class MockAdService extends _i1.Mock implements _i8.AdService {
   MockAdService() {
     _i1.throwOnMissingStub(this);
   }
@@ -180,40 +193,40 @@ class MockAdService extends _i1.Mock implements _i7.AdService {
       ) as _i2.BannerAdListener);
 
   @override
-  _i4.Future<void> initialize() => (super.noSuchMethod(
+  _i5.Future<void> initialize() => (super.noSuchMethod(
         Invocation.method(
           #initialize,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<bool> showRewardedAd() => (super.noSuchMethod(
+  _i5.Future<bool> showRewardedAd() => (super.noSuchMethod(
         Invocation.method(
           #showRewardedAd,
           [],
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
 
   @override
-  _i4.Future<void> loadRewardedAd(String? adUnitId) => (super.noSuchMethod(
+  _i5.Future<void> loadRewardedAd(String? adUnitId) => (super.noSuchMethod(
         Invocation.method(
           #loadRewardedAd,
           [adUnitId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 }
 
 /// A class which mocks [SuscriptionProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockSuscriptionProvider extends _i1.Mock
-    implements _i8.SuscriptionProvider {
+    implements _i9.SuscriptionProvider {
   MockSuscriptionProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -231,14 +244,14 @@ class MockSuscriptionProvider extends _i1.Mock
       ) as bool);
 
   @override
-  _i4.Future<void> loadSubscriptionState(String? userId) => (super.noSuchMethod(
+  _i5.Future<void> loadSubscriptionState(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #loadSubscriptionState,
           [userId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
   void cancelSuscription(
@@ -257,49 +270,49 @@ class MockSuscriptionProvider extends _i1.Mock
       );
 
   @override
-  _i4.Future<void> expireSubscription(String? userId) => (super.noSuchMethod(
+  _i5.Future<void> expireSubscription(String? userId) => (super.noSuchMethod(
         Invocation.method(
           #expireSubscription,
           [userId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<void> startSubscriptionGlobal(String? userId) =>
+  _i5.Future<void> startSubscriptionGlobal(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
           #startSubscriptionGlobal,
           [userId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<String?> getFCMTokenFromFirestore(String? userId) =>
+  _i5.Future<String?> getFCMTokenFromFirestore(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getFCMTokenFromFirestore,
           [userId],
         ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
 
   @override
-  _i4.Future<void> checkAndExpireSubscription(String? userId) =>
+  _i5.Future<void> checkAndExpireSubscription(String? userId) =>
       (super.noSuchMethod(
         Invocation.method(
           #checkAndExpireSubscription,
           [userId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<void> activateSubscription(
+  _i5.Future<void> activateSubscription(
     String? userId,
     bool? isSubscribed,
     DateTime? subscriptionDate,
@@ -315,9 +328,9 @@ class MockSuscriptionProvider extends _i1.Mock
             subscriptionExpirated,
           ],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
   void stopSubscriptionTimer() => super.noSuchMethod(
@@ -329,7 +342,7 @@ class MockSuscriptionProvider extends _i1.Mock
       );
 
   @override
-  void addListener(_i9.VoidCallback? listener) => super.noSuchMethod(
+  void addListener(_i10.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
           [listener],
@@ -338,7 +351,7 @@ class MockSuscriptionProvider extends _i1.Mock
       );
 
   @override
-  void removeListener(_i9.VoidCallback? listener) => super.noSuchMethod(
+  void removeListener(_i10.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #removeListener,
           [listener],
@@ -363,4 +376,59 @@ class MockSuscriptionProvider extends _i1.Mock
         ),
         returnValueForMissingStub: null,
       );
+}
+
+/// A class which mocks [TemplateController].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTemplateController extends _i1.Mock
+    implements _i11.TemplateController {
+  MockTemplateController() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<_i3.TemplateModel> getTemplateData(String? image) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getTemplateData,
+          [image],
+        ),
+        returnValue: _i5.Future<_i3.TemplateModel>.value(_FakeTemplateModel_1(
+          this,
+          Invocation.method(
+            #getTemplateData,
+            [image],
+          ),
+        )),
+      ) as _i5.Future<_i3.TemplateModel>);
+
+  @override
+  _i5.Future<void> downloadImage(String? image) => (super.noSuchMethod(
+        Invocation.method(
+          #downloadImage,
+          [image],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> saveUrlTemplate(String? url) => (super.noSuchMethod(
+        Invocation.method(
+          #saveUrlTemplate,
+          [url],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<String?> accessDemo(String? image) => (super.noSuchMethod(
+        Invocation.method(
+          #accessDemo,
+          [image],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
 }

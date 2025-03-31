@@ -32,6 +32,7 @@ class _TemplateState extends State<Template> {
   }
 
   Future<void> _getData() async {
+    await Future.delayed(Duration(seconds: 1));
     await _templateController.getTemplateData(widget.image);
   }
 
