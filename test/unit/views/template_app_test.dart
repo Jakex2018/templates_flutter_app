@@ -2,19 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:templates_flutter_app/controllers/template_controller.dart';
 import 'package:templates_flutter_app/providers/suscription_provider.dart';
-import 'package:templates_flutter_app/services/ad_services.dart';
-import 'package:templates_flutter_app/services/template_data_services.dart';
 import 'package:templates_flutter_app/views/template_app.dart';
 import '../../mocks/setup_firebase_auth_mocks.dart.dart';
 import '../../mocks/template_app_test.mocks.dart';
 
-@GenerateMocks(
-    [TemplateDataService, AdService, SuscriptionProvider, TemplateController])
 void main() {
   setupFirebaseAuthMocks();
   group('Template Widget Tests', () {

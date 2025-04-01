@@ -7,42 +7,33 @@ import 'package:templates_flutter_app/views/payment_screen.dart';
 class SuscriptionServices {
   Future<void> cancelSubscription(BuildContext context, String? userId,
       SuscriptionProvider subscriptionProvider, suscription) async {
-    if (subscriptionProvider.isSuscribed) {
-      // Lógica para cancelar la suscripción
-      await dialogCancelSuscription(context, userId, subscriptionProvider);
-    } else {
-      // Si no está suscrito, redirige al pago
+    print('SUSCRIPTION ${subscriptionProvider.isSuscribed}');
+    await dialogCancelSuscription(context, userId, subscriptionProvider);
+  }
+
+  void handleSubscription(BuildContext context, SuscriptionModel suscription) {
+    if (suscription.cat == SuscriptionCat.premium) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => PaymentScreen(suscription: suscription),
         ),
       );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('You have Default Free Account'),
+          actions: [
+            MaterialButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+          ],
+        ),
+      );
     }
   }
-  void handleSubscription(BuildContext context, SuscriptionModel suscription) {
-  if (suscription.cat == SuscriptionCat.premium) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PaymentScreen(suscription: suscription),
-      ),
-    );
-  } else {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('You have Default Free Account'),
-        actions: [
-          MaterialButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
   Future<dynamic> dialogMemberSuscription(BuildContext context) {
     return showDialog(

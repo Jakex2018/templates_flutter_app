@@ -24,6 +24,7 @@ class PaymentController extends ChangeNotifier {
       userServices.navigatePaypal(context);
     } else if (_paymentMethod == PaymentOp.stripe) {
       userServices.makePayment(context);
+      ///userServices.userPay(context);
     }
   }
 }
