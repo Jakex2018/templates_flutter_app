@@ -63,6 +63,8 @@ dependencies:
   firebase_core_platform_interface: ^5.4.0
   gif_view: ^1.0.1
   rxdart: ^0.28.0
+  flutter_dotenv: ^5.2.1
+
 
 
 dev_dependencies:
