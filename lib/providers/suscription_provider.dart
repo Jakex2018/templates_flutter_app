@@ -82,11 +82,9 @@ class SuscriptionProvider extends ChangeNotifier {
   ) async {
     _timer?.cancel();
 
-    // Create a new timer that checks the subscription status periodically
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer t) async {
       await checkAndExpireSubscription(userId);
 
-      // Stop the timer if the subscription is expired
       if (!_isSuscribed) {
         _timer?.cancel();
       }
@@ -101,8 +99,7 @@ class SuscriptionProvider extends ChangeNotifier {
           .get();
       if (userDoc.exists) {
         var userData = userDoc.data() as Map<String, dynamic>;
-        return userData[
-            'fcm_token']; // Asegúrate de que 'fcm_token' es el campo correcto
+        return userData['fcm_token'];
       }
       return null;
     } catch (e) {
@@ -136,8 +133,7 @@ class SuscriptionProvider extends ChangeNotifier {
               if (!_isSuscribed) {
                 final token = await getFCMTokenFromFirestore(userId);
                 if (token != null) {
-                  await NotificacionMessages.sendNotification(
-                      token); // Enviar la notificación
+                  await NotificacionMessages.sendNotification(token);
                 } else {
                   throw Exception('No se ha obtenido el token de FCM');
                 }

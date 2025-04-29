@@ -30,11 +30,11 @@ class AuthUserProvider with ChangeNotifier {
       _userId = user?.uid;
       if (_userId != null) {
         await prefs.setString('userId', _userId!);
-        _username = await getUsername(); // Cargar el username
+        _username = await getUsername();
       }
     } else {
       _userId = null;
-      _username = null; // Limpiar el username si no hay sesión
+      _username = null;
     }
     notifyListeners();
   }
@@ -49,11 +49,11 @@ class AuthUserProvider with ChangeNotifier {
       _userId = user?.uid;
       if (_userId != null) {
         await prefs.setString('userId', _userId!);
-        _username = await getUsername(); // Cargar el username
+        _username = await getUsername();
       }
     } else {
       _userId = null;
-      _username = null; // Limpiar el username si el usuario cierra sesión
+      _username = null;
     }
     notifyListeners();
   }
@@ -70,7 +70,7 @@ class AuthUserProvider with ChangeNotifier {
 
   Future<String?> getUsername() async {
     if (_userId == null) {
-      return null; // Si no hay userId, no hay username
+      return null;
     }
 
     try {
@@ -81,12 +81,12 @@ class AuthUserProvider with ChangeNotifier {
 
       if (userDoc.exists) {
         final userData = userDoc.data() as Map<String, dynamic>;
-        return userData['username'] as String?; // Obtener el username
+        return userData['username'] as String?;
       } else {
-        return null; // Si no existe el documento, retornar null
+        return null;
       }
     } catch (e) {
-      return null; // Si hay un error, retornar null
+      return null;
     }
   }
 }

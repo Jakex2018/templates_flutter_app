@@ -19,7 +19,7 @@ class AuthController extends ChangeNotifier {
     final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
 
     try {
-      authProvider.setLoading(true); // Activa la pantalla de carga
+      authProvider.setLoading(true);
       await authServices.loginUser(
           email, password, context, formKey, authProvider);
     } catch (e) {
@@ -28,7 +28,7 @@ class AuthController extends ChangeNotifier {
         SnackBar(content: Text("Error: $e")),
       );
     } finally {
-      authProvider.setLoading(false); // Desactiva la pantalla de carga
+      authProvider.setLoading(false);
     }
   }
 
@@ -37,16 +37,15 @@ class AuthController extends ChangeNotifier {
     final authProvider = Provider.of<AuthUserProvider>(context, listen: false);
 
     try {
-      authProvider.setLoading(true); // Activa la pantalla de carga
+      authProvider.setLoading(true);
       await authServices.registerUser(
           username, email, password, context, formKey);
     } catch (e) {
-      // Maneja el error (opcional)
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
     } finally {
-      authProvider.setLoading(false); // Desactiva la pantalla de carga
+      authProvider.setLoading(false);
     }
   }
 
@@ -61,25 +60,3 @@ class AuthController extends ChangeNotifier {
     await authServices.signInGoogle(googleSignIn, authProvider, context);
   }
 }
-
-
-/*
-rules_version = '2';
-
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{document=**} {
-      allow read, write: if request.auth.uid != null;
-    }
-    match /categories/{document=**} {
-      allow read, write: if true;
-    }
-    match /templates/{document=**} {
-      allow read, write: if true;
-    }
-    match /suscription/{document=**} {
-      allow read, write: if request.auth.uid != null;
-    }
-  }
-}
- */
