@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdService {
@@ -74,11 +75,11 @@ class AdService {
   String? get bannerAdUid {
     if (kReleaseMode) {
       if (Platform.isAndroid) {
-        return "ca-app-pub-5699804099110465~1293005254";
+        return dotenv.env['BANNER_AD_UNIT_ID'] ?? '';
       }
     } else {
       if (Platform.isAndroid) {
-        return "ca-app-pub-3940256099942544/9214589741";
+        return dotenv.env['BANNER_AD_PRO_ID'] ?? '';
       }
     }
     return null;
@@ -87,11 +88,11 @@ class AdService {
   String? get interstitialAdUid {
     if (kReleaseMode) {
       if (Platform.isAndroid) {
-        return "ca-app-pub-5699804099110465~1293005254";
+        return dotenv.env['INTERSTITIAL_AD_UNIT_ID'] ?? '';
       }
     } else {
       if (Platform.isAndroid) {
-        return "ca-app-pub-5699804099110465/2925660861";
+        return dotenv.env['INTERISTIAL_AD_PRO_ID'] ?? '';
       }
     }
     return null;
@@ -100,20 +101,18 @@ class AdService {
   String? get rewardsAdUid {
     if (kReleaseMode) {
       if (Platform.isAndroid) {
-        return "ca-app-pub-5699804099110465~1293005254";
+        return dotenv.env['REWARDS_AD_UNIT_ID'] ?? '';
       } else {
         return null;
       }
     } else {
       if (Platform.isAndroid) {
-        return "ca-app-pub-5699804099110465/1272262873";
+        return dotenv.env['REWARDS_AD_PRO_ID'] ?? '';
       } else {
         return null;
       }
     }
   }
-
-  /*ca-app-pub-3940256099942544/5224354917*/
 
   final BannerAdListener bannerListener = BannerAdListener(
       onAdOpened: (Ad ad) => {},
@@ -137,23 +136,4 @@ class AdService {
       ),
     );
   }
-
-  /*
-  Future<RewardedAd?> _createRewardAd() async {
-    RewardedAd? rewardedAd;
-    await RewardedAd.load(
-      adUnitId: rewardsAdUid!,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
-          rewardedAd = ad;
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          rewardedAd = null;
-        },
-      ),
-    );
-    return rewardedAd;
-  }
-   */
 }

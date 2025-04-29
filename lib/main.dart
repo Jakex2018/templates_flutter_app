@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:templates_flutter_app/common/routes/name.dart';
 import 'package:templates_flutter_app/common/services/intialize_app.dart';
 import 'package:templates_flutter_app/global.dart';
@@ -13,10 +14,14 @@ Future<void> main() async {
   await Global.init();
   WidgetsFlutterBinding.ensureInitialized();
   await initializeApp();
-   final admobServices = AdService();
-  await admobServices.initialize(); 
-  Stripe.publishableKey =
-      'pk_test_51QzRAkQjQlDsnuwCZTNwI0CVE61AdUrKWyvAKpa88NrmS6RA4hHetEBpqlwherdoszVyVNM8jgLILgNKCQ1oHiWb00rKaNmbqQ';
+  final admobServices = AdService();
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    throw Exception('Error loading .env file: $e');
+  }
+  await admobServices.initialize();
+  Stripe.publishableKey = dotenv.env['STRIPE_PUBLIC_KEY'] ?? '';
   runApp(
     MultiProvider(
       providers: [
